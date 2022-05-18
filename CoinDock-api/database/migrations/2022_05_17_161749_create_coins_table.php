@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('coins', function (Blueprint $table) {
-            $table->id();
+            $table->integerIncrements('id');
             $table->string('name');
             $table->timestamps();
         });
