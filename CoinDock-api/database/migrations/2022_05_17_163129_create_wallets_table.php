@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('wallets', function (Blueprint $table) {
-            $table->id();
+            $table->integerIncrements('id');
             $table->unsignedInteger('coin_id');
             $table->foreign('coin_id')->references('id')->on('coins');
             $table->unsignedInteger('user_id');
