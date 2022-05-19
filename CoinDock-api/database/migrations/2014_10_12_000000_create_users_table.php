@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('country');
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('re_enter_password');
             $table->integer('status');
             $table->rememberToken();
             $table->timestamps();
