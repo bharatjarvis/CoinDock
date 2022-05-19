@@ -2,6 +2,7 @@
 
 namespace Database\Factories\V1;
 
+use App\Enums\userType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -20,7 +21,7 @@ class UserFactory extends Factory
         return [
             'first_name' => $this->faker->name(),
             'last_name'=>$this->faker->name(),
-            'type'=>$this->faker->numberBetween(0,1),
+            'type'=>userType::User,
             'date_of_birth'=>$this->faker->date('Y-m-d'),
             'country'=>$this->faker->country(),
             'email' => $this->faker->unique()->safeEmail(),
