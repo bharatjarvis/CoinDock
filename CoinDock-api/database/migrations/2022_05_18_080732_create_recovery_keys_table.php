@@ -30,7 +30,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropForeign('admins_user_id_foreign');
+        Schema::dropForeign('recovery_keys_user_id_foreign');
         Schema::dropIfExists('recovery_keys');
     }
 };
