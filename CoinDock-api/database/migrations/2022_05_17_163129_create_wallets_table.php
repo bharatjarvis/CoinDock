@@ -14,13 +14,13 @@ return new class extends Migration
     public function up()
     {
         Schema::create('wallets', function (Blueprint $table) {
-            $table->integerIncrements('id');
-            $table->unsignedInteger('coin_id');
+            $table->id();
+            $table->unsignedBigInteger('coin_id');
             $table->foreign('coin_id')->references('id')->on('coins');
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('wallet_id');
-            $table->integer('balance');
+            $table->double('balance',2);
             $table->timestamps();
         });
     }
@@ -32,6 +32,8 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::dropForeign('wallets_coin_id_foreign');
+        Schema::dropForeign('wallets_user_id_foreign');
         Schema::dropIfExists('wallets');
     }
 };

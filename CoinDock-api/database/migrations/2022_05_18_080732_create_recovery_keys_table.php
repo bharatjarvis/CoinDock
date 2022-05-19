@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('recovery_keys', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->string('recovery_code');
+            $table->json('recovery_code');
             $table->integer('status');
             $table->timestamps();
         });
@@ -30,6 +30,7 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::dropForeign('admins_user_id_foreign');
         Schema::dropIfExists('recovery_keys');
     }
 };
