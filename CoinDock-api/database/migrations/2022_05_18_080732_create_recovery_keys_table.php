@@ -13,19 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('recovery_keys', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->integer('type');
-            $table->date('date_of_birth');
-            $table->string('country');
-            $table->string('email')->unique();
-            $table->string('password');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->json('recovery_code');
             $table->integer('status');
-            $table->rememberToken()->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -36,6 +30,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropForeign('recovery_keys_user_id_foreign');
+        Schema::dropIfExists('recovery_keys');
     }
 };
