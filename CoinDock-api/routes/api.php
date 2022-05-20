@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\UserController;
 */
 Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'login']);
+Route::post('logout', [UserController::class, 'logout']);
 Route::middleware('auth:api')->group(function(){
     Route::get('logout', [UserController::class, 'logout']);
 });

@@ -3,30 +3,27 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\v1\SignupRequest;
 use Illuminate\Http\Request;
 use App\Models\v1\User;
+use League\Uri\Http;
 
 class UserController extends Controller
 {
     //
 
+    // protected function generateAccessToken($user){
+    //     $token= $user->createToken($user->email. '-'.now());
+    //     return $token->accessToken;
+    // }
+
      /**
      * Registration
      */
-    public function register(Request $request)
+    public function register(SignupRequest $request)
     {
         $this->validate($request, [
-            'first_name' => 'required|string|max:45',
-            'last_name' => 'required|string|max:45',
-            'user_type' => 'required|string',
-            'date_of_birth' => 'required|date|before_or_equal:'.\Carbon\Carbon::now()->subYears(15)->format('Y-m-d'),
-            'country' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|max:12',
-            're_enter_password' => 'required|max:12|same:password',
-            //'password' => 'required|max:12|min:4|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/| confirmed',
-             //'re_enter_password' => 'required|same:password',
-            'status' => 'required'
+           
         ],[
             'first_name.required' => 'First name is required.',
             'last_name.required' => 'Last name is required.',
@@ -42,7 +39,7 @@ class UserController extends Controller
             're_enter_password.required' =>'Passwords are not matching',
             'status.required' => 'status is required.'
             
-            
+
         ]);
  
         $user = User::create([
@@ -57,40 +54,41 @@ class UserController extends Controller
             'status'=> $request->status
         ]);
        
-        $token = $user->createToken('LaravelAuthApp')->accessToken;
+        $token = $user->createToken('Laravel')->accessToken;
  
-        return response()->json(['token' => $token], 200);
-        return response()->json($user);
+        //return response()->json(['token' => $token], 200);
+        //return response()->json($user);
+        return response()->json(["status" => "success", "error" => false, "message" => "Success! User registered."], 201);
     }
+    
 
     /**
      * Login
      */
+    
     public function login(Request $request)
     {
         $data = [
             'email' => $request->email,
             'password' => $request->password
         ];
- 
-        if (auth()->attempt($data)) {
-            $token = auth()->user()->createToken('LaravelAuthApp')->accessToken;
-            return response()->json(['message' =>" Login Successfull."], 200);
-        } else {
-            return response()->json(['error' => 'Unauthorised'], 401);
+        if (!auth()->attempt($data)) {
+            return response(['error' => 'Unauthorised'], 401);
         }
+   
+        $token = auth()->user()->getRememberToken();
+
+        return response(['message' =>" Login Successfull.", 'token'=> $token], 200);
+        
     } 
-    
-    
-
-
 
     public function logout()
-{
-    auth()->user()->token()->revoke();
+    {
+        auth()->user()->tokens->delete();
+    
+        return response([
+            'message' => 'Successfully logged out',
+        ], 200);
+    }
+}
 
-    return response()->json([
-        'message' => 'Successfully logged out'
-    ],200);
-}
-}
