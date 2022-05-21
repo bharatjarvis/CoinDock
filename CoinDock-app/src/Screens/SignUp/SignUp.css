@@ -1,0 +1,26 @@
+p {
+  color: red;
+  font-size: 12px;
+}
+.condition {
+  color: black;
+  font-size: 14px;
+}
+.form-control {
+  outline: none;
+  box-shadow: none;
+  border: 1px solid rgba(233, 139, 16, 0.8);
+}
+.form-control:focus {
+  outline: none;
+  box-shadow: none;
+  border: 1px solid;
+}
+
+.container > form {
+  width: 70%;
+  border: 1px solid #dfdfdf;
+  padding: 20px;
+  border-radius: 5px;
+  background: #fff;
+}

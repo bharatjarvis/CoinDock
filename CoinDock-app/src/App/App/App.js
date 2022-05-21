@@ -1,14 +1,15 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { store } from "../Reducers";
-import './App.css'
+import "./App.css";
+import SignUp from "../../Screens/SignUp/SignUp.js";
 
 function App() {
   return (
     <Provider store={store}>
       <div className="App">
         <header className="App-header">
-          <h1> Sign upe</h1>
+          <SignUp />
         </header>
       </div>
     </Provider>
