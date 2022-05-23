@@ -2,6 +2,7 @@
 
 namespace App\Models\V1;
 
+use App\Models\V1\Traits\Encryptable;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -9,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Encryptable;
 
     /**
      * The attributes that are mass assignable.
@@ -37,6 +38,8 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $encryptable = ['password'];
+
     /**
      * The attributes that should be cast.
      *
@@ -47,7 +50,8 @@ class User extends Authenticatable
     ];
 
 
-    public function recoveryKey(){
+    public function recoveryKey()
+    {
         return $this->hasOne(RecoveryKey::class);
     }
 }
