@@ -43,7 +43,7 @@ class RecoveryKeyController extends Controller
         $completed = 3;
 
         return response([
-            "recovery_code" =>$recoveryString,
+            'recovery_code' =>$recoveryString,
             'completed'=>$completed
 
         ],201);

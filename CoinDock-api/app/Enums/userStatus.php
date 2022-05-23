@@ -12,6 +12,6 @@ use BenSampo\Enum\Enum;
 final class userStatus extends Enum
 {
     const Active =   0;
-    const InActive =   1;
+    const Inactive =   1;
     const Locked = 2;
 }
