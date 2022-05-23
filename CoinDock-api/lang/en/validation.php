@@ -151,6 +151,26 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        're_enter_password' => [
+            're_enter_password.required' =>'Passwords are not matching',
+        ],
+
+        'date_of_birth' => [
+            'date_of_birth.required' => 'You need to be 15 years old to register for CoinDock',
+        ],
+        'email' => [
+        'email.email' => 'Email field must be email address.',],
+         'password'=>[
+          
+        'password.required' => 'Password is required.Password must be at least 12 characters.
+                                                        Password must contain at least one number.
+                                                        Your password must include at least one letter.
+                                                        Password must contain at least one special character, e.g. @$!%*#?&"',
+            
+            
+         ]
+        
+
     ],
 
     /*

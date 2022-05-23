@@ -23,24 +23,7 @@ class UserController extends Controller
     public function register(SignupRequest $request)
     {
         $this->validate($request, [
-           
-        ],[
-            'first_name.required' => 'First name is required.',
-            'last_name.required' => 'Last name is required.',
-            'date_of_birth.required' => 'Date of birth reqired.',
-            'date_of_birth.required' => 'You need to be 15 years old to register for CoinDock',
-            'country.requried' => 'Country required.',
-            'email.required' => 'Email field is required.',
-            'email.email' => 'Email field must be email address.',
-            'password.required' => 'Password is required.Password must be at least 12 characters.
-                                                        Password must contain at least one number.
-                                                        Your password must include at least one letter.
-                                                        Password must contain at least one special character, e.g. @$!%*#?&"',
-            're_enter_password.required' =>'Passwords are not matching',
-            'status.required' => 'status is required.'
-            
-
-        ]);
+        ],);
  
         $user = User::create([
             'first_name' => $request->first_name,
