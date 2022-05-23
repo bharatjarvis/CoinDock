@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\v1\RecoveryKey;
+use App\Http\Controllers\V1\RecoveryKeyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Arr;
@@ -26,9 +26,4 @@ Route::get('/recoverykey',function(){
      return $random;
 });
 
-Route::get('/random' , function(){
-
-
-    $random = Arr::random(config('random_keys.recovery_codes'),12);
-    
-});
+Route::post('/recovery_codes/',[RecoveryKeyController::class,'recoveryCodes']);
