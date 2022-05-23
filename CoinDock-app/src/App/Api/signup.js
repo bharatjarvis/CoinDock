@@ -1,9 +1,11 @@
 import baseApi from "./api";
 
 const p = baseApi.injectEndpoints({
-  endpoints: (build) => {
-    return build.query({
+  endpoints: (build) => ({
+    p: build.query((name) => ({
       url: "/",
-    });
-  },
+    })),
+  }),
 });
+
+p.usePQuery();

@@ -1,0 +1,14 @@
+.start {
+  position: absolute;
+  width: 1600px;
+  height: 55px;
+  left: 0px;
+  top: 0px;
+
+  /* VividBlue2 */
+
+  background: #32c4fc;
+}
+.profile {
+  left: 1250px;
+}

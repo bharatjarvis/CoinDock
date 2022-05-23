@@ -1,0 +1,16 @@
+.paper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.paper-container {
+  width: 100%;
+  padding: 8px;
+}
+@media screen and (min-width: 480px) {
+  .paper-container {
+    width: 480px;
+    padding: 8px;
+  }
+}

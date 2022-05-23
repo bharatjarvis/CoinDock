@@ -21,6 +21,17 @@ p {
   box-shadow: none;
   border: 1px solid;
 }
+.start {
+  position: absolute;
+  width: 1600px;
+  height: 25px;
+  left: 0px;
+  top: 0px;
+
+  /* VividBlue2 */
+
+  background: #32c4fc;
+}
 
 .container > form {
   width: 70%;
@@ -69,9 +80,9 @@ input {
   margin-top: 30px;
 }
 .line {
-  width: 118px;
+  width: 250px;
   height: 2px;
   margin-top: 45px;
   background: #c4c4c4;
-  margin-bottom: 45 px;
+  margin-bottom: 45px;
 }

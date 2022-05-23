@@ -1,0 +1,13 @@
+.stepper-step {
+  width: 32px;
+  height: 32px;
+
+  border-radius: 50%;
+  background: #c4c4c4;
+  margin-top: 30px;
+}
+.stepper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}

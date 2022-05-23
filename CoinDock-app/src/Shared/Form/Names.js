@@ -40,26 +40,32 @@ function Names(props) {
     return errors;
   };
   return (
-    <div className="form-group mb-3">
-      <input
-        type="text"
-        className="form-control"
-        name="firstname"
-        placeholder="Firstname"
-        value={formValues.firstname}
-        onChange={handleChanges}
-      />
-      <p className="text-danger">{formErrors.firstname}</p>
-      <input
-        type="text"
-        className="form-control"
-        name="lastname"
-        placeholder="Last Name"
-        value={formValues.lastname}
-        onChange={handleChanges}
-      />
-      <p className="text-danger">{formErrors.lastname}</p>
-    </div>
+    <>
+      <div className="form-group mb-3">
+        <div>
+          <label>First Name</label>
+          <input
+            type="text"
+            className="form-control"
+            name="firstname"
+            placeholder="Firstname"
+            value={formValues.firstname}
+            onChange={handleChanges}
+          />
+        </div>
+        <p className="text-danger">{formErrors.firstname}</p>
+        <label>Last Name</label>
+        <input
+          type="text"
+          className="form-control"
+          name="lastname"
+          placeholder="Last Name"
+          value={formValues.lastname}
+          onChange={handleChanges}
+        />
+        <p className="text-danger">{formErrors.lastname}</p>
+      </div>
+    </>
   );
 }
 export default Names;

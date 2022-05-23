@@ -1,0 +1,29 @@
+.content {
+  height: 100vh;
+}
+
+.form-control {
+  outline: none;
+  box-shadow: none !important;
+  border: 1px solid #ccc !important;
+}
+.form-control:focus {
+  outline: none;
+  box-shadow: none !important;
+  border: 1px solid #0b5ed7 !important;
+}
+
+.cf {
+  flex: 0.5;
+}
+.start {
+  position: absolute;
+  width: 1600px;
+  height: 25px;
+  left: 0px;
+  top: 0px;
+
+  /* VividBlue2 */
+
+  background: #32c4fc;
+}

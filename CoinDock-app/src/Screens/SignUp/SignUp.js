@@ -2,13 +2,19 @@ import React, { useState } from "react";
 import "./SignUp.css";
 import Names from "../../Shared/Form/Names.js";
 import Email from "../../Shared/Form/Email.js";
-
+import Popup from "../Popup/Popup.js";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { emailValidation } from "../../Shared/Form/Email.js";
+import "../../Shared/common-styles/common.css";
+import Stepper from "../../Shared/Form/Ellipse/Stepper";
+
 function SignUP(props) {
+  const [buttonPopup, setButtonPopup] = useState(false);
   const initialValues = {
-    firstname: "",
-    lastname: "",
-    email: "",
+    // firstname: "",
+    // lastname: "",
+    // email: "",
+    country: "",
     password: "",
     date: "",
     reenterpassword: "",
@@ -22,9 +28,16 @@ function SignUP(props) {
   };
 
   const handleSubmit = (e) => {
+    console.log("checlk");
     e.preventDefault();
+    const { errors, isValid } = handleValidation(formValues);
 
-    setformErrors(handleValidation(formValues));
+    if (!isValid) {
+      setformErrors(errors);
+    } else {
+      setButtonPopup(true);
+    }
+
     if (!Object.values(formValues).includes("")) {
       formValues.id = formValues.id === undefined ? Date.now() : formValues.id;
       setformValues({ ...formValues });
@@ -38,45 +51,86 @@ function SignUP(props) {
 
   const handleValidation = (values) => {
     const errors = {};
+    let isValid = true;
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    errors.email = emailValidation(values.email);
     if (!values.firstname) {
+      isValid = false;
       errors.firstname = "Firstname is required";
     }
     if (!values.lastname) {
+      isValid = false;
       errors.lastname = "Lastname is required";
     }
     if (!values.date) {
+      isValid = false;
       errors.date = "Date of birth is required";
     }
-    if (!values.username) {
-      errors.username = "Username is required";
-    }
-    if (!values.email) {
-      errors.email = "Email is required";
-    } else if (!regex.test(values.email)) {
-      errors.email = "Email is not valid!";
-    }
+    // if (!values.country) {
+    //   errors.country = "Country is required";
+    // }
+    // if (!values.email) {
+    //   isValid = false;
+    //   errors.email = "Email is required";
+    // } else if (!regex.test(values.email)) {
+    //   isValid = false;
+    //   errors.email = "Email is not valid!";
+    // }
+
     if (!values.password) {
+      isValid = false;
       errors.password = "Password is required";
-    } else if (values.password.length < 4) {
-      errors.password = "Password must be more than 4 characters!!!";
+    } else if (values.password.length > 12) {
+      errors.password = "Password must be more than 12 characters!!!";
     }
     if (!values.reenterpassword) {
+      isValid = false;
       errors.reenterpassword = "Re enter the Password";
     }
-    return errors;
+    return {
+      isValid,
+      errors,
+    };
   };
 
   return (
-    <div>
-      <div className="container">
+    <div className="paper">
+      <div className="paper-container">
         <div className="row content d-flex justify-content-center align-items-center">
           <div className="col-12  my-4">
             <div style={{ minWidth: "30vw" }}>
               <div className="d-flex justify-content-between"></div>
-              <form>
-                <div className="card shadow-sm bg-secondary p-4">
+              <Stepper totalSteps={3} />
+              {/* <div className="row">
+                <div className="col">
+                  {" "}
+                  <div className="ellipse"></div>
+                </div>
+                <div className="col">
+                  {" "}
+                  <div className="line"></div>
+                </div>
+
+                <div className="col">
+                  {" "}
+                  <div className="ellipse"></div>
+                </div>
+                <div className="col">
+                  {" "}
+                  <div className="line"></div>
+                </div>
+                <div className="col">
+                  {" "}
+                  <div className="ellipse"></div>
+                </div>
+              </div> */}
+
+              <form onSubmit={handleSubmit}>
+                <div>
                   <Names />
+                </div>
+                <label>Date of Birth</label>
+                <div>
                   <input
                     type="date"
                     className="form-control"
@@ -86,47 +140,68 @@ function SignUP(props) {
                     onChange={handleChanges}
                   />
                   <p className="text-danger">{formErrors.date}</p>
-                  <Email />
-
-                  <select
-                    id="country"
+                </div>
+                <label>Email</label>
+                <div className="form-group mb-3">
+                  <input
+                    type="email"
+                    name="email"
                     className="form-control mt-1 py-8"
-                    placeholder="Country"
-                  >
-                    <option>India </option>
-                    <option>Pakistan</option>
-                  </select>
-                  <input
-                    type="password"
-                    className="form-control mt-3 py-8"
-                    name="password"
-                    placeholder="Password"
-                    value={formValues.password}
+                    placeholder="Enter your email address"
+                    value={formValues.email}
+                    id="email"
                     onChange={handleChanges}
                   />
-                  <p className="text-danger">{formErrors.password}</p>
-                  <input
-                    type="password"
-                    className="form-control"
-                    name="reenterpassword"
-                    placeholder="Re-enter Password"
-                    value={formValues.password}
-                    onChange={handleChanges}
-                  />
-                  <p className="text-danger">{formErrors.reenterpassword}</p>
-                  <p className="condition">
-                    By clicking on confirm, you agreed to he CoinDock terms and
-                    conditions
-                  </p>
-                  <div className="d-flex justify-content-end">
-                    <button
-                      type="button"
-                      className="btn btn-primary"
-                      onClick={handleSubmit}
-                    >
-                      confirm
-                    </button>
-                  </div>
+                </div>
+                <p className="text-danger">{formErrors.email}</p>
+                {/* <Email /> */}
+                <label>Country</label>
+                <select
+                  id="country"
+                  className="form-control mt-1 py-8"
+                  placeholder="Country"
+                  onChange={handleChanges}
+                >
+                  <option>Country</option>
+                  <option>India </option>
+                  <option>Pakistan</option>
+                </select>
+                <p className="text-danger">{formErrors.country}</p>
+                <label>Password</label>
+                <input
+                  type="password"
+                  className="form-control mt-3 py-8"
+                  name="password"
+                  placeholder="Password"
+                  value={formValues.password}
+                  onChange={handleChanges}
+                />
+                <p className="text-danger">{formErrors.password}</p>
+                <label>Re-enter password</label>
+                <input
+                  type="password"
+                  className="form-control"
+                  name="reenterpassword"
+                  placeholder="Re-enter Password"
+                  value={formValues.reenterpassword}
+                  onChange={handleChanges}
+                />
+                <p className="text-danger">{formErrors.reenterpassword}</p>
+                <p className="condition">
+                  By clicking on confirm, you agreed to the CoinDock terms and
+                  conditions
+                </p>
+                <div className="d-flex justify-content-end">
+                  <button className="confirms">confirm</button>
+                  <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
+                    <h5>Account recovery information</h5>
+                    <img className="image" />
+                    <p className="para">
+                      We’re going to display the account recovery information on
+                      the next screen. Please ensure that you have good internet
+                      connection and no individual is watching.
+                    </p>
+                  </Popup>
                 </div>
               </form>
             </div>
