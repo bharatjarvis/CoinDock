@@ -33,3 +33,18 @@
   border-right-width: 0px;
   border-bottom-width: 0px;
 }
+
+
+.cd-step-header-content {
+  width: 335px;
+  height: 87px;
+  left: 14px;
+  top: 141px; 
+
+  display: inline;
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 160%;
+}
