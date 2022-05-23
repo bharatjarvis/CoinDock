@@ -2,8 +2,10 @@
 
 namespace App\Models\V1;
 
+use App\Enums\userType;
 use App\Http\Requests\V1\LoginRequest;
 use App\Http\Requests\V1\SignupRequest;
+use App\Models\V1\User as V1User;
 use GuzzleHttp\Psr7\Request;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -56,7 +58,7 @@ class User extends Authenticatable
         return User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
-            'user_type' => $request->user_type,
+            'type' => userType::User,
             'date_of_birth' => $request->date_of_birth,
             'country' => $request->country,
             'email' => $request->email,
@@ -79,9 +81,8 @@ class User extends Authenticatable
                 ],
                 401
             );
-
+        }
     }
-}
 
 }
 

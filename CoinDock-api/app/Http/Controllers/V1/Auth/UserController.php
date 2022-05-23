@@ -7,6 +7,7 @@ use App\Http\Requests\V1\LoginRequest;
 use App\Http\Requests\V1\SignupRequest;
 use Illuminate\Http\Request;
 use App\Models\V1\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -59,9 +60,7 @@ class UserController extends Controller
      */
     public function logout()
     {
-        info('tedffy');
-        info( auth()->user()->tokens);
-        auth()->user()->tokens->delete();
+        auth()->user()->tokens->map(fn ($token) => $token->delete());
 
         return response(
             [ 'message' => 'Successfully logged out' ], 
