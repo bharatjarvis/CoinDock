@@ -55,9 +55,6 @@ class UserController extends Controller
         ]);
        
         $token = $user->createToken('Laravel')->accessToken;
- 
-        //return response()->json(['token' => $token], 200);
-        //return response()->json($user);
         return response()->json(["status" => "success", "error" => false, "message" => "Success! User registered."], 201);
     }
     
