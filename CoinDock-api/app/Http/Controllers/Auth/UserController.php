@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\v1\SignupRequest;
+use App\Http\Requests\V1\SignupRequest;
 use Illuminate\Http\Request;
-use App\Models\v1\User;
+use App\Models\V1\User;
 use League\Uri\Http;
 
 class UserController extends Controller
