@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums;
+namespace App\Enums\V1;
 
 use BenSampo\Enum\Enum;
 
@@ -12,6 +12,6 @@ use BenSampo\Enum\Enum;
 final class recoveryKeyStatus extends Enum
 {
     const Active =   0;
-    const InActive =   1;
+    const Inactive =   1;
     const Used = 2;
 }

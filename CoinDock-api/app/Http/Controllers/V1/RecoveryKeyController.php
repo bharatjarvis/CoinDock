@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Enums\V1\recoveryKeyStatus;
 use App\Models\V1\RecoveryKey;
 use App\Http\Controllers\Controller;
 use App\Models\V1\User;
@@ -32,13 +33,20 @@ class RecoveryKeyController extends Controller
 
         //Recovery Key Creation in database
         RecoveryKey::create([
-            'user_id' => 2,//$user->id,
+            'user_id' => $user->id,
             'recovery_code' => $recoveryStringFinal,
-            'status' => 1,
+            'status' => recoveryKeyStatus::Inactive,
         ]);
 
 
-        return $recoveryString;
+        //variable to identify the completed page
+        $completed = 3;
+
+        return response([
+            "recovery_code" =>$recoveryString,
+            'completed'=>$completed
+
+        ],201);
         
     }
 }
