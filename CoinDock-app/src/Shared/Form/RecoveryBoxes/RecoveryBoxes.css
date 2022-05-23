@@ -1,0 +1,20 @@
+.code-box {
+  box-sizing: border-box;
+  width: 79px;
+  height: 65px;
+  left: 14px;
+  top: 246px;
+  background: #FFFFFF;
+  border: 1px solid #0080B1;
+  border-radius: 10px;
+}
+
+.download {
+  width: 193px;
+  height: 39px;
+  left: 84px;
+  top: 641px;
+  
+  background: #E0E0E0;
+  border-radius: 20px;
+  }
