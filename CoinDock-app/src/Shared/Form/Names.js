@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Name from "./Name";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+
 function Names(props) {
   const initialValues = {
     firstname: "",

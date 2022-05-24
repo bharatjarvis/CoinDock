@@ -1,0 +1,12 @@
+{
+  "name": "coindock",
+  "scripts": {
+    "start-ui": "cd CoinDock-app && npm start",
+    "start-api": "cd CoinDock-api && php artisan serve --port=8080"
+  },
+  "devDependencies": {
+    "eslint": "^8.16.0",
+    "eslint-config-prettier": "^8.5.0",
+    "prettier": "^2.6.2"
+  }
+}

@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import "./SignUp.css";
 import Names from "../../Shared/Form/Names.js";
-import Email from "../../Shared/Form/Email.js";
+import Email from "../../Shared/Form/Email/Email.js";
 import Popup from "../Popup/Popup.js";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { emailValidation } from "../../Shared/Form/Email.js";
-
+import { emailValidation } from "../../Shared/Form/Email/Email.js";
 import "../../Shared/common-styles/common.css";
 import Stepper from "../../Shared/Form/Ellipse/Stepper";
 

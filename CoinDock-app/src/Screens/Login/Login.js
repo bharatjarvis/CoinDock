@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Email from "../../Shared/Form/Email.js";
+import Email from "../../Shared/Form/Email";
 
 function Login() {
   const initialValues = { email: "", password: "" };

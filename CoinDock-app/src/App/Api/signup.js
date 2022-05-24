@@ -1,11 +1,20 @@
 import baseApi from "./api";
 
-const p = baseApi.injectEndpoints({
+const signup = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    p: build.query((name) => ({
-      url: "/",
-    })),
+    getRegister: build.query({
+      query: () => ({
+        url: "/register",
+        method: "get",
+      }),
+      transformResponse: (response) => {
+        return response;
+      },
+      providesTags: ["register"],
+    }),
   }),
 });
 
-p.usePQuery();
+export default signup;
+export const { useGetRegisterQuery } = signup;
+export const { usePrefetch: useSignupPrefetch } = signup;
