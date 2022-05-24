@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\V1;
 
-use App\Enums\V1\RecoveryKeyStatus;
+
 use App\Models\V1\RecoveryKey;
 use App\Http\Controllers\Controller;
 use App\Models\V1\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class RecoveryKeyController extends Controller
 {
@@ -18,38 +19,34 @@ class RecoveryKeyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function recoveryCodes(User $user,Request $request)
+    public function generateRecoveryCodes(User $user, Request $request)
     {
-        //generating random dictionary words
-
-        $length = config('random_keys.recovery_code_length');
-        $recoveryArray = Arr::random(config('random_keys.recovery_codes'),$length);
-
-        //coverting to string
-        $recoveryString = implode(" ", $recoveryArray);
 
 
-        // // Encrypting the Recovery String
-        // $recoveryStringFinal = bcrypt($recoveryString);
-
-
-        //Recovery Key Creation in database
-        RecoveryKey::create([
-            'user_id' =>2 ,// $user->id,
-            'recovery_code' => $recoveryString,
-            'status' => RecoveryKeyStatus::Inactive,
-        ]);
-
-
-        //variable to identify the completed page
-        $completed = 3;
+        $recovery = new RecoveryKey();
+        $obj = $recovery->generateRecoveryCodes($user,$request);
 
         return response([
-            'status' =>'Recovery codes created successfully ',
-            'recovery_code' =>$recoveryString,
-            'completed'=>$completed
+            'message' => 'Recovery codes created successfully ',
+            'result' => [
+                'recovery_code' => $obj->recovery_code,
+                'completed' => 3
+            ],
 
-        ],200);
+        ], 200);
+
         
+    }
+
+    public function downloadRecoveryWords(User $user, Request $request)
+    {
+
+        $recovery = new RecoveryKey();
+
+        $data = $recovery->downloadRecoveryWords($user,$request);
+        $pdf = Pdf::loadview('myPDF', $data);
+        $now = Carbon::now()->format('Y-m-d');
+
+        return $pdf->download("recovery-words-{$now}.pdf");
     }
 }

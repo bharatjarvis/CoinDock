@@ -26,4 +26,7 @@ Route::get('/recoverykey',function(){
      return $random;
 });
 
-Route::post('/recovery_codes/',[RecoveryKeyController::class,'recoveryCodes']);
+
+Route::post('{user}/recovery_codes/',[RecoveryKeyController::class,'generateRecoveryCodes']);
+
+Route::get('{user}/download-recovery_codes',[RecoveryKeyController::class ,'downloadRecoveryWords']);
