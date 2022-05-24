@@ -11,13 +11,21 @@ use App\Models\V1\RecoveryKey;
 
 class RecoveryKeyController extends Controller
 {
-    //random keys generation
-    public function random_numbers(){
-
-        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
- 
-        $random = Arr::random($array, 3);
-        return $random;
-        //info('return $random_numbers');
+    public  function recovery_keys(User $user , Request $request)
+  {
+      $user_recovery_code = RecoveryKey::where("user_id",$user->id)->first();
+      $pass_array =($user_recovery_code->recovery_code);
+     
+      $pass_array=explode(" ",$pass_array);
+      if($request->first == $pass_array[1]& $request->second == $pass_array[2] &
+      $request->third == $pass_array[3] ){
+          $required_user = User::whereId($user->id)->first();
+          $required_user->status = 4;
+      }
+      else{
+        return response([
+            'Error' => 'Recovery codes did not match ',
+        ],401);
     }
+}
 }

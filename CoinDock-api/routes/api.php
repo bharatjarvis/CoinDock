@@ -29,6 +29,8 @@ use App\Http\Controllers\V1\RecoveryKeyController;
 //});
 
 Route::get('/random/recovery_number',[RecoveryKeyController::class,'random_numbers']);
+Route::post('/confirm/{user}/recoverycodes', [RecoveryKeyController::class,'recovery_keys']);
+
 
 //Route::get('/random' , function(){
 
