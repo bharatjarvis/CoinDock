@@ -1,10 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\Auth\UserController;
 use App\Http\Controllers\V1\RecoveryKeyController;
 use Illuminate\Support\Arr;
- 
+use Illuminate\Support\Facades\Route;
+use App\Models\v1\RecoveryKey;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -22,7 +23,8 @@ Route::middleware('auth:api')->group(function(){
 Route::post('logout', [UserController::class, 'logout']);
     Route::get('logout', [UserController::class, 'logout']);
 });
+//Route::get('/random/recovery_number',[RecoveryKeyController::class,'random_numbers']);
 
 Route::get('/', [RecoveryKeyController::class, 'recoveyKey']);
 
-Route::get('/random' , [RecoveryKeyController::class, 'random']);
+
