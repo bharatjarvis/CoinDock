@@ -29,10 +29,8 @@ function Login() {
     }
     if (!values.password) {
       errors.password = "Password is required";
-    } else if (values.password.length < 4) {
-      errors.password = "Password must be more than 4 characters";
-    } else if (values.password !== "password") {
-      errors.password = "Invalid password";
+    } else if (values.password.length < 12) {
+      errors.password = "Password must be more than 12 characters";
     }
     return errors;
   };
@@ -44,34 +42,34 @@ function Login() {
           <h3 className="nm-4 text-center fs-1 m-4">Login</h3>
 
           <form className="mb-3" onSubmit={handleSubmit}>
-            {/* <div className="form-group mb-3">
-                <input
-                  type="email"
-                  name="email"
-                  className="form-control mt-1 py-3"
-                  placeholder="Enter your email address"
-                  value={formValues.email}
-                  id="email"
-                  onChange={handleChanges}
-                />
-              </div> */}
-            <div>
-              <Email />
+            <div className="form-group mb-3">
+              <label>Email</label>
+              <input
+                type="email"
+                name="email"
+                className="form-control mt-1 py-3"
+                placeholder="Enter your email address"
+                value={formValues.email}
+                id="email"
+                onChange={handleChanges}
+              />
             </div>
+            {/* <div>
+              <Email />
+            </div> */}
             <p className="text-danger">{formErrors.email}</p>
             <div className="form-group mb-3">
-              <div className="input-group">
-                <input
-                  type={isShow ? "text" : "password"}
-                  name="password"
-                  className="form-control mt-1 py-8"
-                  placeholder="Enter your password"
-                  value={formValues.password}
-                  id="password"
-                  onChange={handleChanges}
-                  data-toggle="password"
-                />
-              </div>
+              <label>Password</label>
+              <input
+                type={isShow ? "text" : "password"}
+                name="password"
+                className="form-control mt-1 py-8"
+                placeholder="Enter your password"
+                value={formValues.password}
+                id="password"
+                onChange={handleChanges}
+                data-toggle="password"
+              />
             </div>
             <p className="text-danger">{formErrors.password}</p>
             <div className="d-grid gap-2">

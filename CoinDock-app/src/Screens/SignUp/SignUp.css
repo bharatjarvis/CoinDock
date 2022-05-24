@@ -59,7 +59,7 @@ input {
   background: #e0e0e0;
   border-radius: 20px;
 }
-.ellipse {
+/* .ellipse {
   position: absolute;
   width: 32px;
   height: 32px;
@@ -67,7 +67,7 @@ input {
   border-radius: 50%;
   background: #c4c4c4;
   margin-top: 30px;
-}
+} */
 .line {
   width: 118px;
   height: 2px;

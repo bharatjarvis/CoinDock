@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Name from "./Name";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 function Names(props) {
@@ -43,23 +44,19 @@ function Names(props) {
     <>
       <div className="form-group mb-3">
         <div>
-          <label>First Name</label>
-          <input
-            type="text"
-            className="form-control"
+          <Name
             name="firstname"
-            placeholder="Firstname"
+            placeholder="First Name"
+            label="First Name"
             value={formValues.firstname}
             onChange={handleChanges}
           />
         </div>
         <p className="text-danger">{formErrors.firstname}</p>
-        <label>Last Name</label>
-        <input
-          type="text"
-          className="form-control"
+        <Name
           name="lastname"
           placeholder="Last Name"
+          label="Last Name"
           value={formValues.lastname}
           onChange={handleChanges}
         />

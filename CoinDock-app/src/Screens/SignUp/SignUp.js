@@ -5,6 +5,7 @@ import Email from "../../Shared/Form/Email.js";
 import Popup from "../Popup/Popup.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { emailValidation } from "../../Shared/Form/Email.js";
+
 import "../../Shared/common-styles/common.css";
 import Stepper from "../../Shared/Form/Ellipse/Stepper";
 
@@ -66,9 +67,9 @@ function SignUP(props) {
       isValid = false;
       errors.date = "Date of birth is required";
     }
-    // if (!values.country) {
-    //   errors.country = "Country is required";
-    // }
+    if (!values.country) {
+      errors.country = "Country is required";
+    }
     // if (!values.email) {
     //   isValid = false;
     //   errors.email = "Email is required";
@@ -80,7 +81,7 @@ function SignUP(props) {
     if (!values.password) {
       isValid = false;
       errors.password = "Password is required";
-    } else if (values.password.length > 12) {
+    } else if (values.password.length < 12) {
       errors.password = "Password must be more than 12 characters!!!";
     }
     if (!values.reenterpassword) {
@@ -101,33 +102,11 @@ function SignUP(props) {
             <div style={{ minWidth: "30vw" }}>
               <div className="d-flex justify-content-between"></div>
               <Stepper totalSteps={3} />
-              {/* <div className="row">
-                <div className="col">
-                  {" "}
-                  <div className="ellipse"></div>
-                </div>
-                <div className="col">
-                  {" "}
-                  <div className="line"></div>
-                </div>
-
-                <div className="col">
-                  {" "}
-                  <div className="ellipse"></div>
-                </div>
-                <div className="col">
-                  {" "}
-                  <div className="line"></div>
-                </div>
-                <div className="col">
-                  {" "}
-                  <div className="ellipse"></div>
-                </div>
-              </div> */}
 
               <form onSubmit={handleSubmit}>
                 <div>
                   <Names />
+                  <p className="text-danger">{formErrors.lastname}</p>
                 </div>
                 <label>Date of Birth</label>
                 <div>
@@ -141,31 +120,22 @@ function SignUP(props) {
                   />
                   <p className="text-danger">{formErrors.date}</p>
                 </div>
-                <label>Email</label>
-                <div className="form-group mb-3">
-                  <input
-                    type="email"
-                    name="email"
-                    className="form-control mt-1 py-8"
-                    placeholder="Enter your email address"
-                    value={formValues.email}
-                    id="email"
-                    onChange={handleChanges}
-                  />
-                </div>
+
+                <Email />
                 <p className="text-danger">{formErrors.email}</p>
-                {/* <Email /> */}
-                <label>Country</label>
-                <select
-                  id="country"
-                  className="form-control mt-1 py-8"
-                  placeholder="Country"
-                  onChange={handleChanges}
-                >
-                  <option>Country</option>
-                  <option>India </option>
-                  <option>Pakistan</option>
-                </select>
+                <div>
+                  <label>Country</label>
+                  <select
+                    id="country"
+                    className="form-control mt-1 py-8"
+                    placeholder="Country"
+                    onChange={handleChanges}
+                  >
+                    <option>Country</option>
+                    <option value="1">India </option>
+                    <option value="2">Pakistan</option>
+                  </select>
+                </div>
                 <p className="text-danger">{formErrors.country}</p>
                 <label>Password</label>
                 <input

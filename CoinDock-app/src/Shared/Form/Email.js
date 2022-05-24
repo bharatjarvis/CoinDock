@@ -39,20 +39,10 @@ function Email(props) {
     }
   };
 
-  // const handleValidation = (values) => {
-  //   const errors = {};
-  //   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-  //   if (!values.email) {
-  //     errors.email = "Email is required";
-  //   } else if (!regex.test(values.email)) {
-  //     errors.email = "Email is not valid!";
-  //   }
-  //   return errors;
-  // };
-
   return (
     <>
       <div className="form-group mb-3">
+        <label>Email</label>
         <input
           type="email"
           name="email"
