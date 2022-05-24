@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import "./Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Email from "../../Shared/Form/Email";
+import { useLogin } from "../../App/Api/auth";
 
 function Login() {
+  const [login] = useLogin()
   const initialValues = { email: "", password: "" };
   const [formValues, setformValues] = useState(initialValues);
   const [formErrors, setformErrors] = useState({});
@@ -17,6 +19,9 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setformErrors(handleValidation(formValues));
+    login({
+      ...formValues
+    })
   };
 
   const handleValidation = (values) => {
@@ -47,7 +52,7 @@ function Login() {
               <input
                 type="email"
                 name="email"
-                className="form-control mt-1 py-3"
+                className="form-control mt-1 py-8"
                 placeholder="Enter your email address"
                 value={formValues.email}
                 id="email"

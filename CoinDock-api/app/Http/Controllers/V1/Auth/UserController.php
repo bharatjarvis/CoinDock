@@ -24,10 +24,10 @@ class UserController extends Controller
 
         return response(
             [
-                'status' => 'success', 
-                'error' => false, 
+                'status' => 'success',
+                'error' => false,
                 'message' => 'Success! User registered.'
-            ], 
+            ],
             201
         );
     }
@@ -40,14 +40,14 @@ class UserController extends Controller
     {
         $user = new User();
 
-       $user->login( $request);
+       $user->login($request);
 
        info(auth()->user());
-        
+
        return response(
             [
-                'message' => 'Login Successfull.', 
-                'token' => auth()->user()->getRememberToken()
+                'message' => 'Login Successfull.',
+                // 'token' => auth()->user()->getRememberToken()
             ],
             200
         );
@@ -63,9 +63,8 @@ class UserController extends Controller
         auth()->user()->tokens->map(fn ($token) => $token->delete());
 
         return response(
-            [ 'message' => 'Successfully logged out' ], 
+            [ 'message' => 'Successfully logged out' ],
             200
         );
     }
 }
-

@@ -4,7 +4,7 @@ const signup = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getRegister: build.query({
       query: () => ({
-        url: "/register",
+        url: "/v1/register",
         method: "get",
       }),
       transformResponse: (response) => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./SignUp.css";
 import Names from "../../Shared/Form/Names.js";
 import Email from "../../Shared/Form/Email/Email.js";
@@ -7,9 +7,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { emailValidation } from "../../Shared/Form/Email/Email.js";
 import "../../Shared/common-styles/common.css";
 import Stepper from "../../Shared/Form/Ellipse/Stepper";
+import { useGetRegisterQuery } from "../../App/Api/signup";
+import Select from "../../Shared/Form/Select";
 
 function SignUP(props) {
   const [buttonPopup, setButtonPopup] = useState(false);
+  const {data} = useGetRegisterQuery()
+  const [isValid, setValid] = useState(false)
   const initialValues = {
     // firstname: "",
     // lastname: "",
@@ -23,8 +27,11 @@ function SignUP(props) {
   const [formErrors, setformErrors] = useState({});
 
   const handleChanges = (e) => {
+    console.log(e, e.target)
+    console.log(e.target.value, e.target.name)
     const { name, value } = e.target;
-    setformValues({ ...formValues, [name]: value });
+    setformValues((formValues) => ({ ...formValues, [name]: value }));
+    handleValidation({...formValues, [name]: value})
   };
 
   const handleSubmit = (e) => {
@@ -87,11 +94,17 @@ function SignUP(props) {
       isValid = false;
       errors.reenterpassword = "Re enter the Password";
     }
+
+    setValid(isValid)
     return {
       isValid,
       errors,
     };
   };
+
+  useEffect(() => {
+    console.log(isValid)
+  },[isValid])
 
   return (
     <div className="paper">
@@ -102,7 +115,7 @@ function SignUP(props) {
               <div className="d-flex justify-content-between"></div>
               <Stepper totalSteps={3} />
 
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} onChange={handleChanges}>
                 <div>
                   <Names />
                   <p className="text-danger">{formErrors.lastname}</p>
@@ -115,25 +128,27 @@ function SignUP(props) {
                     name="date"
                     placeholder="Date of Birth"
                     value={formValues.date}
-                    onChange={handleChanges}
+                    // onChange={handleChanges}
                   />
                   <p className="text-danger">{formErrors.date}</p>
                 </div>
 
+
                 <Email />
                 <p className="text-danger">{formErrors.email}</p>
                 <div>
-                  <label>Country</label>
-                  <select
+                  <Select label="Country" options={[{label: 'India', value: 1}]}/>
+                  {/* <label>Country</label> */}
+                  {/* <select
                     id="country"
                     className="form-control mt-1 py-8"
                     placeholder="Country"
-                    onChange={handleChanges}
+                    // onChange={handleChanges}
                   >
                     <option>Country</option>
                     <option value="1">India </option>
                     <option value="2">Pakistan</option>
-                  </select>
+                  </select> */}
                 </div>
                 <p className="text-danger">{formErrors.country}</p>
                 <label>Password</label>
@@ -143,7 +158,7 @@ function SignUP(props) {
                   name="password"
                   placeholder="Password"
                   value={formValues.password}
-                  onChange={handleChanges}
+                  // onChange={handleChanges}
                 />
                 <p className="text-danger">{formErrors.password}</p>
                 <label>Re-enter password</label>
@@ -153,7 +168,7 @@ function SignUP(props) {
                   name="reenterpassword"
                   placeholder="Re-enter Password"
                   value={formValues.reenterpassword}
-                  onChange={handleChanges}
+                  // onChange={handleChanges}
                 />
                 <p className="text-danger">{formErrors.reenterpassword}</p>
                 <p className="condition">
@@ -161,7 +176,7 @@ function SignUP(props) {
                   conditions
                 </p>
                 <div className="d-flex justify-content-end">
-                  <button className="confirms">confirm</button>
+                  <button className="confirms" disabled={!isValid}>confirm</button>
                   <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
                     <h5>Account recovery information</h5>
                     <img className="image" />

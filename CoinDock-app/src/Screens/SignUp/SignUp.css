@@ -29,25 +29,6 @@
   border-radius: 5px;
   background: #fff;
 }
-/* label {
-  font-family: "Lora";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 18px;
-  line-height: 160%;
- 
-  text-transform: capitalize;
-
-  color: #000000;
-} */
-/* input {
-  box-sizing: border-box;
-
-  width: 332px;
-  height: 40px;
-
-  border: 3px solid #e5e5e5;
-} */
 .confirms {
   position: absolute;
   width: 124px;
