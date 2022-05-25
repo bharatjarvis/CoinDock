@@ -27,7 +27,7 @@ class RecoveryKey extends Model
 
 
     //generating random Recovery words
-    public function generateRecoveryCodes(User $user , Request $request)
+    public function generateRecoveryCodes(User $user)
     {
         
         //randomizing the dictionary words
@@ -52,7 +52,8 @@ class RecoveryKey extends Model
 
 
     //Dwonloading RecoveryWords
-    public function downloadRecoveryWords(User $user , Request $request){
+    public function downloadRecoveryWords(User $user)
+    {
 
         $userRecoveryCodes = RecoveryKey::whereUserId($user->id)->orderBy('id','asc')->first();
 

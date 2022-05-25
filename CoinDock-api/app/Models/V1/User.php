@@ -3,14 +3,13 @@
 namespace App\Models\V1;
 
 use App\Enums\V1\UserType;
-use App\Models\V1\RecoveryKey;
-use Laravel\Passport\HasApiTokens;
-use Illuminate\Support\Facades\Hash;
-use App\Models\V1\Traits\Encryptable;
 use App\Http\Requests\V1\SignupRequest;
-use Illuminate\Notifications\Notifiable;
+use App\Models\V1\Traits\Encryptable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -70,7 +69,7 @@ class User extends Authenticatable
     {
         return $this->hasOne(RecoveryKey::class);
     }
-    
+
     public function store(SignupRequest $request): self
     {
         return User::create([
@@ -80,9 +79,9 @@ class User extends Authenticatable
             'date_of_birth' => $request->date_of_birth,
             'country' => $request->country,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
-            're_enter_password' =>bcrypt($request->re_enter_password),
-            'status'=> $request->status
+            'password' => $request->password,
+            're_enter_password' => $request->re_enter_password,
+            'status' => $request->status
         ]);
     }
 

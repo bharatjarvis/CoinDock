@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\V1;
 
 
-use App\Models\V1\RecoveryKey;
 use App\Http\Controllers\Controller;
+use App\Models\V1\RecoveryKey;
 use App\Models\V1\User;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use PDF;
 
@@ -16,7 +16,7 @@ class RecoveryKeyController extends Controller
     /**
      * Generating the recovery codes randomly.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function generateRecoveryCodes(User $user)
     {
@@ -30,7 +30,7 @@ class RecoveryKeyController extends Controller
                 'completed' => 3
             ],
         ], 200);
- 
+
     }
 
     public function downloadRecoveryWords(User $user)
@@ -46,21 +46,21 @@ class RecoveryKeyController extends Controller
     }
 
     //random keys generation
- 
+
     public function recoveyKey()
     {
-        $array = [1, 2, 3, 4, 5,6,7,8,9,10,11,12];
-     
-        $random = Arr::random($array,3);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+        $random = Arr::random($array, 3);
         return $random;
-        
+
     }
-    
+
     public function random()
     {
-        
-        $random = Arr::random(config('random_keys.recovery_codes'),12);
-        
+
+        $random = Arr::random(config('random_keys.recovery_codes'), 12);
+
     }
 
 }

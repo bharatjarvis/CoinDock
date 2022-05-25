@@ -26,6 +26,7 @@ class UserFactory extends Factory
             'country'=> $this->faker->country(),
             'email' => $this->faker->unique()->safeEmail(),
             'password' => 'coinDock@123', // password
+            're_enter_password' => 'coinDock@123',
             'status' => $this->faker->numberBetween(0,1)
         ];
     }
