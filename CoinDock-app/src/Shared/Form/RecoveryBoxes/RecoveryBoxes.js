@@ -12,7 +12,12 @@ import "./RecoveryBoxes.css";
 function RecoveryBoxs(props) {
   return (
     <>
-      <div className="code-box">{/* <p>{handleRecoverboxBlocks}</p> */}</div>
+      <div className="code-box">
+
+        <p className="cd-box-data">strig</p>
+        <p className="cd-box-index">1</p>
+        {/* <p>{handleRecoverboxBlocks}</p> */}
+        </div>
     </>
   );
 }
