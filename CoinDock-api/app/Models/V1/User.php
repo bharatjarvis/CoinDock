@@ -2,11 +2,15 @@
 
 namespace App\Models\V1;
 
-use App\Models\V1\Traits\Encryptable;
+use App\Enums\V1\UserType;
+use App\Models\V1\RecoveryKey;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Support\Facades\Hash;
+use App\Models\V1\Traits\Encryptable;
+use App\Http\Requests\V1\SignupRequest;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -25,7 +29,8 @@ class User extends Authenticatable
         'country',
         'email',
         'password',
-        'status',
+        're_enter_password',
+        'status'
     ];
 
     /**
@@ -35,10 +40,11 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        're_enter_password',
         'remember_token',
     ];
 
-    protected $encryptable = ['password'];
+    protected $encryptable = ['date_of_birth'];
 
     /**
      * The attributes that should be cast.
@@ -49,9 +55,35 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * @param string $value
+     *
+     * @return void
+     */
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = Hash::make($value);
+    }
+
 
     public function recoveryKey()
     {
         return $this->hasOne(RecoveryKey::class);
     }
+    
+    public function store(SignupRequest $request): self
+    {
+        return User::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'type' => UserType::User,
+            'date_of_birth' => $request->date_of_birth,
+            'country' => $request->country,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            're_enter_password' =>bcrypt($request->re_enter_password),
+            'status'=> $request->status
+        ]);
+    }
+
 }
