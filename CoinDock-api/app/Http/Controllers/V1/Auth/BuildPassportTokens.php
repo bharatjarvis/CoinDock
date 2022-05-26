@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1\Auth;
 
 use App\Exceptions\Api\ApiException;
+use GuzzleHttp\Psr7\ServerRequest;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
@@ -23,7 +24,6 @@ trait BuildPassportTokens
         ]);
 
         return $this->makeRequest($response);
-
     }
 
     /**
@@ -36,7 +36,6 @@ trait BuildPassportTokens
         try {
 
             return json_decode(parent::issueToken($serverRequest)->getContent(), true);
-
         } catch (OAuthServerException $e) {
 
             throw new OAuthServerException('OAuth server error', ['token' => $e->getMessage()], 'Auth');
@@ -57,7 +56,17 @@ trait BuildPassportTokens
         ]);
 
         return $this->makeRequest($response);
-
     }
 
+    /**
+     * @param string $method
+     * @param array $body
+     * @return ServerRequestInterface
+     */
+    protected function buildServerRequest(string $method, array $body): ServerRequestInterface
+    {
+        $serverRequest = new ServerRequest($method, request()->path());
+
+        return $serverRequest->withParsedBody($body);
+    }
 }
