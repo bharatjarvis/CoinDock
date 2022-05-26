@@ -2,19 +2,20 @@ import baseApi from "./api";
 
 const signup = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    getRegister: build.query({
-      query: () => ({
-        url: "/v1/register",
-        method: "get",
+    postRegister: build.mutation({
+      query: ({ ...data }) => ({
+        url: "/v1/signup",
+        method: "post",
+        data,
       }),
       transformResponse: (response) => {
         return response;
       },
-      providesTags: ["register"],
     }),
   }),
 });
 
 export default signup;
-export const { useGetRegisterQuery } = signup;
+
+export const { usePostRegisterMutation } = signup;
 export const { usePrefetch: useSignupPrefetch } = signup;

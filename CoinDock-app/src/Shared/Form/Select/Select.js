@@ -1,16 +1,21 @@
-import React from 'react';
+import React from "react";
 
-const Select = ({options,label, ...props}) => {
-    return <>
-    <label>{label}</label>
-    <select>
-        {options.map(({value, label}, index) => {
-            return <option value={value} key={index}>
-                {label}
+const Select = ({ options, label, emptyPlaceHolder, name, ...props }) => {
+  return (
+    <>
+      <label>{label}</label>
+      <select className="form-control mt-1 py-8" name={name}>
+        {emptyPlaceHolder && <option />}
+        {options.map(({ value, label }, index) => {
+          return (
+            <option value={value} key={index}>
+              {label}
             </option>
+          );
         })}
-    </select>
+      </select>
     </>
-}
+  );
+};
 
 export default Select;
