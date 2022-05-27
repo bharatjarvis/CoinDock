@@ -21,6 +21,7 @@ class UserController extends AccessTokenController
      */
     public function store(SignupRequest $request)
     {
+        info("message");
         $user = new User();
 
         $user->store($request);
@@ -47,7 +48,8 @@ class UserController extends AccessTokenController
             [
                 'message' => 'Login Successfull.',
                 'results' => [
-                    'user' => UserResource::make($user)->resolve()
+                    'user' => UserResource::make($user)->resolve(),
+                    'Access-Token' => $response['access_token']
                 ]
             ],
             Response::HTTP_OK,
