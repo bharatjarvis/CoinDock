@@ -13,7 +13,7 @@ use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, Encryptable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +23,7 @@ class User extends Authenticatable
     protected $fillable = [
         'first_name',
         'last_name',
-        'user_type',
+        'type',
         'date_of_birth',
         'country',
         'email',
@@ -43,7 +43,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected $encryptable = ['date_of_birth'];
+    // protected $encryptable = ['date_of_birth'];
 
     /**
      * The attributes that should be cast.

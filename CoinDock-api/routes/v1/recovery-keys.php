@@ -23,7 +23,7 @@ Route::middleware('auth:api')->prefix('users')->group(
                     function(){     
                         Route::get('/', [ RecoveryKeyController::class, 'show' ]);
                         
-                        Route::get('/download', [ RecoveryKeyController::class, 'downloadRecoveryWords' ]);
+                        Route::get('/download', [ RecoveryKeyController::class, 'download' ]);
                 });
         });
     

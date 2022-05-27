@@ -6,10 +6,10 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use App\Models\V1\RecoveryKey;
 use App\Models\V1\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
-use PDF;
 
 class RecoveryKeyController extends Controller
 {
@@ -18,28 +18,28 @@ class RecoveryKeyController extends Controller
      *
      * @return Response
      */
-    public function generateRecoveryCodes(User $user)
+    public function show(User $user)
     {
         $recovery = new RecoveryKey();
 
         return response([
             'message' => 'Recovery codes created successfully',
             'results' => [
-                'recovery_code' => $recovery->generateRecoveryCodes($user),
-                //added a column accepted to recovery_key
+                'recovery_code' => $recovery->show($user),
+                'recovery_code_length'=>config('random_keys.recovery_code_length'),
                 'completed' => 3
             ],
         ], 200);
 
     }
 
-    public function downloadRecoveryWords(User $user)
+    public function download(User $user)
     {
 
         $recovery = new RecoveryKey();
 
-        $data = $recovery->downloadRecoveryWords($user);
-        $pdf = PDF::loadview('myPDF', $data);
+        $data = $recovery->download($user);
+        $pdf = Pdf::loadview('myPDF', $data);
         $now = Carbon::now()->format('Y-m-d');
 
         return $pdf->download("recovery-words-{$now}.pdf");
