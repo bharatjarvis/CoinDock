@@ -30,7 +30,8 @@ class User extends Authenticatable
         'email',
         'password',
         're_enter_password',
-        'status'
+        'status',
+        'recovery_attemps'
     ];
 
     /**
@@ -52,6 +53,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $table= 'users';
+
 
     public function store(SignupRequest $request): self
     {
@@ -63,7 +66,7 @@ class User extends Authenticatable
             'country' => $request->country,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            're_enter_password' =>bcrypt($request->re_enter_password),
+            're_enter_password' =>bcrypt($request->re_enter_password) | 'password',
             'status'=> $request->status
         ]);
     }
@@ -84,6 +87,10 @@ class User extends Authenticatable
         }
     }
 
+    public function recoveryKeys()
+    {
+        $this->hasOne(RecoveryKey::class, 'user_id', 'id');
+    }
 }
 
 

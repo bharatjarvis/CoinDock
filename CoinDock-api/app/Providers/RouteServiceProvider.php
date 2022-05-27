@@ -19,24 +19,21 @@ class RouteServiceProvider extends ServiceProvider
      */
     public const HOME = '/home';
 
+    protected $namespace = 'App\Http\Controllers\V1';
+    
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
      *
      * @return void
      */
-    protected $namespace = 'App\Http\Controllers\V1';
     public function boot()
     {
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            Route::prefix('api')
-                ->middleware('api')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/api.php'));
+            $this->mapV1Routes();
 
             Route::middleware('web')
-                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
         });
     }
@@ -51,5 +48,15 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
+    }
+
+    public function mapV1Routes() 
+    {
+        Route::middleware('api')
+                ->prefix('api/v1')
+                ->group( function() {
+                    require base_path('routes/v1/users.php');
+                    require base_path('routes/v1/recovery-keys.php');
+                });
     }
 }

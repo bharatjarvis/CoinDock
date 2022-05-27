@@ -26,6 +26,7 @@ class UserFactory extends Factory
             'country'=>$this->faker->country(),
             'email' => $this->faker->unique()->safeEmail(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            're_enter_password'=>'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             'status' =>$this->faker->numberBetween(0,1)
         ];
     }

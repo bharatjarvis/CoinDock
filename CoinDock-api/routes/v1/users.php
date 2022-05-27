@@ -23,8 +23,5 @@ Route::middleware('auth:api')->group(function(){
 Route::post('logout', [UserController::class, 'logout']);
     Route::get('logout', [UserController::class, 'logout']);
 });
-//Route::get('/random/recovery_number',[RecoveryKeyController::class,'random_numbers']);
-
-Route::get('/', [RecoveryKeyController::class, 'recoveyKey']);
 
 
