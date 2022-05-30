@@ -21,8 +21,8 @@
   }
 }
 
-.cd-button{
-  padding: 8px 24px ;
+.cd-button {
+  padding: 8px 24px;
 
   /* Gray88 */
   background: #e0e0e0;
@@ -33,16 +33,15 @@
   border-bottom-width: 0px;
 }
 
-.cd-button-1 {
-
-  background: blue;
-
+.cd-button-2 {
+  width: 95px;
+  height: 39px;
+  background: #4461fc;
+  border-radius: 20px;
 }
 
 .cd-button-1:disabled {
-
   background: #e0e0e0;
-
 }
 
 .cd-step-header-content {

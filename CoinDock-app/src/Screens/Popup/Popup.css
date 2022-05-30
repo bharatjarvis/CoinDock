@@ -15,6 +15,7 @@
   width: 100%;
   max-width: 300px;
   background-color: #ffff;
+  border-radius: 10px;
 }
 .ok {
   width: 95px;
@@ -25,4 +26,31 @@
   background: #4461fc;
   border-radius: 20px;
   margin-top: 0.1px;
+}
+.image {
+  width: 55px;
+  height: 68px;
+  left: 22px;
+  top: 83px;
+
+  background: url("C:\Users\SAILS-DM231\Documents\CoinDock\CoinDock-app\src\Shared\images\Lock.png");
+  margin-top: 0.5cm;
+}
+h5 {
+  position: absolute;
+  width: 252px;
+  height: 29px;
+  left: 22px;
+  top: 32px;
+
+  /* Link */
+
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 160%;
+  /* identical to box height, or 29px */
+
+  color: #000000;
 }
