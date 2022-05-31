@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums;
+namespace App\Enums\V1;
 
 use BenSampo\Enum\Enum;
 
@@ -9,8 +9,9 @@ use BenSampo\Enum\Enum;
  * @method static static OptionTwo()
  * @method static static OptionThree()
  */
-final class userType extends Enum
+final class UserStatus extends Enum
 {
-    const User =   0;
-    const Admin =   1;
-};
+    const Active = 0;
+    const Inactive = 1;
+    const Locked = 2;
+}

@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Email from "../../Shared/Form/Email";
 import { useLogin } from "../../App/Api/auth";
 
 function Login() {
-  const [login] = useLogin()
+  let navigate = useNavigate();
+  const [login] = useLogin();
   const initialValues = { email: "", password: "" };
   const [formValues, setformValues] = useState(initialValues);
   const [formErrors, setformErrors] = useState({});
   const [isShow, setIsShow] = useState(false);
+  const [isSubmit, setIsSubmit] = useState(false);
 
   const handleChanges = (e) => {
     const { name, value } = e.target;
@@ -19,9 +22,14 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setformErrors(handleValidation(formValues));
+
     login({
-      ...formValues
+      ...formValues,
     })
+      .unwrap()
+      .then(() => {
+        navigate("/logout");
+      });
   };
 
   const handleValidation = (values) => {
@@ -59,9 +67,6 @@ function Login() {
                 onChange={handleChanges}
               />
             </div>
-            {/* <div>
-              <Email />
-            </div> */}
             <p className="text-danger">{formErrors.email}</p>
             <div className="form-group mb-3">
               <label>Password</label>
