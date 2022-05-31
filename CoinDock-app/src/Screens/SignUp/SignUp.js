@@ -9,7 +9,7 @@ import "../../Shared/common-styles/common.css";
 import Stepper from "../../Shared/Form/Ellipse/Stepper";
 import { usePostRegisterMutation } from "../../App/Api/signup";
 import Select from "../../Shared/Form/Select";
-import DatePick from "../../Shared/Date/DatePick";
+import DatePick, { dateValidation } from "../../Shared/Date/DatePick";
 import { nameValidation } from "../../Shared/Form/Name/Name.js";
 import Password from "../../Shared/Password/Password";
 import { passwordValidation } from "../../Shared/Password/Password";
@@ -33,7 +33,6 @@ function SignUP(props) {
   const [formErrors, setformErrors] = useState({});
 
   const handleChanges = (e) => {
-    console.log(e);
     const { name, value } = e.target;
     setformValues((formValues) => {
       console.log({ ...formValues, [name]: value });
@@ -56,9 +55,10 @@ function SignUP(props) {
       setformErrors(errors);
     } else {
       try {
-        await register(formValues).unwrap();
+        await register({ ...formValues }).unwrap();
         setButtonPopup(true);
       } catch (errorResponse) {
+        console.log(errorResponse);
         setformErrors({});
       }
     }
@@ -74,45 +74,35 @@ function SignUP(props) {
 
     let isValid = true;
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-    errors.firstname = nameValidation(values.firstname, "First Name");
-    errors.lastname = nameValidation(values.lastname, "Last Name");
+    errors.firstname = nameValidation(values.firstname, "First Name", 45);
+    errors.lastname = nameValidation(values.lastname, "Last Name", 45);
     errors.email = emailValidation(values.email);
-    errors.password = passwordValidation(values.password, "Password ");
-    errors.password = passwordValidation(values.password, "Password ", "12");
+    errors.password = passwordValidation({
+      value: values.password,
+      label: "Password ",
+      minlength: 12,
+      maxlength: 45,
+    });
     errors.reenterpassword = reenterpasswordValidation(
       values.reenterpassword,
       "Password",
       values.password
     );
-    // errors.reenterpassword = reenterpasswordValidation(
-    //   values.reenterpassword,
-    //   "Password",
-    //   values.password
-    // );
-    if (!values.date) {
-      console.log(values, values.date);
-      isValid = false;
-      errors.date = "Date of birth is required";
-    }
+    errors.date = dateValidation(values.date);
+    console.log(values.date);
+
+    // if (!values.date) {
+    //   console.log(values, values.date);
+    //   isValid = false;
+    //   errors.date = "Date of birth is required";
+    // }
+
     if (!values.country) {
       isValid = false;
       errors.country = "Country is required";
     }
-    // if (!values.password) {
-    //   isValid = false;
-    //   errors.password = "Password is required";
-    // } else if (values.password.length < 12) {
-    //   errors.password = "Password must be more than 12 characters!!!";
-    // }
-    // if (!values.reenterpassword) {
-    //   isValid = false;
-    //   errors.reenterpassword = "Re enter the Password";
-    // }
-    // if (values.password !== values.reenterpassword) {
-    //   errors.reenterpassword = "Password is not matching";
-    // }
 
-    setValid(isValid);
+    setValid(!Object.values(errors).some(Boolean));
     return {
       isValid,
       errors,
@@ -137,25 +127,31 @@ function SignUP(props) {
                     placeholder="First Name"
                     label="First Name"
                     value={formValues.firstname}
+                    formErrors={formErrors}
                   />
-                  <p className="text-danger">{formErrors.firstname}</p>
+
                   <Name
                     name="lastname"
                     placeholder="Last Name"
                     label="Last Name"
                     value={formValues.lastname}
+                    formErrors={formErrors}
                   />
-                  <p className="text-danger">{formErrors.lastname}</p>
                 </div>
 
                 <label>Date of Birth</label>
-                <DatePick name="date" onChange={handleChanges} />
-                <div>
-                  <p className="text-danger">{formErrors.date}</p>
-                </div>
+                <DatePick
+                  name="date"
+                  value={formValues.date}
+                  formErrors={formErrors}
+                  onChange={handleChanges}
+                />
+                <Email
+                  name="email"
+                  value={formValues.email}
+                  formErrors={formErrors}
+                />
 
-                <Email />
-                <p className="text-danger">{formErrors.email}</p>
                 <div>
                   <Select
                     name="country"
@@ -175,37 +171,18 @@ function SignUP(props) {
                     placeholder="Password"
                     label="Password"
                     value={formValues.password}
+                    formErrors={formErrors}
                   />
-                  <p className="text-danger">{formErrors.password}</p>
+
                   <Password
                     name="reenterpassword"
                     placeholder="Re-enter Password"
                     label="Re-enter Password"
                     value={formValues.reenterpassword}
+                    formErrors={formErrors}
                   />
-                  <p className="text-danger">{formErrors.reenterpassword}</p>
                 </div>
 
-                {/* <label>Password</label> */}
-                {/* <input
-                  type="password"
-                  className="form-control mt-3 py-8"
-                  name="password"
-                  placeholder="Password"
-                  value={formValues.password}
-                  onChange={handleChanges}
-                />
-                <p className="text-danger">{formErrors.password}</p>
-                <label>Re-enter password</label>
-                <input
-                  type="password"
-                  className="form-control"
-                  name="reenterpassword"
-                  placeholder="Re-enter Password"
-                  value={formValues.reenterpassword}
-                  onChange={handleChanges}
-                />
-                <p className="text-danger">{formErrors.reenterpassword}</p> */}
                 <p className="condition">
                   By clicking on confirm, you agreed to the CoinDock terms and
                   conditions

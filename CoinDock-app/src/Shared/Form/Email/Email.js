@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
 export const emailValidation = (value) => {
   let error = null;
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
@@ -11,50 +10,44 @@ export const emailValidation = (value) => {
   return error;
 };
 
-function Email(props) {
-  const [buttonPopup, setButtonPopup] = useState(false);
+const Email = ({ name, formErrors }) => {
   const initialValues = {
     email: "",
   };
   const [formValues, setformValues] = useState(initialValues);
-  const [formErrors, setformErrors] = useState({});
+  const [fieldsTouched, setFieldsTouched] = useState(false);
 
   const handleChanges = (e) => {
     const { name, value } = e.target;
     setformValues({ ...formValues, [name]: value });
   };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    setformErrors(emailValidation(formValues));
-    if (!Object.values(formValues).includes("")) {
-      formValues.id = formValues.id === undefined ? Date.now() : formValues.id;
-      setformValues({ ...formValues });
-      setformValues(initialValues);
-      console.log("user formvalues ", formValues);
-      console.log(
-        formValues.id === undefined ? "error" : Date.now() + formValues.id
-      );
-    }
+  const handleFocus = (e) => {
+    console.log(e);
+    setFieldsTouched(true);
   };
+
+  useEffect(() => {
+    console.log(fieldsTouched);
+  }, [fieldsTouched]);
 
   return (
     <>
       <div className="form-group mb-3">
-        <label>Email</label>
-        <input
-          type="email"
-          name="email"
-          className="form-control mt-1 py-8"
-          placeholder="Enter your email address"
-          value={formValues.email}
-          id="email"
-          onChange={handleChanges}
-        />
+        <div>
+          <label>Email</label>
+          <input
+            type="email"
+            className="form-control"
+            name={name}
+            placeholder="Enter your Email address"
+            onChange={handleChanges}
+            defaultValue={formValues.email}
+            onBlur={handleFocus}
+          />
+          {fieldsTouched && <p className="text-danger">{formErrors[name]}</p>}
+        </div>
       </div>
-      <p className="text-danger">{formErrors.email}</p>
     </>
   );
-}
+};
 export default Email;

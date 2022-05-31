@@ -1,39 +1,35 @@
-import React, { useState } from "react";
-export const nameValidation = (value, label = "Name") => {
+import React, { useState, useEffect } from "react";
+export const nameValidation = (value, label = "Name", length = 0) => {
   let error = null;
 
   if (!value) {
     error = `${label} is required`;
+  } else if (value.length > 45) {
+    error = ` The ${label} may not be greater than ${length} characters.`;
   }
   return error;
 };
 
-const Name = ({ label, name, placeholder }) => {
+const Name = ({ label, name, placeholder, formErrors }) => {
   const initialValues = {
     firstname: "",
     lastname: "",
   };
   const [formValues, setformValues] = useState(initialValues);
-  const [formErrors, setformErrors] = useState({});
+  const [fieldsTouched, setFieldsTouched] = useState(false);
 
   const handleChanges = (e) => {
     const { name, value } = e.target;
     setformValues({ ...formValues, [name]: value });
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    setformErrors(nameValidation(formValues));
-    if (!Object.values(formValues).includes("")) {
-      formValues.id = formValues.id === undefined ? Date.now() : formValues.id;
-      setformValues({ ...formValues });
-      setformValues(initialValues);
-      console.log("user formvalues ", formValues);
-      console.log(
-        formValues.id === undefined ? "error" : Date.now() + formValues.id
-      );
-    }
+  const handleFocus = (e) => {
+    console.log(e);
+    setFieldsTouched(true);
   };
+
+  useEffect(() => {
+    console.log(fieldsTouched);
+  }, [fieldsTouched]);
 
   return (
     <div className="form-group mb-3">
@@ -46,9 +42,11 @@ const Name = ({ label, name, placeholder }) => {
           placeholder={placeholder}
           value={formValues.name}
           onChange={handleChanges}
+          defaultValue={formValues.name}
+          onBlur={handleFocus}
         />
       </div>
-      <p className="text-danger">{formErrors.name}</p>
+      {fieldsTouched && <p className="text-danger">{formErrors[name]}</p>}
     </div>
   );
 };

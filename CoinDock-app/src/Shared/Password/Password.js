@@ -1,11 +1,26 @@
-import React, { useState } from "react";
-export const passwordValidation = (value, label = "Password", length = 12) => {
+import React, { useEffect, useState } from "react";
+export const passwordValidation = ({
+  value,
+  label = "Password",
+  minlength = 12,
+  maxlength = 45,
+}) => {
   let error = null;
-
+  const specialChar = /[!@#$%^&*]/;
+  const number = /[0-9]/;
+  const alpha = /[A-Za-z]/;
   if (!value) {
     error = `${label} is required`;
   } else if (value.length < 12) {
-    error = `${label} should be more than ${length} characters`;
+    error = `${label} should be more than ${minlength} characters`;
+  } else if (!specialChar.test(value)) {
+    error = "Password must contain at least one special character";
+  } else if (!number.test(value)) {
+    error = " Password must contain at least one number";
+  } else if (!alpha.test(value)) {
+    error = " Your password must include at least one letter.";
+  } else if (value.length > maxlength) {
+    error = `Password must be at most ${maxlength} characters`;
   }
   return error;
 };
@@ -20,37 +35,32 @@ export const reenterpasswordValidation = (
   if (!value) {
     error = `Re-enter ${label} is required`;
   } else if (value !== passwordValue) {
-    error = `${label} is not matching`;
+    error = `${label}s are not matching`;
   }
   return error;
 };
 
-const Password = ({ name, placeholder, label }) => {
+const Password = ({ name, placeholder, label, formErrors }) => {
   const initialValues = {
     password: "",
     reenterpassword: "",
   };
   const [formValues, setformValues] = useState(initialValues);
-  const [formErrors, setformErrors] = useState({});
+  const [fieldsTouched, setFieldsTouched] = useState(false);
 
   const handleChanges = (e) => {
     const { name, value } = e.target;
     setformValues({ ...formValues, [name]: value });
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    setformErrors(passwordValidation(formValues));
-    if (!Object.values(formValues).includes("")) {
-      formValues.id = formValues.id === undefined ? Date.now() : formValues.id;
-      setformValues({ ...formValues });
-      setformValues(initialValues);
-      console.log("user formvalues ", formValues);
-      console.log(
-        formValues.id === undefined ? "error" : Date.now() + formValues.id
-      );
-    }
+  const handleFocus = (e) => {
+    console.log(e);
+    setFieldsTouched(true);
   };
+
+  useEffect(() => {
+    console.log(fieldsTouched);
+  }, [fieldsTouched]);
+
   return (
     <>
       <div className="form-group mb-3">
@@ -61,11 +71,11 @@ const Password = ({ name, placeholder, label }) => {
             className="form-control"
             name={name}
             placeholder={placeholder}
-            // value={formValues.name}
             onChange={handleChanges}
             defaultValue={formValues.name}
+            onBlur={handleFocus}
           />
-          <p className="text-danger">{formErrors.name}</p>
+          {fieldsTouched && <p className="text-danger">{formErrors[name]}</p>}
         </div>
       </div>
     </>

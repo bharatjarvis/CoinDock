@@ -1,6 +1,20 @@
 import React from "react";
+export const countryValidation = (value) => {
+  let error = null;
+  if (!value) {
+    error = "Country is required";
+  }
+  return error;
+};
 
-const Select = ({ options, label, emptyPlaceHolder, name, ...props }) => {
+const Select = ({
+  options,
+  label,
+  emptyPlaceHolder,
+  name,
+
+  ...props
+}) => {
   return (
     <>
       <label>{label}</label>
