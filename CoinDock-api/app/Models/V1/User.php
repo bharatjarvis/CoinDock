@@ -84,6 +84,11 @@ class User extends Authenticatable
         }
     }
 
+
+    public function signUp(){
+        return $this->hasOne(SignUp::class);
+    }    
+
 }
 
 
