@@ -2,7 +2,7 @@
 
 use App\Models\V1\Coin;
 use Illuminate\Support\Facades\Route;
- 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,12 +13,14 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
 Route::get('/coins', function () {
+
     $coins = Coin::all();
     return [
         'message' => 'coins fetched succesfully',
         'result' => [
             'coins' => $coins
-        ],200
+        ], 200
     ];
 });
