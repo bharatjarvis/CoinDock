@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Http\Requests\V1\RecoveryKeyRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use phpDocumentor\Reflection\Types\Null_;
 
 class RecoveryKey extends Model
 {
@@ -28,12 +29,20 @@ class RecoveryKey extends Model
         'status' => RecoveryKeyStatus::class,
     ];
 
-    
+
 
     //generating random Recovery words
-    public function show(User $user)
+    public function store(User $user)
     {
-        
+
+        //checking whether 
+        $user_recovery_code = RecoveryKey::whereUserId($user->id)->first();
+        if ($user_recovery_code) {
+            if ($user_recovery_code->status->value == RecoveryKeyStatus::Inactive) {
+                return $user_recovery_code;
+            }
+        }
+
         //randomizing the dictionary words
         $recoveryArray = Arr::random(
             config('random_keys.recovery_codes'),
@@ -51,7 +60,6 @@ class RecoveryKey extends Model
         ]);
 
         return $recoveryGeneration;
-        
     }
 
 
@@ -59,11 +67,11 @@ class RecoveryKey extends Model
     public function download(User $user)
     {
 
-        $userRecoveryCodes = RecoveryKey::whereUserId($user->id)->orderBy('id','asc')->first();
+        $userRecoveryCodes = RecoveryKey::whereUserId($user->id)->first();
 
         $userRecoveryCodes = $userRecoveryCodes->recovery_code;
         $data = [
-            'words_array' => explode(' ',$userRecoveryCodes)
+            'words_array' => explode(' ', $userRecoveryCodes)
         ];
 
         return $data;
@@ -73,24 +81,24 @@ class RecoveryKey extends Model
 
     public  function recoveryKeys(User $user, RecoveryKeyRequest $request)
     {
-        
+
         $passArray = explode(" ", $this->recovery_code);
 
         $count = 0;
-        
+
         $keyResponses = $request->key_response;
-        
+
         foreach ($keyResponses as $key => $value) {
-            if($passArray[$key-1] == $value) {
+            if ($passArray[$key - 1] == $value) {
                 $count++;
             }
         }
 
-        if($count == count($keyResponses)) {
+        if ($count == count($keyResponses)) {
 
-           // $this->update([
-             //   'status' => RecoveryKeyStatus::Active
-            //]);
+            $this->update([
+              'status' => RecoveryKeyStatus::Active
+            ]);
 
             return response(
                 [
@@ -98,16 +106,16 @@ class RecoveryKey extends Model
                     'result' => [
                         'completed' => 4
                     ],
-                ], 
+                ],
                 200
             );
         }
-       
-        $attemptCount = $user->recovery_attemps;
-      
-        $maxAttemptCount = config('random_keys.recovery.attemps'); 
 
-        if($attemptCount < $maxAttemptCount) {
+        $attemptCount = $user->recovery_attemps;
+
+        $maxAttemptCount = config('random_keys.recovery.attemps');
+
+        if ($attemptCount < $maxAttemptCount) {
             $user->update([
                 'recovery_attemps' => $attemptCount + 1
             ]);
@@ -118,10 +126,9 @@ class RecoveryKey extends Model
                 'error' => [
                     'message' => __("recovery-code.attempt-{$user->recovery_attemps}"),
                 ]
-            ], 
+            ],
             400
         );
-            
     }
 
 
