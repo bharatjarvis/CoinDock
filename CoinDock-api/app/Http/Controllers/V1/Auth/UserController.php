@@ -49,7 +49,6 @@ class UserController extends AccessTokenController
                 'message' => 'Login Successfull.',
                 'results' => [
                     'user' => UserResource::make($user)->resolve(),
-                    'Access-Token' => $response['access_token']
                 ]
             ],
             Response::HTTP_OK,
