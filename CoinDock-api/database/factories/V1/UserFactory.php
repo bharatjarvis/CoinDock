@@ -2,7 +2,7 @@
 
 namespace Database\Factories\V1;
 
-use App\Enums\userType;
+use App\Enums\V1\UserType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -20,14 +20,14 @@ class UserFactory extends Factory
     {
         return [
             'first_name' => $this->faker->name(),
-            'last_name'=>$this->faker->name(),
-            'type'=>userType::User,
+            'last_name'=> $this->faker->name(),
+            'type'=> UserType::User,
             'date_of_birth'=>$this->faker->date('Y-m-d'),
-            'country'=>$this->faker->country(),
+            'country'=> $this->faker->country(),
             'email' => $this->faker->unique()->safeEmail(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            're_enter_password'=>'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-            'status' =>$this->faker->numberBetween(0,1)
+            'password' => 'coinDock@123', // password
+            're_enter_password' => 'coinDock@123',
+            'status' => $this->faker->numberBetween(0,1)
         ];
     }
 
