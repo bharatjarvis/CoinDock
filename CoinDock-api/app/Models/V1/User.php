@@ -2,6 +2,7 @@
 
 namespace App\Models\V1;
 
+use App\Enums\V1\UserStatus;
 use App\Enums\V1\UserType;
 use App\Http\Requests\V1\LoginRequest;
 use App\Http\Requests\V1\SignupRequest;
@@ -29,7 +30,6 @@ class User extends Authenticatable
         'country',
         'email',
         'password',
-        're_enter_password',
         'status',
         'recovery_attemps'
     ];
@@ -41,7 +41,6 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        're_enter_password',
         'remember_token',
     ];
 
@@ -84,8 +83,7 @@ class User extends Authenticatable
             'country' => $request->country,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            're_enter_password' =>bcrypt($request->re_enter_password) | 'password',
-            'status'=> $request->status
+            'status'=> UserStatus::Inactive
         ]);
     }
 
