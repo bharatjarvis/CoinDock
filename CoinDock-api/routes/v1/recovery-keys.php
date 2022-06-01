@@ -24,7 +24,11 @@ Route::middleware('auth:api')->prefix('users')->group(
                         Route::get('/', [ RecoveryKeyController::class, 'show' ]);
                         
                         Route::get('/download', [ RecoveryKeyController::class, 'download' ]);
+
+                        Route::put('/activate', [RecoveryKeyController::class, 'activate']);
                 });
         });
     
 });
+
+Route::get('/random', [RecoveryKeyController::class, 'random']);

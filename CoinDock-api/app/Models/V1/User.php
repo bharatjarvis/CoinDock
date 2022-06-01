@@ -3,6 +3,7 @@
 namespace App\Models\V1;
 
 use App\Enums\V1\UserType;
+use App\Http\Requests\V1\LoginRequest;
 use App\Http\Requests\V1\SignupRequest;
 use App\Models\V1\Traits\Encryptable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,7 +30,8 @@ class User extends Authenticatable
         'email',
         'password',
         're_enter_password',
-        'status'
+        'status',
+        'recovery_attemps'
     ];
 
     /**
@@ -53,6 +55,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected $table= 'users';
 
     /**
      * @param string $value
@@ -79,10 +83,30 @@ class User extends Authenticatable
             'date_of_birth' => $request->date_of_birth,
             'country' => $request->country,
             'email' => $request->email,
-            'password' => $request->password,
-            're_enter_password' => $request->re_enter_password,
-            'status' => $request->status
+            'password' => bcrypt($request->password),
+            're_enter_password' =>bcrypt($request->re_enter_password) | 'password',
+            'status'=> $request->status
         ]);
     }
 
+    public function login(LoginRequest $request){
+        $data = [
+            'email' => $request->email,
+            'password' => $request->password
+        ];
+
+        if (!auth()->attempt($data)) {
+            return response(
+                [
+                    'error' => 'unauthorised'
+                ],
+                401
+            );
+        }
+    }
+
+    public function recoveryKeys()
+    {
+        $this->hasOne(RecoveryKey::class, 'user_id', 'id');
+    }
 }

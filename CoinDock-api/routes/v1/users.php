@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\Auth\UserController;
 use App\Http\Controllers\V1\RecoveryKeyController;
+use Illuminate\Support\Facades\Route;
+
  
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,4 @@ Route::post('logout', [UserController::class, 'logout']);
     Route::get('logout', [UserController::class, 'logout']);
 });
 
-Route::get('/', [RecoveryKeyController::class, 'recoveyKey']);
 
-Route::get('/random' , [RecoveryKeyController::class, 'random']);
