@@ -14,7 +14,7 @@ use App\Http\Controllers\V1\RecoveryKeyController;
 |
 */
 
-Route::middleware('auth:api')->prefix('users')->group(
+Route::group(['prefix'=>'users' , 'middleware'=>'auth:api'],
     function(){
 
         Route::prefix('{user}')->group(
