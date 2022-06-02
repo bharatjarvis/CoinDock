@@ -39,6 +39,7 @@
   background: #4461fc;
   border-radius: 20px;
 }
+
 .cd-button-1:disabled {
   background: #e0e0e0;
 }
@@ -56,4 +57,25 @@
   font-size: 18px;
   line-height: 160%;
 
+}
+
+.cd-content-row-center {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.cd-content-row-end {
+display: flex;
+width: 100%;
+justify-content: flex-end;
+flex-direction: row;
+}
+
+.cd-content-row-start {
+display: flex;
+width: 100%;
+justify-content: flex-start;
+flex-direction: row;
 }

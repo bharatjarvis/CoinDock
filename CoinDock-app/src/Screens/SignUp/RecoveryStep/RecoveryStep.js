@@ -29,7 +29,7 @@ function RecoveryCodeBoxStep() {
 
                 <div className="p-3" />
 
-                <div class="mx-auto">
+                <div class="cd-content-row-center">
                   <DownloadRecoverykeys />
                 </div>
 
@@ -39,7 +39,9 @@ function RecoveryCodeBoxStep() {
 
                 <div className="p-3" />
 
-                <div className="mb-l">
+
+
+                <div className="cd-content-row-end">
                   <button className="cd-button-1">Next</button>
                 </div>
               </form>

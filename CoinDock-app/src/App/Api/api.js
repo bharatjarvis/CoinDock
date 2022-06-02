@@ -26,7 +26,7 @@ axiosInstance.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
   if (refreshToken) {
-    config.headers["Refresh-Token"] = refreshToken;
+    config.headers["refresh-token"] = refreshToken;
   }
   return config;
 });
@@ -36,16 +36,16 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.log(error);
+    console.log(error.response);
     return Promise.reject(error.response);
   }
 );
 
 axiosInstance.interceptors.response.use(
   (response) => {
-    const accessToken = response.headers["auth-token"];
-    console.log(response);
-    const refreshToken = response.headers["refresh-token"];
+
+    const accessToken = response.headers["Access-Token"];
+    const refreshToken = response.headers["Refresh-Token"];
 
     if (accessToken) {
       localStorage.setItem(localStorageAccessToken, accessToken);
