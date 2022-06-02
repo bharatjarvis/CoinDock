@@ -19,9 +19,7 @@ Route::post('/signup', [UserController::class, 'store'])->name('users.signup');
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/refresh', [UserController::class, 'refresh']);
 Route::middleware('auth:api')->group(function(){
-    
-Route::post('logout', [UserController::class, 'logout']);
-    Route::get('logout', [UserController::class, 'logout']);
+   Route::get('logout', [UserController::class, 'logout']);
 });
 
 
