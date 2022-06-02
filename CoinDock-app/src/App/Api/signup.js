@@ -27,7 +27,6 @@ const signup = baseApi.injectEndpoints({
         },
       }),
       transformResponse: (response) => {
-        console.log(response);
         if (response.code !== 200) {
           throw response;
         }
