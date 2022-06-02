@@ -10,6 +10,18 @@
   padding-left: 8px;
   padding-right: 8px;
 }
-.imagessss {
-  margin-top: 0.6cm;
+.nav-link {
+  color: black !important;
+}
+.required label:after {
+  content: "*";
+}
+.dropdown-toggle::after {
+  content: none;
+}
+.cd-performance-wrap {
+  display: flex;
+
+  flex-direction: row;
+  justify-content: space-between;
 }

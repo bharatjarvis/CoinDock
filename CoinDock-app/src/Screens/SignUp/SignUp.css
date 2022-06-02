@@ -2,8 +2,8 @@
   color: red;
   font-size: 12px;
 } */
-.text-danger{
-  font-size:12px;
+.text-danger {
+  font-size: 12px;
 }
 .condition {
   color: black;
@@ -64,7 +64,6 @@
   font-weight: 400;
   font-size: 16px;
   line-height: 160%;
-  /* or 29px */
 
   color: #000000;
 }

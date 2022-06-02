@@ -14,6 +14,7 @@ import { nameValidation } from "../../Shared/Form/Name/Name.js";
 import Password from "../../Shared/Password/Password";
 import { passwordValidation } from "../../Shared/Password/Password";
 import { reenterpasswordValidation } from "../../Shared/Password/Password";
+import { countryValidation } from "../../Shared/Form/Select/Select";
 
 function SignUP(props) {
   const [buttonPopup, setButtonPopup] = useState(false);
@@ -89,18 +90,12 @@ function SignUP(props) {
       values.password
     );
     errors.date = dateValidation(values.date);
-    console.log(values.date);
+    errors.country = countryValidation(values.country);
 
-    // if (!values.date) {
-    //   console.log(values, values.date);
+    // if (!values.country) {
     //   isValid = false;
-    //   errors.date = "Date of birth is required";
+    //   errors.country = "Country is required";
     // }
-
-    if (!values.country) {
-      isValid = false;
-      errors.country = "Country is required";
-    }
 
     setValid(!Object.values(errors).some(Boolean));
     return {
@@ -139,7 +134,6 @@ function SignUP(props) {
                   />
                 </div>
 
-                <label>Date of Birth</label>
                 <DatePick
                   name="date"
                   value={formValues.date}
@@ -162,8 +156,8 @@ function SignUP(props) {
                       { label: "India", value: 1 },
                       { label: "Pakistan", value: 2 },
                     ]}
+                    formErrors={formErrors}
                   />
-                  <p className="text-danger">{formErrors.country}</p>
                 </div>
                 <div>
                   <Password
@@ -171,7 +165,6 @@ function SignUP(props) {
                     placeholder="Password"
                     label="Password"
                     value={formValues.password}
-                    formErrors={formErrors}
                   />
 
                   <Password
@@ -188,7 +181,11 @@ function SignUP(props) {
                   conditions
                 </p>
                 <div className="d-flex justify-content-end">
-                  <button className="confirms" disabled={!isValid}>
+                  <button
+                    className="confirms"
+                    onClick={() => setButtonPopup(true)}
+                    disabled={!isValid}
+                  >
                     confirm
                   </button>
                   <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>

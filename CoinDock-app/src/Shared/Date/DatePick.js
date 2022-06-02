@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import moment from "moment";
+import "../../Shared/common-styles/space.css";
 import "react-datepicker/dist/react-datepicker.css";
 export const dateValidation = (value) => {
   let error = null;
@@ -37,9 +38,10 @@ function DatePick({ name, onChange, formErrors }) {
   }, [fieldsTouched]);
   return (
     <React.Fragment>
+      <label className="cd-mt-12">Date of Birth</label>
       <DatePicker
         name={name}
-        className="form-control mt-1 py-8"
+        className="form-control cd-mt-8 "
         selected={selectedDate}
         onChange={handleChanges}
         dateFormat="dd-MM-yyyy"

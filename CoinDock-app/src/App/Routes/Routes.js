@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import Login from "../../Screens/Login/Login";
 import SignUP from "../../Screens/SignUp/SignUp";
 import Logout from "../../Screens/Logout/Logout";
 import RecoveryCodeBoxStep from "../../Screens/SignUp/RecoveryStep/RecoveryStep";
 import RecoveryCodeTestStep from "../../Screens/SignUp/RecoveryCodeTestStep";
+import Section from "../../Shared/Section2/Section";
 
 const Direction = () => {
   return (
@@ -15,8 +17,29 @@ const Direction = () => {
         <Route path="/signup" element={<SignUP />} />
         <Route path="/recovery-codes" element={<RecoveryCodeBoxStep />} />
         <Route path="/recovery-test" element={<RecoveryCodeTestStep />} />
+        <Route path="/section" element={<Section />} />
       </Routes>
     </BrowserRouter>
   );
+};
+
+const publicRoutes = [
+  { path: "/", element: Login },
+  { path: "/signup", element: SignUP },
+];
+
+const privateRoutes = [
+  {
+    path: "/logout",
+    element: Logout,
+    path: "/recovery-codes",
+    element: RecoveryCodeBoxStep,
+    path: "//recovery-test",
+    element: RecoveryCodeTestStep,
+  },
+];
+
+const useAuthChecker = () => {
+  const [isAuth, setIsAuth] = useState({});
 };
 export default Direction;

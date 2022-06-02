@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "../../Shared/common-styles/space.css";
 export const passwordValidation = ({
   value,
   label = "Password",
@@ -63,12 +64,12 @@ const Password = ({ name, placeholder, label, formErrors }) => {
 
   return (
     <>
-      <div className="form-group mb-3">
+      <div className="form-group">
         <div>
-          <label>{label}</label>
+          <label className="cd-mt-12">{label}</label>
           <input
             type="password"
-            className="form-control"
+            className="form-control cd-mt-8"
             name={name}
             placeholder={placeholder}
             onChange={handleChanges}

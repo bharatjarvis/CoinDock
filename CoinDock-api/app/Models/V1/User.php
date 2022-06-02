@@ -2,6 +2,7 @@
 
 namespace App\Models\V1;
 
+use App\Enums\V1\UserStatus;
 use App\Enums\V1\UserType;
 use App\Http\Requests\V1\SignupRequest;
 use App\Models\V1\Traits\Encryptable;
@@ -81,7 +82,7 @@ class User extends Authenticatable
             'email' => $request->email,
             'password' => $request->password,
             're_enter_password' => $request->re_enter_password,
-            'status' => $request->status
+            'status' => UserStatus::Inactive,
         ]);
     }
 

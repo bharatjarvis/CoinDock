@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import propTypes from "prop-types";
+import "../../../Shared/common-styles/space.css";
 export const nameValidation = (value, label = "Name", length = 0) => {
   let error = null;
 
@@ -27,17 +29,13 @@ const Name = ({ label, name, placeholder, formErrors }) => {
     setFieldsTouched(true);
   };
 
-  useEffect(() => {
-    console.log(fieldsTouched);
-  }, [fieldsTouched]);
-
   return (
-    <div className="form-group mb-3">
+    <div className="form-group">
       <div>
-        <label>{label}</label>
+        <label className="cd-mt-12">{label}</label>
         <input
           type="text"
-          className="form-control"
+          className="form-control cd-mt-8"
           name={name}
           placeholder={placeholder}
           value={formValues.name}
@@ -46,8 +44,14 @@ const Name = ({ label, name, placeholder, formErrors }) => {
           onBlur={handleFocus}
         />
       </div>
-      {fieldsTouched && <p className="text-danger">{formErrors[name]}</p>}
+      {formErrors && fieldsTouched && (
+        <p className="text-danger">{formErrors[name]}</p>
+      )}
     </div>
   );
+};
+
+Name.propTypes = {
+  label: propTypes.string,
 };
 export default Name;

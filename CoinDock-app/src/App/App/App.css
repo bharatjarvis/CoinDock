@@ -13,10 +13,16 @@
   padding-top: 5px;
   height: calc(100% - 70px);
 }
+@media (max-width: 600px) {
+  .cd-app-continer {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+}
 
 .App-header {
   position: fixed;
-  width: 1540px;
+  width: 2000px;
   height: 45px;
   left: 0px;
   top: 0px;

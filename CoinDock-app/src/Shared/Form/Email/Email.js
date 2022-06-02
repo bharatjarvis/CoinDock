@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "../../common-styles/space.css";
 export const emailValidation = (value) => {
   let error = null;
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
@@ -32,12 +33,12 @@ const Email = ({ name, formErrors }) => {
 
   return (
     <>
-      <div className="form-group mb-3">
+      <div className="form-group">
         <div>
-          <label>Email</label>
+          <label className="cd-mt-12">Email</label>
           <input
             type="email"
-            className="form-control"
+            className="form-control cd-mt-8"
             name={name}
             placeholder="Enter your Email address"
             onChange={handleChanges}

@@ -23,7 +23,7 @@ class UserController extends AccessTokenController
     {
         info("message");
         $user = new User();
-
+        
         $user->store($request);
 
         return response(['status' => 'success', 'message' => 'Success! User registered.'], 201);
