@@ -4,8 +4,10 @@ namespace App\Http\Controllers\V1;
 
 
 use App\Http\Controllers\Controller;
-use App\Models\V1\RecoveryKey;
+
+use App\Http\Requests\V1\RecoveryKeyRequest;
 use App\Models\V1\User;
+use App\Models\V1\RecoveryKey;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Response;
@@ -13,6 +15,18 @@ use Illuminate\Support\Arr;
 
 class RecoveryKeyController extends Controller
 {
+
+
+    public function random()
+    {    
+        return response([
+                'result'=> Arr::random(
+                    range(1, config('random_keys.recovery.block_length')),
+                    config('random_keys.recovery.test_block_length')
+                )],
+            200
+        );
+    }
     /**
      * Generating the recovery codes randomly.
      *
@@ -45,22 +59,11 @@ class RecoveryKeyController extends Controller
         return $pdf->download("recovery-words-{$now}.pdf");
     }
 
-    //random keys generation
 
-    public function recoveyKey()
+    public function activate(User $user, RecoveryKeyRequest $request)
     {
-        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-
-        $random = Arr::random($array, 3);
-        return $random;
-
-    }
-
-    public function random()
-    {
-
-        $random = Arr::random(config('random_keys.recovery_codes'), 12);
-
-    }
-
+      $recoveryKey = RecoveryKey::whereUserId($user->id)->latest()->first();
+      
+      return $recoveryKey->recoveryKeys($user, $request);
+    }  
 }

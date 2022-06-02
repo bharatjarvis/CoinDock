@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\V1\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Http\Controller\V1\RecoveryKeyController;
 
 class DatabaseSeeder extends Seeder
 {

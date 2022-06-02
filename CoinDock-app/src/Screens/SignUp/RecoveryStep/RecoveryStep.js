@@ -35,14 +35,11 @@ function RecoveryCodeBoxStep() {
 
                 <div className="p-3" />
 
-                <Checkbox label="Yes, I noted down the recovery words securely" />
+                <Checkbox label = "Yes, I noted down the recovery words securely" />
 
                 <div className="p-3" />
-
-
-
                 <div className="cd-content-row-end">
-                  <button className="cd-button-1">Next</button>
+                  <button className="cd-button">Next</button>
                 </div>
               </form>
             </div>
