@@ -24,7 +24,7 @@ class RecoveryKeyController extends Controller
 
         return response([
             'message' => 'Recovery codes created successfully',
-            'results' => [
+            'result' => [
                 'recovery_code' => $recovery->show($user),
                 'recovery_code_length'=>config('random_keys.recovery_code_length'),
                 'completed' => 3

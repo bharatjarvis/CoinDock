@@ -22,7 +22,7 @@ Route::group(['middleware'=>'auth:api' , 'prefix' =>'users'],
             function(){
                 Route::prefix('add-wallet')->group(
                     function(){     
-                        Route::post('/' ,[WalletController::class,'store']);
+                        Route::post('/' ,[WalletController::class,'addWallet']);
                 });
         });
     
