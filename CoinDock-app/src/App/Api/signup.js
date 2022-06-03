@@ -22,16 +22,13 @@ const signup = baseApi.injectEndpoints({
           email: email,
           country: country,
           password: password,
-
           re_enter_password: reenterpassword,
         },
       }),
       transformResponse: (response) => {
-        console.log(response);
         if (response.code !== 200) {
           throw response;
         }
-
         return response;
       },
     }),

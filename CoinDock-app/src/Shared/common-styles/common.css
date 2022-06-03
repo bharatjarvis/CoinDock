@@ -10,14 +10,11 @@
 .paper-container {
   width: 100%;
   height: 100%;
-
-
 }
 
 @media screen and (min-width: 480px) {
   .paper-container {
     width: 480px;
-   
   }
 }
 
@@ -56,7 +53,6 @@
   font-weight: 400;
   font-size: 18px;
   line-height: 160%;
-
 }
 
 .cd-content-row-center {
@@ -67,15 +63,16 @@
 }
 
 .cd-content-row-end {
-display: flex;
-width: 100%;
-justify-content: flex-end;
-flex-direction: row;
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  flex-direction: row;
 }
 
 .cd-content-row-start {
-display: flex;
-width: 100%;
-justify-content: flex-start;
-flex-direction: row;
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  flex-direction: row;
 }
+

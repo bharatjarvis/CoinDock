@@ -1,6 +1,9 @@
 .cd-mt-4 {
   margin-top: 4px;
 }
+.cd-mr-4 {
+  margin-right: 4px;
+}
 
 .cd-pt-4 {
   padding-top: 4px;
@@ -32,6 +35,9 @@
 }
 .cd-ml-8 {
   margin-left: 8px;
+}
+.cd-mr-8 {
+  margin-right: 8px;
 }
 .cd-mt-12 {
   margin-top: 12px;
@@ -89,4 +95,28 @@
 }
 .cd-mt-19 {
   margin-top: 19px;
+}
+.cd-ml-24 {
+  margin-left: 24px;
+}
+.cd-mt-17 {
+  margin-top: 17px;
+}
+.cd-mb-23 {
+  margin-bottom: 23px;
+}
+.cd-mb-25 {
+  margin-bottom: 25px;
+}
+.cd-mt-10 {
+  margin-top: 10px;
+}
+.cd-mt-5 {
+  margin-top: 5px;
+}
+.cd-mb-6 {
+  margin-bottom: 6px;
+}
+.cd-ml-39 {
+  margin-left: 39px;
 }

@@ -15,10 +15,11 @@ import Password from "../../Shared/Password/Password";
 import { passwordValidation } from "../../Shared/Password/Password";
 import { reenterpasswordValidation } from "../../Shared/Password/Password";
 import { countryValidation } from "../../Shared/Form/Select/Select";
+import "../../Shared/common-styles/button.css";
 
 function SignUP(props) {
   const [buttonPopup, setButtonPopup] = useState(false);
-  const [register, { error }] = usePostRegisterMutation();
+  const [register] = usePostRegisterMutation();
   const [isValid, setValid] = useState(false);
   const initialValues = {
     firstname: "",
@@ -59,7 +60,6 @@ function SignUP(props) {
         await register({ ...formValues }).unwrap();
         setButtonPopup(true);
       } catch (errorResponse) {
-        console.log(errorResponse);
         setformErrors({});
       }
     }
@@ -165,6 +165,7 @@ function SignUP(props) {
                     placeholder="Password"
                     label="Password"
                     value={formValues.password}
+                    formErrors={formErrors}
                   />
 
                   <Password
@@ -182,13 +183,17 @@ function SignUP(props) {
                 </p>
                 <div className="d-flex justify-content-end">
                   <button
-                    className="confirms"
-                    onClick={() => setButtonPopup(true)}
+                    className="cd-button cd-button-2"
                     disabled={!isValid}
+                    type="submit"
                   >
                     confirm
                   </button>
-                  <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
+                  <Popup
+                    trigger={buttonPopup}
+                    setTrigger={setButtonPopup}
+                    buttonLable="OK"
+                  >
                     <h5>Account recovery information</h5>
                     <img className="image" />
                     <p className="para">
