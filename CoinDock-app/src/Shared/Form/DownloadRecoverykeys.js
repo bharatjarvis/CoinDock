@@ -6,7 +6,7 @@ import {useGetRecoveryCodesDownloadMutation } from "../../App/Api/recoveryCodes"
 
 
 function DownloadRecoverykeys() {
-  const requestId =1
+
   const [downloadble] = useGetRecoveryCodesDownloadMutation();
 
   const handleOnClick = () => {

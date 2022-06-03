@@ -3,10 +3,13 @@ import baseApi from "./api";
 export const recoveryCodes = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getRecoveryCodes: build.query({
-      query: userId => `/v1/users/${userId}/recovery-codes`,
-      // transformResponse: (response) => {
-      //   return response;
-      // },
+      query: ({userId}) => ({
+        url: `/v1/users/${userId}/recovery-codes`,
+        method: 'get',
+      }),
+      transformResponse: (response) => {
+        return response.results;
+      },
       providesTags: ["recover-codes"],
     }),
 
