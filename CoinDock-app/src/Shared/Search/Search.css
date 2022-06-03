@@ -1,0 +1,4 @@
+.cd-search-container {
+  width: 100%;
+  flex-direction: row-reverse;
+}

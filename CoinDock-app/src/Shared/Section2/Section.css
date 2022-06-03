@@ -4,25 +4,33 @@
   justify-content: space-around;
 
   margin-top: 1cm;
+  padding: 14px;
 }
-.cd-flex-container > div {
+.cd-flex-content-container {
   margin-top: 30px;
-  box-sizing: border-box;
 
-  width: 156px;
-  height: 60px;
+  width: 200px;
 
-  top: 80px;
-
-  /* vivid blue */
+  top: 81px;
 
   background: #09bbff;
-  /* vivid blue */
+
+  border: 1px solid #09bbff;
+  border-radius: 10px;
+  box-sizing: border-box;
+
+  height: 80px;
+
+  background: #09bbff;
 
   border: 1px solid #09bbff;
   border-radius: 10px;
 }
 .cd-currency-performance {
+  margin-top: 4px;
+  padding-bottom: 15px;
+  padding-left: 4px;
+  padding-right: 123px;
   position: absolute;
   width: 29px;
   height: 38px;
@@ -30,11 +38,10 @@
   top: 81px;
 
   font-family: "Lora";
-  font-style: normal;
+  font-style: "normal";
   font-weight: 400;
-  font-size: 12px;
+  font-size: 18px;
   line-height: 160%;
-  /* or 19px */
 
   color: #ffffff;
 }
@@ -43,15 +50,18 @@
   position: absolute;
   width: 113px;
   height: 29px;
+  padding-right: 4px;
+  padding-left: 60px;
+  padding-top: 18px;
+  padding-bottom: 12px;
 
   top: 85px;
 
   font-family: "Lora";
   font-style: normal;
-  font-weight: 400;
+  font-weight: 700;
   font-size: 18px;
   line-height: 160%;
-  /* identical to box height, or 29px */
 
-  color: #ffffff;
+  color: #e9ecef;
 }

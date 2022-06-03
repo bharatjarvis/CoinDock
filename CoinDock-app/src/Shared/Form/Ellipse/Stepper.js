@@ -4,7 +4,7 @@ import "../../common-styles/space.css";
 
 function Stepper({ totalSteps, currentActiveSteps }) {
   return (
-    <div className="stepper cd-ml-14 cd-mb-27 cd-mt-19">
+    <div className="stepper cd-mp-14 cd-mb-27 cd-mt-19">
       {[...new Array(totalSteps)].map((value, index) => {
         return (
           <React.Fragment key={index}>

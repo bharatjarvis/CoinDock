@@ -1,10 +1,15 @@
 .start {
   position: fixed;
   width: 100%;
-  height: 45px;
+  height: 70px;
   left: 0px;
   top: 0px;
-  background: #32c4fc;
+  background: linear-gradient(
+    90deg,
+    #00b9ff 6%,
+    #0d719f 73.23%,
+    #125377 99.86%
+  );
   display: flex;
   justify-content: space-between;
   padding-left: 8px;
@@ -24,4 +29,17 @@
 
   flex-direction: row;
   justify-content: space-between;
+}
+.cd-addwallet-button {
+  width: 81px;
+  height: 26px;
+
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 160%;
+  /* identical to box height, or 26px */
+
+  color: #ffffff;
 }

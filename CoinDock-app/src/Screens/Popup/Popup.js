@@ -10,7 +10,7 @@ function Popup(props) {
           className="cd-button cd-button-2"
           onClick={() => props.setTrigger(false)}
         >
-          Ok
+          {props.buttonLable}
         </button>
       </div>
     </div>

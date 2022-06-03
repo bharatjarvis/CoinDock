@@ -14,7 +14,11 @@
   width: 95px;
   height: 39px;
   background: #4461fc;
-  border-radius: 20px;
+  color: #ffffff;
+}
+.cd-button-2:disabled {
+  background: #e0e0e0;
+  color: black;
 }
 .cd-button-1:disabled {
   background: #e0e0e0;
