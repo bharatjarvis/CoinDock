@@ -20,14 +20,19 @@ export const recoveryCodes = baseApi.injectEndpoints({
           responseType: 'blob',
       }),
 
-      // transformResponse: (response, meta, arg) => {
-      //   console.log(response)
-      //   return response
-      // }      ,
-
+      transformResponse: (response) => {
+        const {data} = response
+        const url = window.URL.createObjectURL(data);
+        const link = document.createElement('a');
+        link.href = url;
+        window.open(url);
+        link.setAttribute('download', response.headers['content-disposition'].split('filename=')[1].replaceAll('"',''), );
+        document.body.appendChild(link);
+        link.click();
+        return data
+      }
     }),
   }),
 });
 
-// export default recoveryCodes
 export const { useGetRecoveryCodesQuery, useGetRecoveryCodesDownloadMutation } = recoveryCodes

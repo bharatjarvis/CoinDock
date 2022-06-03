@@ -42,9 +42,8 @@ axiosInstance.interceptors.response.use(
 
 axiosInstance.interceptors.response.use(
   (response) => {
-
-    const accessToken = response.headers["Access-Token"];
-    const refreshToken = response.headers["Refresh-Token"];
+    const accessToken = response.headers["access-token"];
+    const refreshToken = response.headers["refresh-token"];
 
     if (accessToken) {
       localStorage.setItem(localStorageAccessToken, accessToken);
@@ -53,11 +52,16 @@ axiosInstance.interceptors.response.use(
     if (refreshToken) {
       localStorage.setItem(localStorageRefreshToken, refreshToken);
     }
-
-    return response;
+    return {
+      data: {...response}
+    };
   },
-  (error) => {
-    return Promise.reject(error);
+  (errorResponse) => {
+    return {
+      error: {
+        ...errorResponse
+      }
+    };
   }
 );
 
