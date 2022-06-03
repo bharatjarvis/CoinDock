@@ -5,8 +5,30 @@ import Checkbox from "../../../Shared/Form/CheckBox/CheckBox";
 import "../../../Shared/common-styles/common.css";
 import Stepper from "../../../Shared/Form/Ellipse/Stepper";
 import DownloadRecoverykeys from "../../../Shared/Form/DownloadRecoverykeys";
+import "../../../Shared/common-styles/button.css";
+import {useGetRecoveryCodesQuery} from "../../../App/Api/recoveryCodes";
+
+
+// const userId = use
+
+// const { data: results } = useGetRecoveryCodesQuery(userId)
 
 function RecoveryCodeBoxStep() {
+
+
+  const { data = [], isFetching, isLoading,isError} =useGetRecoveryCodesQuery({userId:1})
+
+// console.log(data)
+
+
+
+  // }
+
+  const handleOnClick = () => {
+    // downloadble({userId: 1})
+
+  }
+
   return (
     <div className="paper">
       <div className="paper-container">
@@ -25,7 +47,7 @@ function RecoveryCodeBoxStep() {
 
                 <div className="p-3" />
 
-                <RecoveryBoxs />
+                <RecoveryBoxs label ={data}/>
 
                 <div className="p-3" />
 
@@ -35,14 +57,11 @@ function RecoveryCodeBoxStep() {
 
                 <div className="p-3" />
 
-                <Checkbox label="Yes, I noted down the recovery words securely" />
+                <Checkbox label = "Yes, I noted down the recovery words securely" />
 
                 <div className="p-3" />
-
-
-
                 <div className="cd-content-row-end">
-                  <button className="cd-button-1">Next</button>
+                  <button className="cd-button" onClick={handleOnClick}>Next</button>
                 </div>
               </form>
             </div>

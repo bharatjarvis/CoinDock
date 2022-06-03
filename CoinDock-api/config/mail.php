@@ -115,4 +115,6 @@ return [
         ],
     ],
 
+    'support_address' => env('SUPPORT_EMAIL', 'abc@gmail.com')
+
 ];
