@@ -13,7 +13,7 @@ const Direction = () => {
   return (
     <BrowserRouter>
       <Header />
-      <div style={{ flexGrow: 1 }}>
+      <div style={{ flexGrow: 1,  }}>
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />

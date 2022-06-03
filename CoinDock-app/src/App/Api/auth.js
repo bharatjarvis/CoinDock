@@ -14,7 +14,11 @@ const auth = baseApi.injectEndpoints({
                 url: '/v1/logout',
                 method: 'post',
                 data,
-            })
+            }),
+            transformResponse: (response) => {
+                localStorage.clear()
+                return response
+            }
          }),
          refresh: build.mutation({
             query: ({...data}) => ({
