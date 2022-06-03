@@ -6,19 +6,25 @@ import Logout from "../../Screens/Logout/Logout";
 import RecoveryCodeBoxStep from "../../Screens/SignUp/RecoveryStep/RecoveryStep";
 import RecoveryCodeTestStep from "../../Screens/SignUp/RecoveryCodeTestStep";
 import Section from "../../Shared/Section2/Section";
+import Header from "../Header/Header";
+import Auth from "../Auth/Auth";
 
 const Direction = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/signup" element={<SignUP />} />
-        <Route path="/recovery-codes" element={<RecoveryCodeBoxStep />} />
-        <Route path="/recovery-test" element={<RecoveryCodeTestStep />} />
-        <Route path="/section" element={<Section />} />
-      </Routes>
+      <Header />
+      <div style={{ flexGrow: 1 }}>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUP />} />
+          <Route element={<Auth />}>
+            <Route path="/logout" element={<Logout />} />
+            <Route path="/recovery-codes" element={<RecoveryCodeBoxStep />} />
+            <Route path="/recovery-test" element={<RecoveryCodeTestStep />} />
+          </Route>
+        </Routes>
+      </div>
     </BrowserRouter>
   );
 };

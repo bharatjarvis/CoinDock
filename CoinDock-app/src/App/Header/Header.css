@@ -1,0 +1,48 @@
+.cd-app-header {
+  position: fixed !important;
+
+  left: 0px;
+  top: 0px;
+  background: linear-gradient(
+    90deg,
+    #00b9ff 6%,
+    #0d719f 73.23%,
+    #125377 99.86%
+  );
+  display: flex;
+  justify-content: space-between;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.nav-link {
+  color: black !important;
+}
+.required label:after {
+  content: "*";
+}
+.dropdown-toggle::after {
+  content: none;
+}
+.cd-performance-wrap {
+  display: flex;
+
+  flex-direction: row;
+  justify-content: space-between;
+}
+.cd-addwallet-button {
+  width: 81px;
+  height: 26px;
+
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 160%;
+  /* identical to box height, or 26px */
+
+  color: #ffffff;
+}
+.cd-header-dimensions {
+  height: 70px;
+  width: 100%;
+}
