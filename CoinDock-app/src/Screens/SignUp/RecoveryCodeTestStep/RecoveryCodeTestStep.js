@@ -2,9 +2,13 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import RecoveryBoxs from "../../../Shared/Form/RecoveryBoxes";
 import "../../../Shared/common-styles/common.css";
+import "../../../Shared/common-styles/button.css";
 import Stepper from "../../../Shared/Form/Ellipse/Stepper";
+// import { usePutRecoveryCodesMutation } from "../../../App/Api/recoveryCodes";
 
 function RecoveryCodeTestStep() {
+  // const { data = [], ...r } = usePutRecoveryCodesMutation({ userId: 1 });
+
   return (
     <div className="paper">
       <div className="paper-container">
@@ -26,9 +30,9 @@ function RecoveryCodeTestStep() {
                 <RecoveryBoxs />
 
                 <div className="p-3" />
-                <button className="cd-button-1">Back</button>
+                <button className="cd-button">Back</button>
                 <div className="mb-l">
-                  <button className="cd-button-1">Confirm</button>
+                  <button className="cd-button">Confirm</button>
                 </div>
               </form>
             </div>

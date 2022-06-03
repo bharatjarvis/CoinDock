@@ -6,29 +6,23 @@ import "../../../Shared/common-styles/common.css";
 import Stepper from "../../../Shared/Form/Ellipse/Stepper";
 import DownloadRecoverykeys from "../../../Shared/Form/DownloadRecoverykeys";
 import "../../../Shared/common-styles/button.css";
-import {useGetRecoveryCodesQuery} from "../../../App/Api/recoveryCodes";
-
+import { useGetRecoveryCodesQuery } from "../../../App/Api/recoveryCodes";
+import { array } from "prop-types";
 
 // const userId = use
 
 // const { data: results } = useGetRecoveryCodesQuery(userId)
 
 function RecoveryCodeBoxStep() {
-
-
-  const { data = [], isFetching, isLoading,isError} =useGetRecoveryCodesQuery({userId:1})
-
-// console.log(data)
-
-
-
-  // }
+  const { data = [], ...r } = useGetRecoveryCodesQuery({ userId: 1 });
 
   const handleOnClick = () => {
     // downloadble({userId: 1})
+  };
 
-  }
+  const recoveryCodes = data?.data?.results.recovery_code.recovery_codes;
 
+  // console.log(r)
   return (
     <div className="paper">
       <div className="paper-container">
@@ -47,7 +41,19 @@ function RecoveryCodeBoxStep() {
 
                 <div className="p-3" />
 
-                <RecoveryBoxs label ={data}/>
+                {/* <div style={{ width: "30%", display: "flex" }}> */}
+                {Boolean(recoveryCodes) &&
+                  [...Array(recoveryCodes.length).keys()].map((number) => {
+                    return (
+                      <RecoveryBoxs
+                        {...{
+                          value: number,
+                          code: recoveryCodes[number],
+                        }}
+                      />
+                    );
+                  })}
+                {/* </div> */}
 
                 <div className="p-3" />
 
@@ -57,11 +63,13 @@ function RecoveryCodeBoxStep() {
 
                 <div className="p-3" />
 
-                <Checkbox label = "Yes, I noted down the recovery words securely" />
+                <Checkbox label="Yes, I noted down the recovery words securely" />
 
                 <div className="p-3" />
                 <div className="cd-content-row-end">
-                  <button className="cd-button" onClick={handleOnClick}>Next</button>
+                  <button className="cd-button" onClick={handleOnClick}>
+                    Next
+                  </button>
                 </div>
               </form>
             </div>
