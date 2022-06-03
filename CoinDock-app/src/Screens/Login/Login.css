@@ -1,5 +1,5 @@
 .content {
-  height: 100vh;
+  height: 100%;
 }
 
 .form-control {
@@ -16,16 +16,4 @@
 
 .cf {
   flex: 0.5;
-}
-
-.start {
-  position: absolute;
-  width: 1600px;
-  height: 25px;
-  left: 0px;
-  top: 0px;
-
-  /* VividBlue2 */
-
-  background: #32c4fc;
 }

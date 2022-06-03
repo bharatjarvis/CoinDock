@@ -48,47 +48,44 @@ function Login() {
     return errors;
   };
   return (
-    <section className="container-fluid">
-      <div className="start"></div>
-      <div className="row content d-flex justify-content-center align-items-center">
-        <div className="col-md-4">
-          <h3 className="nm-4 text-center fs-1 m-4">Login</h3>
+    <div className="row content d-flex justify-content-center align-items-center">
+      <div className="col-md-4">
+        <h3 className="nm-4 text-center fs-1 m-4">Login</h3>
 
-          <form className="mb-3" onSubmit={handleSubmit}>
-            <div className="form-group mb-3">
-              <label>Email</label>
-              <input
-                type="email"
-                name="email"
-                className="form-control mt-1 py-8"
-                placeholder="Enter your email address"
-                value={formValues.email}
-                id="email"
-                onChange={handleChanges}
-              />
-            </div>
-            <p className="text-danger">{formErrors.email}</p>
-            <div className="form-group mb-3">
-              <label>Password</label>
-              <input
-                type={isShow ? "text" : "password"}
-                name="password"
-                className="form-control mt-1 py-8"
-                placeholder="Enter your password"
-                value={formValues.password}
-                id="password"
-                onChange={handleChanges}
-                data-toggle="password"
-              />
-            </div>
-            <p className="text-danger">{formErrors.password}</p>
-            <div className="d-grid gap-2">
-              <button className="btn btn-primary btn-lg border-0">Login</button>
-            </div>
-          </form>
-        </div>
+        <form className="mb-3" onSubmit={handleSubmit}>
+          <div className="form-group mb-3">
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              className="form-control mt-1 py-8"
+              placeholder="Enter your email address"
+              value={formValues.email}
+              id="email"
+              onChange={handleChanges}
+            />
+          </div>
+          <p className="text-danger">{formErrors.email}</p>
+          <div className="form-group mb-3">
+            <label>Password</label>
+            <input
+              type={isShow ? "text" : "password"}
+              name="password"
+              className="form-control mt-1 py-8"
+              placeholder="Enter your password"
+              value={formValues.password}
+              id="password"
+              onChange={handleChanges}
+              data-toggle="password"
+            />
+          </div>
+          <p className="text-danger">{formErrors.password}</p>
+          <div className="d-grid gap-2">
+            <button className="btn btn-primary btn-lg border-0">Login</button>
+          </div>
+        </form>
       </div>
-    </section>
+    </div>
   );
 }
 

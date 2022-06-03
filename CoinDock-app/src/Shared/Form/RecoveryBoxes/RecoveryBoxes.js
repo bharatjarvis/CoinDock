@@ -4,7 +4,6 @@ import "../../../Shared/common-styles/common.css";
 import "./RecoveryBoxes.css";
 
 function RecoveryBoxs(props) {
-  console.log(props);
   return (
     <>
       <div

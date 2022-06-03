@@ -14,10 +14,21 @@ const auth = baseApi.injectEndpoints({
                 url: '/v1/logout',
                 method: 'post',
                 data,
+            }),
+            transformResponse: (response) => {
+                localStorage.clear()
+                return response
+            }
+         }),
+         refresh: build.mutation({
+            query: ({...data}) => ({
+                url: '/v1/refresh',
+                method: 'post',
+                data,
             })
          })
     })
 })
 
 export default auth
-export const {useLoginMutation: useLogin, useLogoutMutation: useLogout} = auth
+export const {useLoginMutation: useLogin, useLogoutMutation: useLogout,useRefreshMutation:useRefresh} = auth
