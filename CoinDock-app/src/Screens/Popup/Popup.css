@@ -34,8 +34,7 @@
   height: 68px;
   left: 22px;
   top: 83px;
-
-  background: url("C:\Users\SAILS-DM231\Documents\CoinDock\CoinDock-app\src\Shared\images\Lock.png");
+  background: url("../../Shared/images/Lock.png");
   margin-top: 0.5cm;
 }
 h5 {

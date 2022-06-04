@@ -11,8 +11,8 @@ function RecoveryBoxs(props) {
           marginLeft: "40%",
           marginTop: "60px",
           width: "200px",
-          display: "flex",
-          flexWrap: "initial",
+          // display: "flex",
+          // flexWrap: "initial",
         }}
       ></div>
       <div className="code-box">

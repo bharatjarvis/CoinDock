@@ -26,9 +26,10 @@ const signup = baseApi.injectEndpoints({
         },
       }),
       transformResponse: (response) => {
-        if (response.code !== 200) {
+        if (response.status !== 200) {
           throw response;
         }
+
         return response;
       },
     }),

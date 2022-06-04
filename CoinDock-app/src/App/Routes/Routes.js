@@ -13,7 +13,7 @@ const Direction = () => {
   return (
     <BrowserRouter>
       <Header />
-      <div style={{ flexGrow: 1,  }}>
+      <div style={{ flexGrow: 1 }}>
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
@@ -40,7 +40,7 @@ const privateRoutes = [
     element: Logout,
     path: "/recovery-codes",
     element: RecoveryCodeBoxStep,
-    path: "//recovery-test",
+    path: "/recovery-test",
     element: RecoveryCodeTestStep,
   },
 ];

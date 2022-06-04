@@ -57,8 +57,11 @@ function SignUP(props) {
       setformErrors(errors);
     } else {
       try {
-        await register({ ...formValues }).unwrap();
-        setButtonPopup(true);
+        await register({ ...formValues })
+          .unwrap()
+          .then(() => {
+            setButtonPopup(true);
+          });
       } catch (errorResponse) {
         setformErrors({});
       }
@@ -195,7 +198,9 @@ function SignUP(props) {
                     buttonLable="OK"
                   >
                     <h5>Account recovery information</h5>
-                    <img className="image" />
+                    <div className="p-3">
+                      <img className="image" />
+                    </div>
                     <p className="para">
                       We’re going to display the account recovery information on
                       the next screen. Please ensure that you have good internet

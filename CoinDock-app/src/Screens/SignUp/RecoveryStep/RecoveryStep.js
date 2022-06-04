@@ -7,22 +7,14 @@ import Stepper from "../../../Shared/Form/Ellipse/Stepper";
 import DownloadRecoverykeys from "../../../Shared/Form/DownloadRecoverykeys";
 import "../../../Shared/common-styles/button.css";
 import { useGetRecoveryCodesQuery } from "../../../App/Api/recoveryCodes";
-import { array } from "prop-types";
 
-// const userId = use
-
-// const { data: results } = useGetRecoveryCodesQuery(userId)
-
-function RecoveryCodeBoxStep() {
+function RecoveryCodeBoxStep(props) {
   const { data = [], ...r } = useGetRecoveryCodesQuery({ userId: 1 });
 
-  const handleOnClick = () => {
-    // downloadble({userId: 1})
-  };
+  const handleOnClick = () => {};
 
   const recoveryCodes = data?.data?.results.recovery_code.recovery_codes;
 
-  // console.log(r)
   return (
     <div className="paper">
       <div className="paper-container">
@@ -40,24 +32,31 @@ function RecoveryCodeBoxStep() {
                 </div>
 
                 <div className="p-3" />
-
-                {/* <div style={{ width: "30%", display: "flex" }}> */}
-                {Boolean(recoveryCodes) &&
-                  [...Array(recoveryCodes.length).keys()].map((number) => {
-                    return (
-                      <RecoveryBoxs
-                        {...{
-                          value: number,
-                          code: recoveryCodes[number],
-                        }}
-                      />
-                    );
-                  })}
-                {/* </div> */}
-
+                <div style={{ flex: "1 4 50%;" }}>
+                  <div
+                    className="even-columns"
+                    // style={{
+                    //   width: "300px",
+                    //   display: "flex",
+                    //   flexDirection: "revert",
+                    // }}
+                  >
+                    {Boolean(recoveryCodes) &&
+                      [...Array(recoveryCodes.length).keys()].map((number) => {
+                        return (
+                          <RecoveryBoxs
+                            {...{
+                              value: number,
+                              code: recoveryCodes[number],
+                            }}
+                          />
+                        );
+                      })}
+                  </div>
+                </div>
                 <div className="p-3" />
 
-                <div class="cd-content-row-center">
+                <div className="cd-content-row-center">
                   <DownloadRecoverykeys />
                 </div>
 
