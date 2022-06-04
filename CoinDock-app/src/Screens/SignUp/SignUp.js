@@ -199,7 +199,7 @@ function SignUP(props) {
                   >
                     <h5>Account recovery information</h5>
                     <div className="p-3">
-                      <img className="image" />
+                      <img className="image" alt="" />
                     </div>
                     <p className="para">
                       We’re going to display the account recovery information on

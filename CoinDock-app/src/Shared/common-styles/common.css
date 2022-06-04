@@ -75,3 +75,34 @@
   justify-content: flex-start;
   flex-direction: row;
 }
+
+.recover-table {
+  display: flex;
+  gap: 1em;
+  margin-top: 40;
+  padding-left: 10;
+  margin-top: 40;
+  flex-flow: wrap;
+  height: auto;
+  list-style: none;
+  gap: 20px;
+  margin: 2%;
+}
+
+.recover-table > * {
+  flex: 1 4 50%;
+  cursor: row-resize;
+}
+
+.recover-test-table {
+  display: flex;
+  gap: 1em;
+  margin-top: 40;
+  padding-left: 10;
+  margin-top: 40;
+  flex-flow: wrap;
+  height: auto;
+  list-style: none;
+  gap: 100px;
+  margin: 2%;
+}

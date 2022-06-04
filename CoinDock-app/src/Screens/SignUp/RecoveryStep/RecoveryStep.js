@@ -7,11 +7,16 @@ import Stepper from "../../../Shared/Form/Ellipse/Stepper";
 import DownloadRecoverykeys from "../../../Shared/Form/DownloadRecoverykeys";
 import "../../../Shared/common-styles/button.css";
 import { useGetRecoveryCodesQuery } from "../../../App/Api/recoveryCodes";
+import { useNavigate } from "react-router-dom";
 
-function RecoveryCodeBoxStep(props) {
+function RecoveryCodeBoxStep() {
+  const navigate = useNavigate();
+
   const { data = [], ...r } = useGetRecoveryCodesQuery({ userId: 1 });
 
-  const handleOnClick = () => {};
+  const handleOnClick = () => {
+    navigate("/recovery-test");
+  };
 
   const recoveryCodes = data?.data?.results.recovery_code.recovery_codes;
 
@@ -32,15 +37,8 @@ function RecoveryCodeBoxStep(props) {
                 </div>
 
                 <div className="p-3" />
-                <div style={{ flex: "1 4 50%;" }}>
-                  <div
-                    className="even-columns"
-                    // style={{
-                    //   width: "300px",
-                    //   display: "flex",
-                    //   flexDirection: "revert",
-                    // }}
-                  >
+                <div style={{ flex: "1 4 50%;", display: "flex" }}>
+                  <div className="recover-table">
                     {Boolean(recoveryCodes) &&
                       [...Array(recoveryCodes.length).keys()].map((number) => {
                         return (
