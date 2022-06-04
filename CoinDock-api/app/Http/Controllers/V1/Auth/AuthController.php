@@ -12,24 +12,9 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Symfony\Component\HttpFoundation\Response;
 
-class UserController extends AccessTokenController
+class AuthController extends AccessTokenController
 {
     use BuildPassportTokens;
-
-    /**
-     * SignupRequest
-     */
-    public function store(SignupRequest $request)
-    {
-        info("message");
-        $user = new User();
-
-        $user->store($request);
-
-        return response(['status' => 'success', 'message' => 'Success! User registered.'], 201);
-    }
-
-
     /**
      * Login
      */

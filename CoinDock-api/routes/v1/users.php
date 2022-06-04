@@ -16,12 +16,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::post('/signup', [UserController::class, 'store'])->name('users.signup');
-Route::post('/login', [UserController::class, 'login']);
-Route::post('/refresh', [UserController::class, 'refresh']);
-Route::middleware('auth:api')->group(function(){
-    
-Route::post('logout', [UserController::class, 'logout']);
-    Route::get('logout', [UserController::class, 'logout']);
+
+
+Route::middleware('auth:api')->prefix('user')->group(function(){
+
+
+    Route::prefix('{user}')->group(
+        function(){
+            Route::prefix('recovery-codes')->group(
+                function(){     
+                    Route::get('/', [ RecoveryKeyController::class, 'show' ]);
+                    
+                    Route::get('/download', [ RecoveryKeyController::class, 'download' ]);
+
+                    Route::put('/activate', [RecoveryKeyController::class, 'activate']);
+            });
+    });
+
 });
 
 
