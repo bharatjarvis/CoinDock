@@ -20,7 +20,8 @@ class Wallet extends Model
 
 
     //Individual walet creation
-    public function WalletCreate($userId , $walletId ,$userCoinId ,$balance){
+    public function WalletCreate($userId, $walletId, $userCoinId, $balance)
+    {
         Wallet::create([
             'user_id' => $userId,
             'wallet_id' => $walletId,
@@ -44,7 +45,8 @@ class Wallet extends Model
 
 
     //getting basePath for particular Coin 
-    public function basePath($userCoinId , $walletId){
+    public function basePath($userCoinId, $walletId)
+    {
         $userCoin = Coin::whereId($userCoinId)->first();
         $userCoinName = $userCoin->name;
 
@@ -63,7 +65,30 @@ class Wallet extends Model
     }
 
 
-    
+    public function balance($response)
+    {
+        $responseArray = json_decode($response, true);
+        $responseArrayKeys = array_keys($responseArray);
+
+
+        foreach ($responseArrayKeys as $jsonKey) {
+            if ($jsonKey == 'balance' || $jsonKey == 'result' || $jsonKey == 'data' || $jsonKey == 'result') {
+                $balance = $responseArray[$jsonKey];
+
+                return $balance;
+            } elseif ($jsonKey == 'confirmed') {
+
+
+                $confirmedResponse = json_decode($response, true);
+                $confirmedResponse = json_encode($confirmedResponse['confirmed'], true);
+                $confirmedResponseArray = json_decode($confirmedResponse, true);
+
+                $balance = $confirmedResponseArray['nanoErgs'];
+                return $balance;
+            }
+        }
+    }
+
     //Adding Wallet for Particular User
     public function addWallet(User $user, Request $request)
     {
@@ -81,35 +106,14 @@ class Wallet extends Model
         $userCoin = $request->coin;
         $userCoinId = Coin::whereName($userCoin)->first();
         $userCoinId = $userCoinId->id;
-        $basePath = $this->basePath($userCoinId ,$walletId);
+        $basePath = $this->basePath($userCoinId, $walletId);
 
         $response = Http::get($basePath);
 
         if ($this->isJson($response)) {
 
-            $responseArray = json_decode($response, true);
-            $responseArrayKeys = array_keys($responseArray);
-
-
-            foreach ($responseArrayKeys as $jsonKey) {
-                if ($jsonKey == 'balance' || $jsonKey == 'result' || $jsonKey == 'data' || $jsonKey == 'result') {
-                    $balance = $responseArray[$jsonKey];
-
-                    return $this->WalletCreate($user->id,$walletId,$userCoinId,$balance);
-                    
-                } elseif ($jsonKey == 'confirmed') {
-
-
-                    $confirmedResponse = json_decode($response, true);
-                    $confirmedResponse = json_encode($confirmedResponse['confirmed'], true);
-                    $confirmedResponseArray = json_decode($confirmedResponse, true);
-
-                    $balance = $confirmedResponseArray['nanoErgs'];
-
-                    return $this->WalletCreate($user->id,$walletId,$userCoinId,$balance);
-                    
-                }
-            }
+            $balance = $this->balance($response);
+            return $this->WalletCreate($user->id, $walletId, $userCoinId, $balance);
         }
 
 

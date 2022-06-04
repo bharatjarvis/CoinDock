@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Models\V1\RecoveryKey;
 use App\Models\V1\Wallet;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 
 class everyHourBalance extends Command
 {
@@ -13,7 +13,7 @@ class everyHourBalance extends Command
      *
      * @var string
      */
-    protected $signature = 'hourly:balance';
+    protected $signature = 'balance:update';
 
     /**
      * The console command description.
@@ -29,8 +29,23 @@ class everyHourBalance extends Command
      */
     public function handle()
     {
-        $recoveryKeyList = RecoveryKey::all();
+        $wallet_instance = new Wallet();
+        $wallets = Wallet::all();
+        foreach ($wallets as $coin){
 
+            $walletId = $coin->wallet_id;
+            $coinId = $coin->coin_id;
+
+            $baseUrl = $wallet_instance->basePath($coinId,$walletId);
+            $response = Http::get($baseUrl);
+            $bal = $wallet_instance->balance($response);
+
+            Wallet::where('wallet_id',$walletId)->update(['balance'=>$bal]);
+            
+
+        }
+
+        echo 'Wallet Balanced Updated..';
 
 
 
