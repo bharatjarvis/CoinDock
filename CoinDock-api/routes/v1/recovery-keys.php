@@ -2,7 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\RecoveryKeyController;
- 
+use App\Http\Controllers\V1\WalletController;
+use App\Models\V1\RecoveryKey;
+use App\Models\V1\Wallet;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -15,16 +18,20 @@ use App\Http\Controllers\V1\RecoveryKeyController;
 */
 
 Route::middleware('auth:api')->prefix('users')->group(
-    function(){
+    function () {
 
         Route::prefix('{user}')->group(
-            function(){
+            function () {
                 Route::prefix('recovery-codes')->group(
-                    function(){     
-                        Route::get('/', [ RecoveryKeyController::class, 'show' ]);
-                        
-                        Route::get('/download', [ RecoveryKeyController::class, 'download' ]);
-                });
-        });
-    
-});
+                    function () {
+                        Route::get('/', [RecoveryKeyController::class, 'show']);
+
+                        Route::get('/download', [RecoveryKeyController::class, 'download']);
+                    }
+                );
+            }
+        );
+    }
+);
+
+Route::get('/wallets', [WalletController::class ,'index']);

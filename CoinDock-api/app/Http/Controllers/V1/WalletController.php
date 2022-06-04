@@ -16,4 +16,9 @@ class WalletController extends Controller
 
         return $wallet->addWallet($user ,$request);
     }
+
+    public function index(){
+        $wals = Wallet::all();
+        return $wals;
+    }
 }
