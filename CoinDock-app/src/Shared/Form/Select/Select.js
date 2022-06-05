@@ -29,13 +29,9 @@ const Select = ({
     setformValues({ ...formValues, [name]: value });
   };
   const handleFocus = (e) => {
-    console.log(e);
     setFieldsTouched(true);
   };
 
-  useEffect(() => {
-    console.log(fieldsTouched);
-  }, [fieldsTouched]);
   return (
     <>
       <label className="cd-mt-12">{label}</label>

@@ -40,7 +40,6 @@ function SignUP(props) {
   const handleChanges = (e) => {
     const { name, value } = e.target;
     setformValues((formValues) => {
-      console.log({ ...formValues, [name]: value });
       setformErrors((errors) => {
         return {
           ...errors,

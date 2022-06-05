@@ -29,13 +29,9 @@ function DatePick({ name, onChange, formErrors }) {
     setSelectedDate(value);
   };
   const handleFocus = (e) => {
-    console.log(e);
     setFieldsTouched(true);
   };
 
-  useEffect(() => {
-    console.log(fieldsTouched);
-  }, [fieldsTouched]);
   return (
     <React.Fragment>
       <label className="cd-mt-12">Date of Birth</label>

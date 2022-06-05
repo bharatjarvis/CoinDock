@@ -54,7 +54,6 @@ export const recoveryCodes = baseApi.injectEndpoints({
         method: "get",
       }),
       transformResponse: (response) => {
-        console.log(response);
         return response.data;
       },
     }),

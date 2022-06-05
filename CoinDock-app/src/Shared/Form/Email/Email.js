@@ -23,13 +23,8 @@ const Email = ({ name, formErrors }) => {
     setformValues({ ...formValues, [name]: value });
   };
   const handleFocus = (e) => {
-    console.log(e);
     setFieldsTouched(true);
   };
-
-  useEffect(() => {
-    console.log(fieldsTouched);
-  }, [fieldsTouched]);
 
   return (
     <>

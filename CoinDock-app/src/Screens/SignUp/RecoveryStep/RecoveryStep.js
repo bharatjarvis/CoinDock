@@ -35,54 +35,53 @@ function RecoveryCodeBoxStep() {
             <div>
               <div className="d-flex justify-content-between"></div>
               <Stepper totalSteps={3} />
-              <form>
-                <div className="p-3" />
 
-                <div className="cd-step-header-content">
-                  Please note down the below recovery words in the same order
-                  and keep it securely
+              <div className="p-3" />
+
+              <div className="cd-step-header-content">
+                Please note down the below recovery words in the same order and
+                keep it securely
+              </div>
+
+              <div className="p-3" />
+              <div style={{ flex: "1 4 50%", display: "flex" }}>
+                <div className="recover-table">
+                  {Boolean(recoveryCodes) &&
+                    [...Array(recoveryCodes.length).keys()].map((number) => {
+                      return (
+                        <RecoveryBoxs
+                          key={number}
+                          index={number + 1}
+                          code={recoveryCodes[number]}
+                        />
+                      );
+                    })}
                 </div>
+              </div>
+              <div className="p-3" />
 
-                <div className="p-3" />
-                <div style={{ flex: "1 4 50%", display: "flex" }}>
-                  <div className="recover-table">
-                    {Boolean(recoveryCodes) &&
-                      [...Array(recoveryCodes.length).keys()].map((number) => {
-                        return (
-                          <RecoveryBoxs
-                            key={number}
-                            index={number + 1}
-                            code={recoveryCodes[number]}
-                          />
-                        );
-                      })}
-                  </div>
-                </div>
-                <div className="p-3" />
+              <div className="cd-content-row-center">
+                <DownloadRecoverykeys />
+              </div>
 
-                <div className="cd-content-row-center">
-                  <DownloadRecoverykeys />
-                </div>
+              <div className="p-3" />
 
-                <div className="p-3" />
+              <Checkbox
+                label="Yes, I noted down the recovery words securely"
+                checked={checked}
+                onChange={handleOnCheckBoxChange}
+              />
 
-                <Checkbox
-                  label="Yes, I noted down the recovery words securely"
-                  checked={checked}
-                  onChange={handleOnCheckBoxChange}
-                />
-
-                <div className="p-3" />
-                <div className="cd-content-row-end">
-                  <button
-                    className="cd-button cd-button-2"
-                    onClick={handleOnSubmit}
-                    disabled={!checked}
-                  >
-                    Next
-                  </button>
-                </div>
-              </form>
+              <div className="p-3" />
+              <div className="cd-content-row-end">
+                <button
+                  className="cd-button cd-button-2"
+                  onClick={handleOnSubmit}
+                  disabled={!checked}
+                >
+                  Next
+                </button>
+              </div>
             </div>
           </div>
         </div>

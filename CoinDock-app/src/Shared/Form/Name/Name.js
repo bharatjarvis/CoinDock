@@ -25,7 +25,6 @@ const Name = ({ label, name, placeholder, formErrors }) => {
     setformValues({ ...formValues, [name]: value });
   };
   const handleFocus = (e) => {
-    console.log(e);
     setFieldsTouched(true);
   };
 
