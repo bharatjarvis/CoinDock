@@ -6,10 +6,10 @@ import "./RecoveryBoxes.css";
 function RecoveryBoxs(props) {
   return (
     <>
-      <div className="code-box">
+      <div className="cd-code-box">
         {props.input ? (
           <input
-            className="cd-box-data"
+            className="cd-box-input-data"
             type="text"
             value={props.code}
             name={props.index}

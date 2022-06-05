@@ -1,4 +1,4 @@
-.code-box {
+.cd-code-box {
   position: relative;
   box-sizing: border-box;
   width: 79px;
@@ -23,4 +23,13 @@
   justify-content: center;
   height: fit-content;
   padding: 20px;
+}
+
+.cd-box-input-data {
+  padding: 20px;
+  box-sizing: content-box;
+  display: block;
+  width: 100%;
+  border: indigo;
+  border-radius: 10px;
 }
