@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import RecoveryBoxs from "../../../Shared/Form/RecoveryBoxes";
 import Checkbox from "../../../Shared/Form/CheckBox/CheckBox";
@@ -10,12 +10,19 @@ import { useGetRecoveryCodesQuery } from "../../../App/Api/recoveryCodes";
 import { useNavigate } from "react-router-dom";
 
 function RecoveryCodeBoxStep() {
+  const [checked, setChecked] = useState(false);
+
+  const checkboxRef = useRef(null);
   const navigate = useNavigate();
 
   const { data = [], ...r } = useGetRecoveryCodesQuery({ userId: 1 });
 
-  const handleOnClick = () => {
+  const handleOnSubmit = () => {
     navigate("/recovery-test");
+  };
+
+  const handleOnCheckBoxChange = () => {
+    setChecked((checked) => !checked);
   };
 
   const recoveryCodes = data?.data?.results.recovery_code.recovery_codes;
@@ -37,16 +44,15 @@ function RecoveryCodeBoxStep() {
                 </div>
 
                 <div className="p-3" />
-                <div style={{ flex: "1 4 50%;", display: "flex" }}>
+                <div style={{ flex: "1 4 50%", display: "flex" }}>
                   <div className="recover-table">
                     {Boolean(recoveryCodes) &&
                       [...Array(recoveryCodes.length).keys()].map((number) => {
                         return (
                           <RecoveryBoxs
-                            {...{
-                              value: number,
-                              code: recoveryCodes[number],
-                            }}
+                            key={number}
+                            index={number + 1}
+                            code={recoveryCodes[number]}
                           />
                         );
                       })}
@@ -60,11 +66,19 @@ function RecoveryCodeBoxStep() {
 
                 <div className="p-3" />
 
-                <Checkbox label="Yes, I noted down the recovery words securely" />
+                <Checkbox
+                  label="Yes, I noted down the recovery words securely"
+                  checked={checked}
+                  onChange={handleOnCheckBoxChange}
+                />
 
                 <div className="p-3" />
                 <div className="cd-content-row-end">
-                  <button className="cd-button" onClick={handleOnClick}>
+                  <button
+                    className="cd-button cd-button-2"
+                    onClick={handleOnSubmit}
+                    disabled={!checked}
+                  >
                     Next
                   </button>
                 </div>

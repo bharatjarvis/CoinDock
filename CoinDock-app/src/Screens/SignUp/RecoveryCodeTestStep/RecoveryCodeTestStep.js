@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import RecoveryBoxs from "../../../Shared/Form/RecoveryBoxes";
 import "../../../Shared/common-styles/common.css";
@@ -9,29 +9,39 @@ import {
   useGetRandomRecoveryCodesQuery,
 } from "../../../App/Api/recoveryCodes";
 import { useNavigate } from "react-router-dom";
+import Popup from "../../Popup/Popup";
 
 function RecoveryCodeTestStep() {
   const navigate = useNavigate();
 
-  const { data = [], ...a } = useGetRandomRecoveryCodesQuery();
+  const { data = [] } = useGetRandomRecoveryCodesQuery();
 
-  // const [recoveryTestCodes] = usePutRecoveryCodesMutation({ userId: 1 });
+  const [recoveryTestCodes, { error }] = usePutRecoveryCodesMutation();
+
+  const [formValues, setformValues] = useState({
+    key_response: {},
+  });
+
+  const [buttonPopup, setButtonPopup] = useState(false);
 
   const handleSubmit = async (e) => {
-    // e.preventDefault();
-    // try {
-    //   await recoveryTestCodes({ ...formValues })
-    //     .unwrap()
-    //     .then(() => {
-    //       setButtonPopup(true);
-    //     });
-    // } catch (errorResponse) {
-    //   setformErrors({});
-    // }
+    e.preventDefault();
+    try {
+      await recoveryTestCodes({ userId: 1, ...formValues }).unwrap();
+
+      navigate("/logout");
+    } catch (error) {
+      if (error.status == 400) {
+        setButtonPopup(true);
+      }
+    }
   };
 
-  const handleOnInput = (e) => {
-    console.log(e);
+  const handleOnInput = (event) => {
+    setformValues((formValues) => {
+      formValues.key_response[event.target.name] = event.target.value;
+      return formValues;
+    });
   };
 
   const recoveryCodes = data?.results;
@@ -44,29 +54,30 @@ function RecoveryCodeTestStep() {
             <div>
               <div className="d-flex justify-content-between"></div>
               <Stepper totalSteps={3} />
-              <form>
+              <form onInput={handleOnInput}>
                 <div className="p-3" />
 
                 <div className="cd-step-header-content">
                   Please enter the recovery words on the same order to activate
-                  the CoinDock account
+                  the CoinDock account.
                 </div>
 
                 <div className="p-3" />
-                <div style={{ flex: "1 4 50%;", display: "flex" }}>
+                <div style={{ flex: "1 4 50%", display: "flex" }}>
                   <div className="recover-test-table">
                     {Boolean(recoveryCodes) &&
-                      [...Array(recoveryCodes.length).keys()].map((number) => {
-                        return (
-                          <RecoveryBoxs
-                            {...{
-                              value: recoveryCodes[number],
-                              submitEvent: true,
-                              code: "",
-                            }}
-                          />
-                        );
-                      })}
+                      [...Array(recoveryCodes.length).keys()].map(
+                        (number, index) => {
+                          return (
+                            <RecoveryBoxs
+                              key={index}
+                              index={recoveryCodes[number]}
+                              submitEvent={true}
+                              input={true}
+                            />
+                          );
+                        }
+                      )}
                   </div>
                 </div>
                 <div className="p-3" />
@@ -74,23 +85,28 @@ function RecoveryCodeTestStep() {
                   <div className="col-md-4">
                     <button
                       className="cd-button"
-                      onClick={navigate("/recovery-codes")}
+                      onClick={() => {
+                        navigate("/recovery-codes");
+                      }}
                     >
                       Back
                     </button>
                   </div>
 
                   <div className="col-md-4 offset-md-4">
-                    <button
-                      className="cd-button"
-                      onClick={handleSubmit()}
-                      onInput={handleOnInput()}
-                    >
+                    <button className="cd-button" onClick={handleSubmit}>
                       Confirm
                     </button>
                   </div>
                 </div>
               </form>
+              <Popup
+                trigger={buttonPopup}
+                setTrigger={setButtonPopup}
+                buttonLable="OK"
+              >
+                <p>{error?.data?.error?.message}</p>
+              </Popup>
             </div>
           </div>
         </div>

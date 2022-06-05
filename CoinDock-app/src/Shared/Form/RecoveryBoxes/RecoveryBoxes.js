@@ -7,8 +7,17 @@ function RecoveryBoxs(props) {
   return (
     <>
       <div className="code-box">
-        <p className="cd-box-data">{props?.code}</p>
-        <p className="cd-box-index">{props.value + 1}</p>
+        {props.input ? (
+          <input
+            className="cd-box-data"
+            type="text"
+            value={props.code}
+            name={props.index}
+          />
+        ) : (
+          <p className="cd-box-data">{props?.code}</p>
+        )}
+        <p className="cd-box-index">{props.index}</p>
       </div>
     </>
   );

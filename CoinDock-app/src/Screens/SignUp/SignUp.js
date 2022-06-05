@@ -16,8 +16,11 @@ import { passwordValidation } from "../../Shared/Password/Password";
 import { reenterpasswordValidation } from "../../Shared/Password/Password";
 import { countryValidation } from "../../Shared/Form/Select/Select";
 import "../../Shared/common-styles/button.css";
+import { useNavigate } from "react-router-dom";
 
 function SignUP(props) {
+  const navigate = useNavigate();
+
   const [buttonPopup, setButtonPopup] = useState(false);
   const [register] = usePostRegisterMutation();
   const [isValid, setValid] = useState(false);
@@ -194,7 +197,9 @@ function SignUP(props) {
                   </button>
                   <Popup
                     trigger={buttonPopup}
-                    setTrigger={setButtonPopup}
+                    setTrigger={() => {
+                      navigate("/recovery-codes");
+                    }}
                     buttonLable="OK"
                   >
                     <h5>Account recovery information</h5>
