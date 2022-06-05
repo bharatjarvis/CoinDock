@@ -63,22 +63,21 @@ function RecoveryCodeTestStep() {
                 </div>
 
                 <div className="p-3" />
-                <div style={{ flex: "1 4 50%", display: "flex" }}>
-                  <div className="recover-test-table">
-                    {Boolean(recoveryCodes) &&
-                      [...Array(recoveryCodes.length).keys()].map(
-                        (number, index) => {
-                          return (
-                            <RecoveryBoxs
-                              key={index}
-                              index={recoveryCodes[number]}
-                              submitEvent={true}
-                              input={true}
-                            />
-                          );
-                        }
-                      )}
-                  </div>
+
+                <div className="cd-recover-test-table">
+                  {Boolean(recoveryCodes) &&
+                    [...Array(recoveryCodes.length).keys()].map(
+                      (number, index) => {
+                        return (
+                          <RecoveryBoxs
+                            key={index}
+                            index={recoveryCodes[number]}
+                            submitEvent={true}
+                            input={true}
+                          />
+                        );
+                      }
+                    )}
                 </div>
                 <div className="p-3" />
                 <div className="row">

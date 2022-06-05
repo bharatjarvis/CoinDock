@@ -1,4 +1,4 @@
-.label {
+.cd-label {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -12,7 +12,7 @@
   color: #000000;
 }
 
-.check-box {
+.cd-check-box {
   border-radius: 0em;
   border: 5px solid #09bbff;
   width: 20px;

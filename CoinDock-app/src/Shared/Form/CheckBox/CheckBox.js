@@ -16,12 +16,12 @@ function Checkbox(props) {
       <input
         type="checkbox"
         id="Checkbox"
-        className="check-box"
+        className="cd-check-box"
         checked={checked}
         onChange={handleOnChange}
       />
 
-      <label htmlFor="Checkbox" className="label">
+      <label htmlFor="Checkbox" className="cd-label">
         {" "}
         {props.label}
       </label>

@@ -76,7 +76,7 @@
   flex-direction: row;
 }
 
-.recover-table {
+.cd-recover-table {
   display: flex;
   gap: 1em;
   margin-top: 40;
@@ -89,12 +89,7 @@
   margin: 2%;
 }
 
-.recover-table > * {
-  flex: 1 4 50%;
-  cursor: row-resize;
-}
-
-.recover-test-table {
+.cd-recover-test-table {
   display: flex;
   gap: 1em;
   margin-top: 40;

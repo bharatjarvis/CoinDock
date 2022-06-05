@@ -44,19 +44,17 @@ function RecoveryCodeBoxStep() {
               </div>
 
               <div className="p-3" />
-              <div style={{ flex: "1 4 50%", display: "flex" }}>
-                <div className="recover-table">
-                  {Boolean(recoveryCodes) &&
-                    [...Array(recoveryCodes.length).keys()].map((number) => {
-                      return (
-                        <RecoveryBoxs
-                          key={number}
-                          index={number + 1}
-                          code={recoveryCodes[number]}
-                        />
-                      );
-                    })}
-                </div>
+              <div className="cd-recover-table">
+                {Boolean(recoveryCodes) &&
+                  [...Array(recoveryCodes.length).keys()].map((number) => {
+                    return (
+                      <RecoveryBoxs
+                        key={number}
+                        index={number + 1}
+                        code={recoveryCodes[number]}
+                      />
+                    );
+                  })}
               </div>
               <div className="p-3" />
 
