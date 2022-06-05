@@ -10,6 +10,7 @@ import {
 } from "../../../App/Api/recoveryCodes";
 import { useNavigate } from "react-router-dom";
 import Popup from "../../Popup/Popup";
+import "./RecoveryCodeTest.css";
 
 function RecoveryCodeTestStep() {
   const navigate = useNavigate();
@@ -80,8 +81,8 @@ function RecoveryCodeTestStep() {
                     )}
                 </div>
                 <div className="p-3" />
-                <div className="row">
-                  <div className="col-md-4">
+                <div className="row cd-row-space-between">
+                  <div className="col-md-4 cd-width-unset">
                     <button
                       className="cd-button"
                       onClick={() => {
@@ -92,7 +93,7 @@ function RecoveryCodeTestStep() {
                     </button>
                   </div>
 
-                  <div className="col-md-4 offset-md-4">
+                  <div className="col-md-4 offset-md-4 cd-width-unset">
                     <button className="cd-button" onClick={handleSubmit}>
                       Confirm
                     </button>
