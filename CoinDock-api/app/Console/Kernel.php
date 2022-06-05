@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('passport:purge')->hourly();
-        $schedule->command('balance:update')->hourly();
+        $schedule->command('wallet:handle_balance')->hourly();
     }
 
     /**

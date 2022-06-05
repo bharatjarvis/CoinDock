@@ -19,7 +19,7 @@ class Wallet extends Model
     ];
 
 
-    //Individual walet creation
+    //wallet creation
     public function WalletCreate($userId, $walletId, $userCoinId, $balance)
     {
         Wallet::create([
@@ -65,6 +65,7 @@ class Wallet extends Model
     }
 
 
+    //Fetching Wallet balance through the Response
     public function balance($response)
     {
         $responseArray = json_decode($response, true);

@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Console\Commands\Wallets;
+
+use App\Models\V1\Wallet;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
+
+class handleWalletBalance extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'wallet:handle_balance';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'This will fetch the wallet balnce hourly';
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
+        $wallets = Wallet::all();
+        foreach ($wallets as $wallet){
+
+            $baseUrl = $wallet->basePath($wallet->coin_id,$wallet->wallet_id);
+            $response = Http::get($baseUrl);
+            $balance = $wallet->balance($response);
+
+            $wallet->balance = $balance;
+            $wallet->save();
+
+        }
+
+        $this->info('Wallet Balance Updated ');
+        return Command::SUCCESS;
+
+    }
+}
+
