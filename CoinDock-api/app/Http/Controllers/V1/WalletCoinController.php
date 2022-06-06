@@ -27,8 +27,9 @@ class WalletCoinController extends Controller
                 return  $e->sum();
             })->toArray();
 
-        dd($wallets);
-        return view('chart',['wallets' => [$wallets]]);
+        //dd($wallets);
+        //return view('chart',['wallets' => [$wallets]]);
+        return $wallets;
         
     }
 }
