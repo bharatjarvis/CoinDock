@@ -7,9 +7,7 @@ use App\Models\V1\Traits\Encryptable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Requests\V1\RecoveryKeyRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use phpDocumentor\Reflection\Types\Null_;
 
 class RecoveryKey extends Model
 {
@@ -36,24 +34,22 @@ class RecoveryKey extends Model
     {
 
         //checking whether 
-        $user_recovery_code = RecoveryKey::whereUserId($user->id)->first();
-        if ($user_recovery_code) {
-            if ($user_recovery_code->status->value == RecoveryKeyStatus::Inactive) {
-                return $user_recovery_code;
-            }
+        $recoveryCode = $this->whereUserId($user->id)->whereStatus(RecoveryKeyStatus::Inactive)->first();
+        if ($recoveryCode) {
+            return $recoveryCode;
         }
 
         //randomizing the dictionary words
         $recoveryArray = Arr::random(
             config('random_keys.recovery_codes'),
-            config('random_keys.recovery_code_length')
+            config('random_keys.recovery.block_length')
         );
 
         //coverting to string
         $recoveryString = implode(" ", $recoveryArray);
 
         //Recovery Key Creation in DB
-        $recoveryGeneration = RecoveryKey::create([
+        $recoveryGeneration = self::create([
             'user_id' => $user->id,
             'recovery_code' => $recoveryString,
             'status' => RecoveryKeyStatus::Inactive,

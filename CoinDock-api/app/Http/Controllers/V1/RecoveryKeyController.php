@@ -6,6 +6,7 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\V1\RecoveryKeyRequest;
+use App\Http\Resources\V1\RecoveryCodeResource;
 use App\Models\V1\User;
 use App\Models\V1\RecoveryKey;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -32,19 +33,18 @@ class RecoveryKeyController extends Controller
      *
      * @return Response
      */
-    public function show(User $user)
+    public function create(User $user)
     {
         $recovery = new RecoveryKey();
 
+        $recoveryKey =$recovery->store($user);
         return response([
             'message' => 'Recovery codes created successfully',
             'results' => [
-                'recovery_code' => $recovery->store($user),
-                'recovery_code_length'=>config('random_keys.recovery_code_length'),
+                'recovery_code' => new RecoveryCodeResource($recoveryKey),
                 'completed' => 3
             ],
         ], 200);
-
     }
 
     public function download(User $user)

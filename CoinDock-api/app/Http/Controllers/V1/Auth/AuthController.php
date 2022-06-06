@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\V1\Auth;
 
+use App\Http\Requests\V1\CreateUserRequest;
 use App\Http\Requests\V1\LoginRequest;
 use App\Http\Requests\V1\SignupRequest;
 use App\Http\Resources\V1\UserResource;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Symfony\Component\HttpFoundation\Response;
 
-class UserController extends AccessTokenController
+class AuthController extends AccessTokenController
 {
     use BuildPassportTokens;
 
@@ -52,23 +53,13 @@ class UserController extends AccessTokenController
     /**
      * SignupRequest
      */
-    public function store(SignupRequest $request)
+    public function store(CreateUserRequest $request)
     {
         info("message");
         $user = new User();
 
-        $newUser = $user->store($request);
-
-        $this->signUpInfo($newUser);
+        $user->store($request);
         
-        //  $signUp = SignUp::find($user->id);
-
-        //  $stepCount = $signUp->step_count;
-        //  if($stepCount==0){
-        //      $signUp->step_count = $signUp->step_count+1;
-        //  }
-        //  $signUp->save();
-
         return response(['status' => 'success', 'message' => 'Success! User registered.'], 201);
     }
 
