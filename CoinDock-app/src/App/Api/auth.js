@@ -1,4 +1,5 @@
 import baseApi from "./api";
+import { store } from "App/Reducers";
 
 const auth = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -11,22 +12,23 @@ const auth = baseApi.injectEndpoints({
     }),
 
     logout: build.mutation({
-      query: ({ ...data }) => ({
+      query: () => ({
         url: "/v1/logout",
         method: "post",
-        data,
       }),
       transformResponse: (response) => {
         localStorage.clear();
+        store.dispatch({
+          type: "RESET"
+        })
         return response;
       },
     }),
 
     refresh: build.mutation({
-      query: ({ ...data }) => ({
+      query: () => ({
         url: "/v1/refresh",
         method: "post",
-        data,
       }),
     }),
   }),

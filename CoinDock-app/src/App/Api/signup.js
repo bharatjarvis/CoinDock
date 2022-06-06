@@ -1,4 +1,6 @@
+import { store } from "App/Reducers";
 import baseApi from "./api";
+import auth from "./auth";
 
 const signup = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -26,10 +28,7 @@ const signup = baseApi.injectEndpoints({
         },
       }),
       transformResponse: (response) => {
-        if (response.status !== 200) {
-          throw response;
-        }
-
+        store.dispatch(auth.endpoints.refresh.initiate())
         return response;
       },
     }),

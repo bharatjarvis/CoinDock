@@ -1,20 +1,19 @@
 import React, { useState } from "react";
-import { Navbar, Nav, NavDropdown, Button } from "react-bootstrap";
+import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { useLogout } from "../Api/auth";
 import "./Header.css";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Search from "../../Shared/Search/Search";
 import Select from "../../Shared/Form/Select";
-// import Popup from "../../Popup/Popup";
 import Name from "../../Shared/Form/Name/Name";
 import "../../Shared/common-styles/space.css";
 import { RiCloseLine } from "react-icons/ri";
 import Popup from "../../Screens/Popup/Popup";
+import { useIsAuthenticated } from "App/Auth/hooks";
 function Header() {
+  const isAuthenticated = useIsAuthenticated()
   const navigate = useNavigate();
   const [buttonPopup, setButtonPopup] = useState(false);
-  const [formErrors, setformErrors] = useState({});
   const [logout] = useLogout();
   const handleLogoutClick = async () => {
     try {
@@ -30,7 +29,7 @@ function Header() {
       <div className="cd-header-dimensions"></div>
       <Navbar variant="dark" className="cd-app-header cd-header-dimensions">
         <Navbar.Brand href="#home">CoinDock</Navbar.Brand>
-
+        {isAuthenticated &&  <>
         <Search />
 
         <Nav.Link href="#addwallet">
@@ -43,6 +42,9 @@ function Header() {
         </Nav.Link>
         <Nav>
           <NavDropdown
+            style={{
+              zIndex: 1000
+            }}
             title={
               <div className="pull-left">
                 <img
@@ -62,6 +64,7 @@ function Header() {
             </NavDropdown.Item>
           </NavDropdown>
         </Nav>
+        </>}
       </Navbar>
       <Popup
         trigger={buttonPopup}
@@ -86,20 +89,17 @@ function Header() {
             { label: "BitCoin", value: 1 },
             { label: "Ethereum", value: 2 },
           ]}
-          formErrors={formErrors}
         />
 
         <Name
           name="Wallet Address"
           placeholder="Wallet Address "
           label="Wallet Address"
-          formErrors={formErrors}
         />
         <Name
           name="Wallet Name"
           placeholder="Wallet Name"
           label="Wallet Name"
-          formErrors={formErrors}
         />
       </Popup>
     </React.Fragment>
