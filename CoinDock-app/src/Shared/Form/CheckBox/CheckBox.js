@@ -1,15 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./CheckBox.css";
 
 function Checkbox(props) {
+  const [checked, setChecked] = useState(props.checked);
+  const handleOnChange = (event) => {
+    if (props.onChange) {
+      props.onChange(event);
+    }
+    setChecked((checked) => !checked);
+  };
+
   return (
     <div className="cd-checkbox-container">
+      <input
+        type="checkbox"
+        id="Checkbox"
+        className="cd-check-box"
+        checked={checked}
+        onChange={handleOnChange}
+      />
 
-      <input type="checkbox" id="Checkbox" className="check-box" required/>
-
-      <label htmlFor="Checkbox" className="label">
-      {' '}
+      <label htmlFor="Checkbox" className="cd-label">
+        {" "}
         {props.label}
       </label>
     </div>

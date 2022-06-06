@@ -3,7 +3,6 @@ import { Provider } from "react-redux";
 import { store } from "../Reducers";
 import "./App.css";
 import Direction from "../Routes";
-import Header from "../Header/Header";
 
 function App() {
   return (

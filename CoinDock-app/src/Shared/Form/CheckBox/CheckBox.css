@@ -1,4 +1,4 @@
-.label {
+.cd-label {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -9,16 +9,19 @@
   font-style: normal;
   font-weight: 400;
   font-size: 18px;
-  line-height: 200%;
   color: #000000;
 }
 
-.check-box {
+.cd-check-box {
   border-radius: 0em;
   border: 5px solid #09bbff;
   width: 20px;
-  height: 40px;
+  height: 20px;
   box-sizing: border-box;
+  background-color: #28363c;
+  display: inline-block;
+  visibility: visible;
+  box-shadow: 0 0 0 1px #09bbff, 0 0 0 0.2rem #09bbff;
 }
 
 .cd-checkbox-container {

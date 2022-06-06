@@ -1,34 +1,24 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../../../Shared/common-styles/common.css";
+import "Shared/common-styles/common.css";
 import "./RecoveryBoxes.css";
 
-import { Box } from "react";
-
-// const handleDownload = (e) => {
-//   // use mutate for route call
-// };
-
-// const handleRecoverboxBlocks = (e) => {};
-
 function RecoveryBoxs(props) {
-  console.log(props.label);
-  console.log(props.label.recovery_code_length);
-
-  let codeLength = props.label.recovery_code_length;
   return (
     <>
-      <div style={{ marginLeft: "40%", marginTop: "60px", width: "30%" }}>
-        <Box color="white" bgcolor="palevioletred" p={1}>
-          Greetings from GeeksforGeeks!
-        </Box>
+      <div className="cd-code-box">
+        {props.input ? (
+          <input
+            className="cd-box-input-data"
+            type="text"
+            value={props.code}
+            name={props.index}
+          />
+        ) : (
+          <p className="cd-box-data">{props?.code}</p>
+        )}
+        <p className="cd-box-index">{props.index}</p>
       </div>
-      {/* <div className="code-box"> */}
-
-      {/* <p className="cd-box-data">strig</p> */}
-      {/* <p className="cd-box-index">1</p> */}
-      {/* <p>{handleRecoverboxBlocks}</p> */}
-      {/* </div> */}
     </>
   );
 }

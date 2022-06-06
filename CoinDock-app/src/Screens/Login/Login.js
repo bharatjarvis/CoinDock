@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useLogin } from "../../App/Api/auth";
-import "../../Shared/common-styles/button.css";
+
+import "Shared/common-styles/button.css";
+import Email from "Shared/Form/Email";
+import { useLogin } from "App/Api/auth";
 
 function Login() {
   let navigate = useNavigate();

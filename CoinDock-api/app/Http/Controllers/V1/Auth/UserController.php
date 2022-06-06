@@ -23,10 +23,18 @@ class UserController extends AccessTokenController
     {
         info("message");
         $user = new User();
-        
-        $user->store($request);
 
-        return response(['status' => 'success', 'message' => 'Success! User registered.'], 201);
+        $user->store($request);
+        $user->refresh();
+
+        $response = $this->requestPasswordGrant($request);
+
+        return response(['status' => 'success', 'message' => 'Success! User registered.'], 201,
+        [
+            'Access-Token' => $response['access_token'],
+            'Refresh-Token' => $response['refresh_token'],
+            'Expires-In' => $response['expires_in']
+        ]);
     }
 
 

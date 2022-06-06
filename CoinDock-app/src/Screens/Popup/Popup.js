@@ -17,7 +17,7 @@ function Popup(props) {
       </div>
     </div>
   ) : (
-    ""
+    <React.Fragment/>
   );
 }
 

@@ -1,6 +1,6 @@
 import React from "react";
 import "./Stepper.css";
-import "../../common-styles/space.css";
+import "Shared/common-styles/space.css";
 
 function Stepper({ totalSteps, currentActiveSteps }) {
   return (

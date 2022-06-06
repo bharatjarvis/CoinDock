@@ -1,6 +1,6 @@
-import { React, useState, useEffect } from "react";
+import { React, useState } from "react";
 import "./Select.css";
-import "../../common-styles/space.css";
+import "Shared/common-styles/space.css";
 
 export const countryValidation = (value) => {
   let error = null;
@@ -29,13 +29,9 @@ const Select = ({
     setformValues({ ...formValues, [name]: value });
   };
   const handleFocus = (e) => {
-    console.log(e);
     setFieldsTouched(true);
   };
 
-  useEffect(() => {
-    console.log(fieldsTouched);
-  }, [fieldsTouched]);
   return (
     <>
       <label className="cd-mt-12">{label}</label>

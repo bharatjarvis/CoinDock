@@ -1,23 +1,26 @@
 import React, { useEffect, useState } from "react";
 import "./SignUp.css";
-import Name from "../../Shared/Form/Name/Name.js";
-import Email from "../../Shared/Form/Email/Email.js";
+import Name from "Shared/Form/Name/Name.js";
+import Email from "Shared/Form/Email/Email.js";
 import Popup from "../Popup/Popup.js";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { emailValidation } from "../../Shared/Form/Email/Email.js";
-import "../../Shared/common-styles/common.css";
-import Stepper from "../../Shared/Form/Ellipse/Stepper";
-import { usePostRegisterMutation } from "../../App/Api/signup";
-import Select from "../../Shared/Form/Select";
-import DatePick, { dateValidation } from "../../Shared/Date/DatePick";
-import { nameValidation } from "../../Shared/Form/Name/Name.js";
-import Password from "../../Shared/Password/Password";
-import { passwordValidation } from "../../Shared/Password/Password";
-import { reenterpasswordValidation } from "../../Shared/Password/Password";
-import { countryValidation } from "../../Shared/Form/Select/Select";
-import "../../Shared/common-styles/button.css";
+import { emailValidation } from "Shared/Form/Email/Email.js";
+import "Shared/common-styles/common.css";
+import Stepper from "Shared/Form/Ellipse/Stepper";
+import { usePostRegisterMutation } from "App/Api/signup";
+import Select from "Shared/Form/Select";
+import DatePick, { dateValidation } from "Shared/Date/DatePick";
+import { nameValidation } from "Shared/Form/Name/Name.js";
+import Password from "Shared/Password/Password";
+import { passwordValidation } from "Shared/Password/Password";
+import { reenterpasswordValidation } from "Shared/Password/Password";
+import { countryValidation } from "Shared/Form/Select/Select";
+import "Shared/common-styles/button.css";
+import { useNavigate } from "react-router-dom";
 
 function SignUP(props) {
+  const navigate = useNavigate();
+
   const [buttonPopup, setButtonPopup] = useState(false);
   const [register] = usePostRegisterMutation();
   const [isValid, setValid] = useState(false);
@@ -37,7 +40,6 @@ function SignUP(props) {
   const handleChanges = (e) => {
     const { name, value } = e.target;
     setformValues((formValues) => {
-      console.log({ ...formValues, [name]: value });
       setformErrors((errors) => {
         return {
           ...errors,
@@ -57,8 +59,11 @@ function SignUP(props) {
       setformErrors(errors);
     } else {
       try {
-        await register({ ...formValues }).unwrap();
-        setButtonPopup(true);
+        await register({ ...formValues })
+          .unwrap()
+          .then(() => {
+            setButtonPopup(true);
+          });
       } catch (errorResponse) {
         setformErrors({});
       }
@@ -191,11 +196,15 @@ function SignUP(props) {
                   </button>
                   <Popup
                     trigger={buttonPopup}
-                    setTrigger={setButtonPopup}
+                    setTrigger={() => {
+                      navigate("/recovery-codes");
+                    }}
                     buttonLable="OK"
                   >
                     <h5>Account recovery information</h5>
-                    <img className="image" />
+                    <div className="p-3">
+                      <img className="image" alt="" />
+                    </div>
                     <p className="para">
                       We’re going to display the account recovery information on
                       the next screen. Please ensure that you have good internet

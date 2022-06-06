@@ -1,10 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import RecoveryBoxs from "../../../Shared/Form/RecoveryBoxes";
-import "../../../Shared/common-styles/common.css";
-import Stepper from "../../../Shared/Form/Ellipse/Stepper";
+import RecoveryBoxs from "Shared/Form/RecoveryBoxes";
+import "Shared/common-styles/common.css";
+import "Shared/common-styles/button.css";
+import Stepper from "Shared/Form/Ellipse/Stepper";
+import {
+  usePutRecoveryCodesMutation,
+  useGetRandomRecoveryCodesQuery,
+} from "App/Api/recoveryCodes";
+import { useNavigate } from "react-router-dom";
+import "./RecoveryCodeTest.css";
+import Popup from "Screens/Popup/Popup";
 
 function RecoveryCodeTestStep() {
+  const navigate = useNavigate();
+
+  const { data = [] } = useGetRandomRecoveryCodesQuery();
+
+  const [recoveryTestCodes, { error }] = usePutRecoveryCodesMutation();
+
+  const [formValues, setformValues] = useState({
+    key_response: {},
+  });
+
+  const [buttonPopup, setButtonPopup] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await recoveryTestCodes({ userId: 1, ...formValues }).unwrap();
+
+      navigate("/logout");
+    } catch (error) {
+      if (error.status === 400) {
+        setButtonPopup(true);
+      }
+    }
+  };
+
+  const handleOnInput = (event) => {
+    setformValues((formValues) => {
+      formValues.key_response[event.target.name] = event.target.value;
+      return formValues;
+    });
+  };
+
+  const recoveryCodes = data?.results;
+
   return (
     <div className="paper">
       <div className="paper-container">
@@ -13,24 +55,58 @@ function RecoveryCodeTestStep() {
             <div>
               <div className="d-flex justify-content-between"></div>
               <Stepper totalSteps={3} />
-              <form>
+              <form onInput={handleOnInput}>
                 <div className="p-3" />
 
                 <div className="cd-step-header-content">
                   Please enter the recovery words on the same order to activate
-                  the CoinDock account
+                  the CoinDock account.
                 </div>
 
                 <div className="p-3" />
 
-                <RecoveryBoxs />
-
+                <div className="cd-recover-test-table">
+                  {Boolean(recoveryCodes) &&
+                    [...Array(recoveryCodes.length).keys()].map(
+                      (number, index) => {
+                        return (
+                          <RecoveryBoxs
+                            key={index}
+                            index={recoveryCodes[number]}
+                            submitEvent={true}
+                            input={true}
+                          />
+                        );
+                      }
+                    )}
+                </div>
                 <div className="p-3" />
-                <button className="cd-button-1">Back</button>
-                <div className="mb-l">
-                  <button className="cd-button-1">Confirm</button>
+                <div className="row cd-row-space-between">
+                  <div className="col-md-4 cd-width-unset">
+                    <button
+                      className="cd-button"
+                      onClick={() => {
+                        navigate("/recovery-codes");
+                      }}
+                    >
+                      Back
+                    </button>
+                  </div>
+
+                  <div className="col-md-4 offset-md-4 cd-width-unset">
+                    <button className="cd-button" onClick={handleSubmit}>
+                      Confirm
+                    </button>
+                  </div>
                 </div>
               </form>
+              <Popup
+                trigger={buttonPopup}
+                setTrigger={setButtonPopup}
+                buttonLable="OK"
+              >
+                <p>{error?.data?.error?.message}</p>
+              </Popup>
             </div>
           </div>
         </div>
