@@ -5,7 +5,6 @@ namespace App\Models\V1;
 use App\Enums\V1\UserStatus;
 use App\Enums\V1\UserType;
 use App\Http\Requests\V1\CreateUserRequest;
-use App\Http\Requests\V1\LoginRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -30,7 +29,7 @@ class User extends Authenticatable
         'email',
         'password',
         'status',
-        'recovery_attempts'
+        'recovery_attempts',
     ];
 
     /**
@@ -38,12 +37,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    // protected $encryptable = ['date_of_birth'];
+    protected $hidden = ['password', 'remember_token'];
 
     /**
      * The attributes that should be cast.
@@ -54,7 +48,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $table= 'users';
+    protected $table = 'users';
 
     /**
      * @param string $value
@@ -66,7 +60,6 @@ class User extends Authenticatable
         $this->attributes['password'] = Hash::make($value);
     }
 
-
     public function recoveryKey()
     {
         return $this->hasOne(RecoveryKey::class);
@@ -74,40 +67,25 @@ class User extends Authenticatable
 
     public function store(CreateUserRequest $request): self
     {
-        return User::create([
+        return self::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'type' => UserType::User,
             'date_of_birth' => $request->date_of_birth,
             'country' => $request->country,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'status'=> UserStatus::Active
+            'password' => $request->password,
+            'status' => UserStatus::Active,
         ]);
-    }
-
-    public function login(LoginRequest $request){
-        $data = [
-            'email' => $request->email,
-            'password' => $request->password
-        ];
-
-        if (!auth()->attempt($data)) {
-            return response(
-                [
-                    'error' => 'unauthorised'
-                ],
-                401
-            );
-        }
     }
 
     public function recoveryKeys()
     {
-        $this->hasOne(RecoveryKey::class, 'user_id', 'id');
+        return $this->hasMany(RecoveryKey::class, 'user_id', 'id');
     }
 
-    public function signUp(){
-        return $this->hasOne(SignUp::class);
-    }    
+    public function signUp()
+    {
+        return $this->hasOne(Signup::class);
+    }
 }

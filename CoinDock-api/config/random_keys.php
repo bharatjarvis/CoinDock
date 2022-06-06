@@ -6,7 +6,7 @@ return [
     'recovery' => [
         'test_block_length' => env('RECOVERY_TEST_BLOCK_LENGTH',3),
         'attemps' => env('RECOVERY_ATTEMPS',3),
-        'block_length' => env('BLOCK_LENGTH',12)
+        'block_length' => env('RECOVERY_BLOCK_LENGTH',12)
     ],
 
 ];

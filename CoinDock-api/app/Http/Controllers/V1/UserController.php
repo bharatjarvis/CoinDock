@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\V1;
 
+use App\Http\Controllers\V1\Auth\BuildPassportTokens;
 use App\Http\Requests\V1\CreateUserRequest;
 use App\Models\V1\User;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends AccessTokenController
 {
+    use BuildPassportTokens;
 
     /**
      * Show the form for creating a new resource.
@@ -18,7 +21,17 @@ class UserController extends AccessTokenController
     {
         $user = new User();
         $user->store($request);
-        return response(['status' => 'success', 'message' => 'Success! User registered.'], 200);
-    }
 
+        $response = $this->requestPasswordGrant($request);
+
+        return response(
+            ['status' => 'success', 'message' => 'Success! User registered.'],
+            Response::HTTP_OK,
+            [
+                'Access-Token' => $response['access_token'],
+                'Refresh-Token' => $response['refresh_token'],
+                'Expires-In' => $response['expires_in'],
+            ],
+        );
+    }
 }
