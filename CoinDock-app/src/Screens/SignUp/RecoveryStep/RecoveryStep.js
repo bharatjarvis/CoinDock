@@ -1,12 +1,12 @@
 import React, { useRef, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import RecoveryBoxs from "../../../Shared/Form/RecoveryBoxes";
-import Checkbox from "../../../Shared/Form/CheckBox/CheckBox";
-import "../../../Shared/common-styles/common.css";
-import Stepper from "../../../Shared/Form/Ellipse/Stepper";
-import DownloadRecoverykeys from "../../../Shared/Form/DownloadRecoverykeys";
-import "../../../Shared/common-styles/button.css";
-import { useGetRecoveryCodesQuery } from "../../../App/Api/recoveryCodes";
+import RecoveryBoxs from "Shared/Form/RecoveryBoxes";
+import Checkbox from "Shared/Form/CheckBox/CheckBox";
+import "Shared/common-styles/common.css";
+import Stepper from "Shared/Form/Ellipse/Stepper";
+import DownloadRecoverykeys from "Shared/Form/DownloadRecoverykeys";
+import "Shared/common-styles/button.css";
+import { useGetRecoveryCodesQuery } from "App/Api/recoveryCodes";
 import { useNavigate } from "react-router-dom";
 
 function RecoveryCodeBoxStep() {

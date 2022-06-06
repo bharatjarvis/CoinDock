@@ -1,7 +1,7 @@
 import React from "react";
+import Header from "App/Header/Header";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignUp from "Screens/SignUp";
-import Header from "../Header/Header";
 import AuthRoutes from "./AuthRoutes";
 import PublicRoutes from "./PublicRoutes";
 import RouteLoader from "./RouteLoader";

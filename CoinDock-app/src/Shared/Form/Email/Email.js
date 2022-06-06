@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../../common-styles/space.css";
+import "Shared/common-styles/space.css";
 export const emailValidation = (value) => {
   let error = null;
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;

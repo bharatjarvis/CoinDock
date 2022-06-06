@@ -1,6 +1,6 @@
 import { React, useState } from "react";
 import "./Select.css";
-import "../../common-styles/space.css";
+import "Shared/common-styles/space.css";
 
 export const countryValidation = (value) => {
   let error = null;

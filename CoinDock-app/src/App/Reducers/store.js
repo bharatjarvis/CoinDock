@@ -4,8 +4,8 @@ import { combineReducers } from "redux";
 import thunk from "redux-thunk";
 import { logger } from "redux-logger";
 import { setupListeners } from "@reduxjs/toolkit/query";
-import { authReducer } from "../Auth/reducers";
 import auth from "App/Api/auth";
+import { authReducer } from "App/Auth/reducers";
 
 const reducer = combineReducers({
   [baseApi.reducerPath]: baseApi.reducer,
@@ -22,7 +22,9 @@ const rootReducer = (state, action) => {
 const store = configureStore({
   initialState: {},
   reducer: rootReducer,
-  middleware: (getDefaultMiddleWare) => getDefaultMiddleWare().concat([thunk, baseApi.middleware, logger, auth.middleware]),
+  middleware: (getDefaultMiddleWare) => getDefaultMiddleWare({
+    serializableCheck: false
+  }).concat([thunk, baseApi.middleware, logger, auth.middleware]),
 });
 
 setupListeners(store.dispatch)

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import propTypes from "prop-types";
-import "../../../Shared/common-styles/space.css";
+import "Shared/common-styles/space.css";
 export const nameValidation = (value, label = "Name", length = 0) => {
   let error = null;
 

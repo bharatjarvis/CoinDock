@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
 import "./SignUp.css";
-import Name from "../../Shared/Form/Name/Name.js";
-import Email from "../../Shared/Form/Email/Email.js";
+import Name from "Shared/Form/Name/Name.js";
+import Email from "Shared/Form/Email/Email.js";
 import Popup from "../Popup/Popup.js";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { emailValidation } from "../../Shared/Form/Email/Email.js";
-import "../../Shared/common-styles/common.css";
-import Stepper from "../../Shared/Form/Ellipse/Stepper";
-import { usePostRegisterMutation } from "../../App/Api/signup";
-import Select from "../../Shared/Form/Select";
-import DatePick, { dateValidation } from "../../Shared/Date/DatePick";
-import { nameValidation } from "../../Shared/Form/Name/Name.js";
-import Password from "../../Shared/Password/Password";
-import { passwordValidation } from "../../Shared/Password/Password";
-import { reenterpasswordValidation } from "../../Shared/Password/Password";
-import { countryValidation } from "../../Shared/Form/Select/Select";
-import "../../Shared/common-styles/button.css";
+import { emailValidation } from "Shared/Form/Email/Email.js";
+import "Shared/common-styles/common.css";
+import Stepper from "Shared/Form/Ellipse/Stepper";
+import { usePostRegisterMutation } from "App/Api/signup";
+import Select from "Shared/Form/Select";
+import DatePick, { dateValidation } from "Shared/Date/DatePick";
+import { nameValidation } from "Shared/Form/Name/Name.js";
+import Password from "Shared/Password/Password";
+import { passwordValidation } from "Shared/Password/Password";
+import { reenterpasswordValidation } from "Shared/Password/Password";
+import { countryValidation } from "Shared/Form/Select/Select";
+import "Shared/common-styles/button.css";
 import { useNavigate } from "react-router-dom";
 
 function SignUP(props) {

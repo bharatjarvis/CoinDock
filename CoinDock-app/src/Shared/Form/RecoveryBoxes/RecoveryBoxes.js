@@ -1,6 +1,6 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../../../Shared/common-styles/common.css";
+import "Shared/common-styles/common.css";
 import "./RecoveryBoxes.css";
 
 function RecoveryBoxs(props) {

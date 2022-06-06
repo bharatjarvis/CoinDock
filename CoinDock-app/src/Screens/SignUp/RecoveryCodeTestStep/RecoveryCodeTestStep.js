@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import RecoveryBoxs from "../../../Shared/Form/RecoveryBoxes";
-import "../../../Shared/common-styles/common.css";
-import "../../../Shared/common-styles/button.css";
-import Stepper from "../../../Shared/Form/Ellipse/Stepper";
+import RecoveryBoxs from "Shared/Form/RecoveryBoxes";
+import "Shared/common-styles/common.css";
+import "Shared/common-styles/button.css";
+import Stepper from "Shared/Form/Ellipse/Stepper";
 import {
   usePutRecoveryCodesMutation,
   useGetRandomRecoveryCodesQuery,
-} from "../../../App/Api/recoveryCodes";
+} from "App/Api/recoveryCodes";
 import { useNavigate } from "react-router-dom";
-import Popup from "../../Popup/Popup";
 import "./RecoveryCodeTest.css";
+import Popup from "Screens/Popup/Popup";
 
 function RecoveryCodeTestStep() {
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ function RecoveryCodeTestStep() {
 
       navigate("/logout");
     } catch (error) {
-      if (error.status == 400) {
+      if (error.status === 400) {
         setButtonPopup(true);
       }
     }

@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
-import { useLogout } from "../Api/auth";
 import "./Header.css";
 import { useNavigate } from "react-router-dom";
-import Search from "../../Shared/Search/Search";
-import Select from "../../Shared/Form/Select";
-import Name from "../../Shared/Form/Name/Name";
-import "../../Shared/common-styles/space.css";
+import Search from "Shared/Search/Search";
+import Select from "Shared/Form/Select";
+import Name from "Shared/Form/Name/Name";
+import "Shared/common-styles/space.css";
 import { RiCloseLine } from "react-icons/ri";
-import Popup from "../../Screens/Popup/Popup";
+import Popup from "Screens/Popup/Popup";
 import { useIsAuthenticated } from "App/Auth/hooks";
+import { useLogout } from "App/Api/auth";
 function Header() {
   const isAuthenticated = useIsAuthenticated()
   const navigate = useNavigate();
