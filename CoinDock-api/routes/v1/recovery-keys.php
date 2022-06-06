@@ -14,21 +14,5 @@ use App\Http\Controllers\V1\RecoveryKeyController;
 |
 */
 
-Route::group(['prefix'=>'users' , 'middleware'=>'auth:api'],
-    function(){
-
-        Route::prefix('{user}')->group(
-            function(){
-                Route::prefix('recovery-codes')->group(
-                    function(){     
-                        Route::get('/', [ RecoveryKeyController::class, 'show' ]);
-                        
-                        Route::get('/download', [ RecoveryKeyController::class, 'download' ]);
-
-                        Route::put('/activate', [RecoveryKeyController::class, 'activate']);
-                });
-        });
-    
-});
 
 Route::get('/random', [RecoveryKeyController::class, 'random']);

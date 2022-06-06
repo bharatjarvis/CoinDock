@@ -15,17 +15,17 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('/signup', [UserController::class, 'store'])->name('users.signup');
 
 
-Route::middleware('auth:api')->prefix('user')->group(function(){
 
+Route::middleware('auth:api')->prefix('users')->group(function(){
 
+    Route::post('/', [UserController::class, 'create'])->name('users.create');
     Route::prefix('{user}')->group(
         function(){
             Route::prefix('recovery-codes')->group(
                 function(){     
-                    Route::get('/', [ RecoveryKeyController::class, 'show' ]);
+                    Route::post('/', [ RecoveryKeyController::class, 'create' ]);
                     
                     Route::get('/download', [ RecoveryKeyController::class, 'download' ]);
 

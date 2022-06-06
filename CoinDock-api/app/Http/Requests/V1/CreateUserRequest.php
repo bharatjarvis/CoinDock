@@ -4,7 +4,7 @@ namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SignupRequest extends FormRequest
+class CreateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,8 +30,6 @@ class SignupRequest extends FormRequest
             'country' => 'required|string',
             'email' => 'required|email|unique:users',
             'password' => 'required|max:45|min:12|',//regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
-            're_enter_password' => 'required|max:12|same:password',
-            'status' => 'required'
         ];
     }
 }
