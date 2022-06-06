@@ -3,15 +3,17 @@ import "./Popup.css";
 
 function Popup(props) {
   return props.trigger ? (
-    <div className="popup">
-      <div className="popup-inner">
+    <div className="cd-popup">
+      <div className="cd-popup-inner">
         {props.children}
-        <button
-          className="cd-button cd-button-2"
-          onClick={() => props.setTrigger(false)}
-        >
-          {props.buttonLable}
-        </button>
+        <div className="d-flex justify-content-center cd-mt-39">
+          <button
+            className="cd-button cd-button-2 "
+            onClick={() => props.setTrigger(false)}
+          >
+            {props.buttonLable}
+          </button>
+        </div>
       </div>
     </div>
   ) : (

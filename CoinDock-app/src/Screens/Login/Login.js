@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Email from "../../Shared/Form/Email";
 import { useLogin } from "../../App/Api/auth";
+import "../../Shared/common-styles/button.css";
 
 function Login() {
   let navigate = useNavigate();
@@ -49,7 +49,7 @@ function Login() {
   };
   return (
     <div className="row content d-flex justify-content-center align-items-center">
-      <div className="col-md-4">
+      <div className="col-md-3">
         <h3 className="nm-4 text-center fs-1 m-4">Login</h3>
 
         <form className="mb-3" onSubmit={handleSubmit}>
@@ -80,8 +80,16 @@ function Login() {
             />
           </div>
           <p className="text-danger">{formErrors.password}</p>
-          <div className="d-grid gap-2">
+          {/* <div className="d-grid gap-2">
             <button className="btn btn-primary btn-lg border-0">Login</button>
+          </div> */}
+          <div className="d-flex justify-content-end">
+            <button
+              className="cd-button cd-button-2 cd-login-button"
+              type="submit"
+            >
+              Login
+            </button>
           </div>
         </form>
       </div>

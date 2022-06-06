@@ -1,4 +1,4 @@
-.popup {
+.cd-popup {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,23 +11,13 @@
   align-items: center;
   z-index: 1000;
 }
-.popup-inner {
+.cd-popup-inner {
   position: relative;
-  padding: 32px;
+  padding: 14px;
   width: 100%;
-  max-width: 300px;
+  max-width: 353px;
   background-color: #ffff;
   border-radius: 10px;
-}
-.ok {
-  width: 95px;
-  height: 39px;
-
-  /* vivid navy */
-
-  background: #4461fc;
-  border-radius: 20px;
-  margin-top: 0.1px;
 }
 .image {
   width: 55px;
@@ -55,4 +45,7 @@ h5 {
   /* identical to box height, or 29px */
 
   color: #000000;
+}
+.cd-mt-39 {
+  margin-top: 39px;
 }
