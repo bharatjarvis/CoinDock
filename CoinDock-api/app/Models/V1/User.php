@@ -4,9 +4,8 @@ namespace App\Models\V1;
 
 use App\Enums\V1\UserStatus;
 use App\Enums\V1\UserType;
+use App\Http\Requests\V1\CreateUserRequest;
 use App\Http\Requests\V1\LoginRequest;
-use App\Http\Requests\V1\SignupRequest;
-use App\Models\V1\Traits\Encryptable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -31,7 +30,7 @@ class User extends Authenticatable
         'email',
         'password',
         'status',
-        'recovery_attemps'
+        'recovery_attempts'
     ];
 
     /**
@@ -73,7 +72,7 @@ class User extends Authenticatable
         return $this->hasOne(RecoveryKey::class);
     }
 
-    public function store(SignupRequest $request): self
+    public function store(CreateUserRequest $request): self
     {
         return User::create([
             'first_name' => $request->first_name,
@@ -83,7 +82,7 @@ class User extends Authenticatable
             'country' => $request->country,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'status'=> UserStatus::Inactive
+            'status'=> UserStatus::Active
         ]);
     }
 
@@ -107,4 +106,8 @@ class User extends Authenticatable
     {
         $this->hasOne(RecoveryKey::class, 'user_id', 'id');
     }
+
+    public function signUp(){
+        return $this->hasOne(SignUp::class);
+    }    
 }
