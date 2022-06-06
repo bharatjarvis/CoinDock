@@ -4,7 +4,7 @@ import baseApi from "./api";
 export const recoveryCodes = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getRecoveryCodes: build.query({
-      query: ({ userId }) => ({
+      query: () => ({
         url: `/v1/users/${getUserId()}/recovery-codes`,
         method: "get",
       }),
@@ -15,7 +15,7 @@ export const recoveryCodes = baseApi.injectEndpoints({
     }),
 
     getRecoveryCodesDownload: build.mutation({
-      query: ({ userId }) => ({
+      query: () => ({
         url: `/v1/users/${getUserId()}/recovery-codes/download`,
         method: "get",
         responseType: "blob",
@@ -39,7 +39,7 @@ export const recoveryCodes = baseApi.injectEndpoints({
     }),
 
     putRecoveryCodes: build.mutation({
-      query: ({ userId, key_response }) => ({
+      query: ({ key_response }) => ({
         url: `/v1/users/${getUserId()}/recovery-codes/activate`,
         method: "put",
         data: { key_response },

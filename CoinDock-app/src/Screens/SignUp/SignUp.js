@@ -79,7 +79,6 @@ function SignUP(props) {
     const errors = {};
 
     let isValid = true;
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     errors.firstname = nameValidation(values.firstname, "First Name", 45);
     errors.lastname = nameValidation(values.lastname, "Last Name", 45);
     errors.email = emailValidation(values.email);

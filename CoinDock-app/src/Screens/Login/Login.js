@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-
 import "Shared/common-styles/button.css";
-import Email from "Shared/Form/Email";
 import { useLogin } from "App/Api/auth";
 
 function Login() {
@@ -13,8 +11,7 @@ function Login() {
   const initialValues = { email: "", password: "" };
   const [formValues, setformValues] = useState(initialValues);
   const [formErrors, setformErrors] = useState({});
-  const [isShow, setIsShow] = useState(false);
-  const [isSubmit, setIsSubmit] = useState(false);
+  const [isShow] = useState(false);
 
   const handleChanges = (e) => {
     const { name, value } = e.target;

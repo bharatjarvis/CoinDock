@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "Shared/common-styles/space.css";
 export const passwordValidation = ({
   value,

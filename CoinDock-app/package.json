@@ -56,5 +56,8 @@
   },
   "devDependencies": {
     "prop-types": "^15.8.1"
+  },
+  "resolutions": {
+    "autoprefixer": "10.4.5"
   }
 }
