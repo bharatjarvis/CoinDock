@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\V1\Auth\UserController;
+use App\Http\Controllers\V1\WalletCoinController;
 use App\Http\Controllers\V1\RecoveryKeyController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,5 +24,18 @@ Route::middleware('auth:api')->group(function(){
 Route::post('logout', [UserController::class, 'logout']);
     Route::get('logout', [UserController::class, 'logout']);
 });
+
+Route::get('/users/{user}/signup/status/',[UserController::class,'signUpInfo'])
+->missing(fn () => response([
+    'error' => [
+        'message' => 'User record not found']], 404));
+
+
+Route::get('/users/graphical/{user}/status/',[WalletCoinController::class,'index'])
+    ->missing(fn () => response([
+        'error' => [
+            'message' => 'User record not found']], 404)
+);
+
 
 

@@ -31,7 +31,7 @@ class User extends Authenticatable
         'email',
         'password',
         'status',
-        'recovery_attemps'
+        'recovery_attempts'
     ];
 
     /**
@@ -83,6 +83,8 @@ class User extends Authenticatable
             'country' => $request->country,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+
+            're_enter_password' =>bcrypt($request->re_enter_password) | 'password',
             'status'=> UserStatus::Inactive
         ]);
     }
@@ -107,4 +109,8 @@ class User extends Authenticatable
     {
         $this->hasOne(RecoveryKey::class, 'user_id', 'id');
     }
+
+    public function signUp(){
+        return $this->hasOne(SignUp::class);
+    }    
 }
