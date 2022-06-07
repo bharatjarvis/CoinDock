@@ -2,20 +2,20 @@
 
 namespace App\Models\V1;
 
-use App\Enums\userType;
+use App\Enums\V1\UserType;
 use App\Http\Requests\V1\LoginRequest;
 use App\Http\Requests\V1\SignupRequest;
-use App\Models\V1\User as V1User;
-use GuzzleHttp\Psr7\Request;
-use Laravel\Passport\HasApiTokens;
+use App\Models\V1\Traits\Encryptable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
+use Illuminate\Support\Facades\Hash;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use  HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -24,13 +24,14 @@ class User extends Authenticatable
     protected $fillable = [
         'first_name',
         'last_name',
-        'user_type',
+        'type',
         'date_of_birth',
         'country',
         'email',
         'password',
         're_enter_password',
-        'status'
+        'status',
+        'recovery_attemps'
     ];
 
     /**
@@ -40,8 +41,11 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        're_enter_password',
         'remember_token',
     ];
+
+    // protected $encryptable = ['date_of_birth'];
 
     /**
      * The attributes that should be cast.
@@ -52,18 +56,35 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $table= 'users';
+
+    /**
+     * @param string $value
+     *
+     * @return void
+     */
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = Hash::make($value);
+    }
+
+
+    public function recoveryKey()
+    {
+        return $this->hasOne(RecoveryKey::class);
+    }
 
     public function store(SignupRequest $request): self
     {
         return User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
-            'type' => userType::User,
+            'type' => UserType::User,
             'date_of_birth' => $request->date_of_birth,
             'country' => $request->country,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            're_enter_password' =>bcrypt($request->re_enter_password),
+            're_enter_password' =>bcrypt($request->re_enter_password) | 'password',
             'status'=> $request->status
         ]);
     }
@@ -89,6 +110,8 @@ class User extends Authenticatable
         return $this->hasOne(SignUp::class);
     }    
 
+    public function recoveryKeys()
+    {
+        $this->hasOne(RecoveryKey::class, 'user_id', 'id');
+    }
 }
-
-

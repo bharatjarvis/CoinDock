@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers\V1\Auth;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\LoginRequest;
 use App\Http\Requests\V1\SignupRequest;
-use Illuminate\Http\Request;
+use App\Http\Resources\V1\UserResource;
 use App\Models\V1\User;
 use App\Models\V1\SignUp;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Passport\Http\Controllers\AccessTokenController;
+use Symfony\Component\HttpFoundation\Response;
 
-class UserController extends Controller
+class UserController extends AccessTokenController
 {
+    use BuildPassportTokens;
+
     /**
      * SignupRequest
      */
@@ -49,20 +54,12 @@ class UserController extends Controller
 
     public function store(SignupRequest $request)
     {
+        info("message");
         $user = new User();
 
         $user->store($request);
 
-        $user->createToken('Laravel')->accessToken;
-
-        return response(
-            [
-                'status' => 'success', 
-                'error' => false, 
-                'message' => 'Success! User registered.'
-            ], 
-            201
-        );
+        return response(['status' => 'success', 'message' => 'Success! User registered.'], 201);
     }
 
 
@@ -71,20 +68,30 @@ class UserController extends Controller
      */
     public function login(LoginRequest $request)
     {
-        $user = new User();
+        // checking if the user data was existing in the database or not
+        if (!Auth::once($request->only('email', 'password'))) {
+            throw new AuthenticationException('Email or password incorrect');
+        }
 
-       $user->login( $request);
+        $response = $this->requestPasswordGrant($request);
 
-       info(auth()->user());
-        
-       return response(
+        $user = User::whereEmail($request->email)->first();
+
+        return response(
             [
-                'message' => 'Login Successfull.', 
-                'token' => auth()->user()->getRememberToken()
+                'message' => 'Login Successfull.',
+                'results' => [
+                    'user' => UserResource::make($user)->resolve(),
+                    'Access-Token' => $response['access_token']
+                ]
             ],
-            200
+            Response::HTTP_OK,
+            [
+                'Access-Token' => $response['access_token'],
+                'Refresh-Token' => $response['refresh_token'],
+                'Expires-In' => $response['expires_in']
+            ]
         );
-
     }
 
     /**
@@ -95,10 +102,21 @@ class UserController extends Controller
     {
         auth()->user()->tokens->map(fn ($token) => $token->delete());
 
+        return response(['message' => 'Successfully logged out'], 200);
+    }
+
+    public function refresh(Request $request)
+    {
+        $response = $this->requestRefreshGrant($request);
+
         return response(
-            [ 'message' => 'Successfully logged out' ], 
-            200
+            ['message' => 'Refreshed token successfully',],
+            Response::HTTP_OK,
+            [
+                'Access-Token' => $response['access_token'],
+                'Refresh-Token' => $response['refresh_token'],
+                'Expires-In' => $response['expires_in']
+            ]
         );
     }
 }
-
