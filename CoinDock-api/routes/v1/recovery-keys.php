@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\RecoveryKeyController;
- 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,5 +14,6 @@ use App\Http\Controllers\V1\RecoveryKeyController;
 |
 */
 
-
-Route::get('/random', [RecoveryKeyController::class, 'random']);
+Route::prefix('recovery-codes')->group(function () {
+    Route::get('/random', [RecoveryKeyController::class, 'random']);
+});

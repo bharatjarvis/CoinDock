@@ -4,7 +4,6 @@ namespace Database\Factories\V1;
 
 use App\Enums\V1\UserType;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>

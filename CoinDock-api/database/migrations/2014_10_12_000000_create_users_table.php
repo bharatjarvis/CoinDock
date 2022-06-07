@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('first_name');
             $table->string('last_name');
-            $table->integer('recovery_attemps')->default(0);
+            $table->integer('recovery_attempts')->default(0);
             $table->integer('type');
             $table->date('date_of_birth');
             $table->string('country');

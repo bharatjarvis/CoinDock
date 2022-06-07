@@ -3,9 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\V1\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Http\Controller\V1\RecoveryKeyController;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,11 +14,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        //creating access token and grant token
+       $this->call(ClientSeeder::class);
+        
         User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
     }
 }
