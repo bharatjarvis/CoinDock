@@ -18,11 +18,11 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+Route::post('/', [UserController::class, 'create'])->name('users.create');
 Route::middleware('auth:api')
     ->prefix('users')
     ->group(function () {
-        Route::post('/', [UserController::class, 'create'])->name('users.create');
+        
 
         Route::prefix('{user}')->group(function () {
             Route::prefix('recovery-codes')->group(function () {
