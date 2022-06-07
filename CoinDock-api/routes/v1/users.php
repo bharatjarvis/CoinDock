@@ -19,11 +19,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::group(['prefix'=>'users'],function(){
+    Route::post('/', [UserController::class, 'create'])->name('users.create');
+});
+
+
 Route::middleware('auth:api')
     ->prefix('users')
     ->group(function () {
-        Route::post('/', [UserController::class, 'create'])->name('users.create');
-
         Route::prefix('{user}')->group(function () {
             Route::prefix('recovery-codes')->group(function () {
                 Route::post('/', [RecoveryKeyController::class, 'create']);
