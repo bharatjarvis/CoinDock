@@ -26,7 +26,6 @@ class RecoveryKey extends Model
     //generating random Recovery words
     public function store(User $user)
     {
-        //checking whether
         $recoveryCode = $this->whereUserId($user->id)
             ->whereStatus(RecoveryKeyStatus::Inactive)
             ->latest()

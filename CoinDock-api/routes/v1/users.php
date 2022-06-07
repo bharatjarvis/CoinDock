@@ -19,10 +19,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::group(['prefix' => 'users'], function () {
+    Route::post('/', [UserController::class, 'create'])->name('users.create');
+});
+
 Route::middleware('auth:api')
     ->prefix('users')
     ->group(function () {
-        Route::post('/', [UserController::class, 'create'])->name('users.create');
 
         Route::prefix('{user}')->group(function () {
             Route::prefix('recovery-codes')->group(function () {
@@ -35,7 +38,7 @@ Route::middleware('auth:api')
 
             Route::prefix('signup')->group(function () {
                 Route::get('/info', [SignupController::class, 'info'])->missing(
-                    fn() => response(
+                    fn () => response(
                         [
                             'error' => ['message' => 'User record not found'],
                         ],
@@ -46,7 +49,7 @@ Route::middleware('auth:api')
 
             Route::prefix('graph')->group(function () {
                 Route::get('/', [WalletCoinController::class, 'index'])->missing(
-                    fn() => response(
+                    fn () => response(
                         [
                             'error' => ['message' => 'User record not found'],
                         ],

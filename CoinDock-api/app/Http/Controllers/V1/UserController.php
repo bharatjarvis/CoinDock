@@ -25,7 +25,10 @@ class UserController extends AccessTokenController
         $response = $this->requestPasswordGrant($request);
 
         return response(
-            ['status' => 'success', 'message' => 'Success! User registered.'],
+            ['status' => 'success', 'message' => 'Success! User registered.',
+            'token' => $response['access_token']
+                
+        ],
             Response::HTTP_OK,
             [
                 'Access-Token' => $response['access_token'],
