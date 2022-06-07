@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\V1\Auth\UserController;
 use App\Http\Controllers\V1\RecoveryKeyController;
+use App\Http\Controllers\V1\SignupController;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Request;
 
@@ -31,7 +32,7 @@ Route::get('/', [RecoveryKeyController::class, 'recoveryKey']);
 
 Route::get('/random' , [RecoveryKeyController::class, 'random']);
 
-Route::get('/users/{user}/signup/',[UserController::class,'signUpInfo'])
+Route::get('/users/{user}/signup/',[SignupController::class,'show'])
 ->missing(fn () => response([
     'error' => [
         'message' => 'User record not found']], 404));

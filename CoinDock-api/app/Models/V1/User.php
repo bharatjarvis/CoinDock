@@ -76,17 +76,27 @@ class User extends Authenticatable
 
     public function store(SignupRequest $request): self
     {
-        return User::create([
+        $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
-            'type' => UserType::User,
+            'type' => 1,
             'date_of_birth' => $request->date_of_birth,
             'country' => $request->country,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            're_enter_password' =>bcrypt($request->re_enter_password) | 'password',
-            'status'=> $request->status
+            're_enter_password' =>bcrypt($request->re_enter_password),
+            'status'=>1
         ]);
+
+        $signup = $this->signUp;
+        if($signup){
+            $signup->step_count+=1;
+            $signup->save();
+        }
+
+        SignUp::create(['step_count'=>1,'user_id'=>$user->id]);
+ 
+        return $user;
     }
 
     public function login(LoginRequest $request){
