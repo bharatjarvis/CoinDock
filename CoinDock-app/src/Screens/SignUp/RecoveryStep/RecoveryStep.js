@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import RecoveryBoxs from "Shared/Form/RecoveryBoxes";
 import Checkbox from "Shared/Form/CheckBox/CheckBox";
@@ -12,10 +12,9 @@ import { useNavigate } from "react-router-dom";
 function RecoveryCodeBoxStep() {
   const [checked, setChecked] = useState(false);
 
-  const checkboxRef = useRef(null);
   const navigate = useNavigate();
 
-  const { data = [], ...r } = useGetRecoveryCodesQuery({ userId: 1 });
+  const { data = [] } = useGetRecoveryCodesQuery();
 
   const handleOnSubmit = () => {
     navigate("/recovery-test");

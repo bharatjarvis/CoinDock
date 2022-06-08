@@ -76,7 +76,7 @@ function Login() {
     if (displayErrorMessage) setDisplayErrorMessage(false);
   };
   return (
-    
+
     <div className="row content d-flex justify-content-center align-items-center">
       <div className="col-md-3">
         <h3 className="nm-4 text-center fs-1 m-4">Login</h3>

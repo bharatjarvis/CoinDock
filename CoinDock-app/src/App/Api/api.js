@@ -53,14 +53,14 @@ axiosInstance.interceptors.response.use(
       localStorage.setItem(localStorageRefreshToken, refreshToken);
     }
     return {
-      data: {...response}
+      data: { ...response },
     };
   },
   (errorResponse) => {
     return {
       error: {
-        ...errorResponse
-      }
+        ...errorResponse,
+      },
     };
   }
 );
