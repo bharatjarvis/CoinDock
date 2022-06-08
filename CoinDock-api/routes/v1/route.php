@@ -17,6 +17,6 @@ use App\Http\Controllers\V1\HomeController;
 */
 /* ----Dashboard ---*/
 
-Route::get('/balance', [HomeController::class, 'showDashboard']);
+Route::get('users/{user}/numberOfCoins', [HomeController::class, 'numberOfCoins']);
 
 

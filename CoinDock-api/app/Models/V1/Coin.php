@@ -9,4 +9,11 @@ class Coin extends Model
 {
     use HasFactory;
     protected $fillable = ['name'];
+
+
+    public function wallet(){
+
+        return $this->hasMany(Wallet::class);
+
+    }
 }
