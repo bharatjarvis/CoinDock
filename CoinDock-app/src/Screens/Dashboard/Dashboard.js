@@ -1,8 +1,8 @@
 import React from "react";
 import Section from "Shared/Section2/Section";
 import "Shared/common-styles/space.css";
-import "./Logout.css";
-function Logout() {
+import "./Dashboard.css";
+function Dashboard() {
   return (
     <React.Fragment>
       <div className="cd-performance-wrap">
@@ -15,4 +15,4 @@ function Logout() {
   );
 }
 
-export default Logout;
+export default Dashboard;

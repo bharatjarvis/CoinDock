@@ -49,7 +49,9 @@ const Select = ({
           );
         })}
       </select>
-      {fieldsTouched && <p className="text-danger">{formErrors[name]}</p>}
+      {fieldsTouched && formErrors && (
+        <p className="text-danger">{formErrors[name]}</p>
+      )}
     </>
   );
 };
