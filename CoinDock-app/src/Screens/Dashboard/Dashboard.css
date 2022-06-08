@@ -26,7 +26,7 @@
 }
 .cd-performance-wrap {
   display: flex;
-
+  padding:14px;
   flex-direction: row;
   justify-content: space-between;
 }

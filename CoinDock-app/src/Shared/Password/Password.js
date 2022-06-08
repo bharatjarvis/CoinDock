@@ -66,7 +66,7 @@ const Password = ({ name, placeholder, label, formErrors }) => {
     <>
       <div className=" form-group">
         <label className="cd-mt-12">{label}</label>
-        <div className="input-group cd-password-container">
+        <div className="cd-password-container">
           <input
             type={isShow ? "text" : "password"}
             className="form-control cd-mt-8"
@@ -76,14 +76,10 @@ const Password = ({ name, placeholder, label, formErrors }) => {
             defaultValue={formValues.name}
             onBlur={handleFocus}
             data-toggle="password"
-            aria-describedby="visiblity-eye"
+          
           />
 
-          <span
-            onClick={() => togglePassword()}
-            id="visiblity-eye"
-          className="cd-eye"
-          >
+          <span onClick={() => togglePassword()} className="cd-eye">
             {isShow ? <RiEyeLine /> : <RiEyeOffLine />}
           </span>
         </div>

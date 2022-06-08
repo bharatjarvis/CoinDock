@@ -1,6 +1,7 @@
 import { useIsAuthenticated } from "App/Auth/hooks";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
+import AddWallet from "Screens/AddWallet/AddWallet";
 import Login from "Screens/Login/Login";
 import SignUp from "Screens/SignUp/SignUp";
 import Loading from "Shared/Loading/Loading";
@@ -16,6 +17,7 @@ const PublicRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/loading" element={<Loading />} />
+      <Route path="/addwallet" element={<AddWallet/>}/>
     </Routes>
   );
 };

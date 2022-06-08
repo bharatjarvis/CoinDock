@@ -1,13 +1,16 @@
-import { React, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+
+import { useNavigate, useLocation } from "react-router-dom";
+import { RiCloseLine } from "react-icons/ri";
 import Select from "Shared/Form/Select";
 import Name from "Shared/Form/Name/Name";
-import { RiCloseLine } from "react-icons/ri";
 import Popup from "Screens/Popup/Popup";
 
-const AddWallet = () => {
-  const [buttonPopup, setButtonPopup] = useState(false);
+function AddWallet() {
+  const [buttonPopup, setButtonPopup] = useState(false); 
+
   return (
-    <>
+    <div>
       <form>
         <Popup
           trigger={buttonPopup}
@@ -46,8 +49,8 @@ const AddWallet = () => {
           />
         </Popup>
       </form>
-    </>
+    </div>
   );
-};
+}
 
 export default AddWallet;

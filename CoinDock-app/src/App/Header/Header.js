@@ -11,8 +11,6 @@ import Popup from "Screens/Popup/Popup";
 import { useIsAuthenticated } from "App/Auth/hooks";
 import { useLogout } from "App/Api/auth";
 import Logo2 from "Shared/images/Logo2.png";
-import { countryValidation } from "Shared/Form/Select/Select";
-
 function Header() {
   const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
@@ -76,6 +74,7 @@ function Header() {
           </>
         )}
       </Navbar>
+
       <form>
         <Popup
           trigger={buttonPopup}
