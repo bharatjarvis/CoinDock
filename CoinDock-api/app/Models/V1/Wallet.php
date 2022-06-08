@@ -15,7 +15,8 @@ class Wallet extends Model
         'coin_id',
         'user_id',
         'wallet_id',
-        'balance'
+        'balance',
+        'name'
     ];
 
 
@@ -114,7 +115,16 @@ class Wallet extends Model
         if ($this->isJson($response)) {
 
             $balance = $this->balance($response);
-            return $this->WalletCreate($user->id, $walletId, $userCoinId, $balance);
+
+            if(is_numeric($balance)){
+                return $this->WalletCreate($user->id, $walletId, $userCoinId, $balance);
+            }
+            else{
+                return response([
+                    'message' => 'Wallet Cannot be Added'
+                ], 404);
+            }
+            
         }
 
 
