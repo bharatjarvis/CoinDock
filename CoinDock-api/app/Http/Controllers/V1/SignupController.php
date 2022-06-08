@@ -9,7 +9,9 @@ class SignupController extends Controller
 {
     public function info(User $user)
     {
-        $signUp = Signup::find($user->id);
+        //$signUp = Signup::find($user->id);
+
+        $signUp = Signup::whereUserId($user->id)->get()->first();
 
         $result = [
             'step_1_completed' => false,

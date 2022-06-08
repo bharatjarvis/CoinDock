@@ -7,6 +7,7 @@ use App\Models\V1\Traits\Encryptable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Requests\V1\RecoveryKeyRequest;
+use App\Models\V1\Signup;
 use Illuminate\Support\Arr;
 
 class RecoveryKey extends Model
@@ -52,10 +53,13 @@ class RecoveryKey extends Model
             'status' => RecoveryKeyStatus::Inactive,
         ]);
 
+       
+        
+
         return $recoveryGeneration;
     }
 
-    //Dwonloading RecoveryWords
+    //Downloading RecoveryWords
     public function download(User $user)
     {
         $userRecoveryCodes = self::whereUserId($user->id)->latest()->first();
@@ -64,6 +68,13 @@ class RecoveryKey extends Model
         $data = [
             'words_array' => explode(' ', $userRecoveryCodes),
         ];
+        
+        // USER SUCCESSFULLY DOWNLOADED THE RECOVERY CODES  STEP:2
+        $signup = Signup::whereUserId($user->id)->get()->first();
+        if($signup){
+            $signup->step_count+=1;
+            $signup->save();
+        }
 
         return $data;
     }
@@ -87,6 +98,19 @@ class RecoveryKey extends Model
                 'status' => RecoveryKeyStatus::Active,
             ]);
 
+            // USER SIGNUP STATUS RECOVERY CODES MATCHED SUCCESSFULLY - STEP:3
+            $signup = Signup::whereUserId($user->id)->get()->first();
+            if($signup){
+                $signup->step_count+=1;
+                if($signup->step_count==3){
+                    $signup->save();
+                }else{
+                    $signup->step_count = 3;
+                    $signup->save();
+                }
+                
+            }
+
             return response(
                 [
                     'message' => 'Recovery codes matched successfully',
@@ -97,6 +121,8 @@ class RecoveryKey extends Model
                 200,
             );
         }
+
+
 
         $attemptCount = $user->recovery_attempts;
 

@@ -33,6 +33,8 @@ Route::middleware('auth:api')
 
                 Route::get('/download', [RecoveryKeyController::class, 'download']);
 
+                Route::get('/random', [RecoveryKeyController::class, 'random']);
+
                 Route::put('/activate', [RecoveryKeyController::class, 'activate']);
             });
 

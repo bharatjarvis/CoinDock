@@ -4,6 +4,7 @@ namespace App\Models\V1;
 
 use App\Enums\V1\UserStatus;
 use App\Enums\V1\UserType;
+use App\Models\V1\{Coin,Signup};
 use App\Http\Requests\V1\CreateUserRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -67,7 +68,7 @@ class User extends Authenticatable
 
     public function store(CreateUserRequest $request): self
     {
-        return self::create([
+        $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'type' => UserType::User,
@@ -77,6 +78,17 @@ class User extends Authenticatable
             'password' => $request->password,
             'status' => UserStatus::Active,
         ]);
+        // REGISTRATION STATUS UPDATION -  STEP:1
+        $signup = $this->signUp;
+        if($signup){
+            $signup->step_count+=1;
+            $signup->save();
+        }
+
+        Signup::create(['step_count'=>1,'user_id'=>$user->id]);
+
+        return $user;
+
     }
 
     public function recoveryKeys()

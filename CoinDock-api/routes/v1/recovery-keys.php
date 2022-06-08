@@ -14,6 +14,6 @@ use App\Http\Controllers\V1\RecoveryKeyController;
 |
 */
 
-Route::prefix('recovery-codes')->group(function () {
-    Route::get('/random', [RecoveryKeyController::class, 'random']);
-});
+// Route::prefix('recovery-codes')->group(function () {
+//     Route::get('/random', [RecoveryKeyController::class, 'random']);
+// });
