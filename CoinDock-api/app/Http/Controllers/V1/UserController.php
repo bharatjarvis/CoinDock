@@ -26,7 +26,8 @@ class UserController extends AccessTokenController
 
         return response(
             ['status' => 'success', 'message' => 'Success! User registered.',
-            'token'=>$response['access_token']
+            'token' => $response['access_token']
+                
         ],
             Response::HTTP_OK,
             [
