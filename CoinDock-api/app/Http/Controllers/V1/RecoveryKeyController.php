@@ -35,7 +35,6 @@ class RecoveryKeyController extends Controller
     public function show(User $user)
     {
         $recovery = new RecoveryKey();
-
         return response([
             'message' => 'Recovery codes created successfully',
             'results' => [

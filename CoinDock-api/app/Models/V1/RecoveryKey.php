@@ -75,7 +75,7 @@ class RecoveryKey extends Model
     {
         
         $passArray = explode(" ", $this->recovery_code);
-
+          
         $count = 0;
         
         $keyResponses = $request->key_response;
