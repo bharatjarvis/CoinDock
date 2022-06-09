@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
-use App\Models\V1\Coin;
 use App\Models\V1\User;
 use App\Models\V1\Wallet;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
 class WalletController extends Controller
 {
@@ -17,8 +15,5 @@ class WalletController extends Controller
         return $wallet->addWallet($user ,$request);
     }
 
-    public function index(){
-        $wals = Wallet::all();
-        return $wals;
-    }
+
 }
