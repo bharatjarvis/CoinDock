@@ -1,9 +1,6 @@
-/* p {
-  color: red;
-  font-size: 12px;
-} */
 .text-danger {
   font-size: 12px;
+  margin-bottom: 0px;
 }
 .condition {
   color: black;
@@ -32,25 +29,7 @@
   border-radius: 5px;
   background: #fff;
 }
-.confirms {
-  position: absolute;
-  width: 124px;
-  height: 39px;
 
-  /* Gray88 */
-
-  background: #e0e0e0;
-  border-radius: 20px;
-}
-/* .ellipse {
-  position: absolute;
-  width: 32px;
-  height: 32px;
-
-  border-radius: 50%;
-  background: #c4c4c4;
-  margin-top: 30px;
-} */
 .line {
   width: 118px;
   height: 2px;
@@ -66,4 +45,12 @@
   line-height: 160%;
 
   color: #000000;
+}
+.cd-lock-image {
+  width: 55px;
+
+  left: 22px;
+  top: 83px;
+
+  margin-top: 0.5cm;
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import "./SignUp.css";
 import Name from "Shared/Form/Name/Name.js";
 import Email from "Shared/Form/Email/Email.js";
@@ -17,9 +18,11 @@ import { reenterpasswordValidation } from "Shared/Password/Password";
 import { countryValidation } from "Shared/Form/Select/Select";
 import "Shared/common-styles/button.css";
 import { useNavigate } from "react-router-dom";
-
+import { useRefresh } from "App/Api/auth";
+import Lock from "Shared/images/Lock.png";
 function SignUP(props) {
   const navigate = useNavigate();
+  const [refresh] = useRefresh();
 
   const [buttonPopup, setButtonPopup] = useState(false);
   const [register] = usePostRegisterMutation();
@@ -65,7 +68,23 @@ function SignUP(props) {
             setButtonPopup(true);
           });
       } catch (errorResponse) {
-        setformErrors({});
+        console.log(errorResponse);
+        const {
+          first_name,
+          last_name,
+          date_of_birth,
+          country,
+          email,
+          password,
+        } = errorResponse?.data?.errors ?? {};
+        setformErrors({
+          firstname: first_name,
+          lastname: last_name,
+          date: date_of_birth,
+          email,
+          country,
+          password,
+        });
       }
     }
 
@@ -79,6 +98,7 @@ function SignUP(props) {
     const errors = {};
 
     let isValid = true;
+
     errors.firstname = nameValidation(values.firstname, "First Name", 45);
     errors.lastname = nameValidation(values.lastname, "Last Name", 45);
     errors.email = emailValidation(values.email);
@@ -96,11 +116,6 @@ function SignUP(props) {
     errors.date = dateValidation(values.date);
     errors.country = countryValidation(values.country);
 
-    // if (!values.country) {
-    //   isValid = false;
-    //   errors.country = "Country is required";
-    // }
-
     setValid(!Object.values(errors).some(Boolean));
     return {
       isValid,
@@ -108,8 +123,13 @@ function SignUP(props) {
     };
   };
 
-  useEffect(() => {}, [isValid]);
-
+  const handleSuccessPopupButtonClick = () => {
+    refresh()
+      .unwrap()
+      .then(() => {
+        navigate("/recovery-codes");
+      });
+  };
   return (
     <div className="paper">
       <div className="paper-container">
@@ -119,7 +139,11 @@ function SignUP(props) {
               <div className="d-flex justify-content-between"></div>
               <Stepper totalSteps={3} />
 
-              <form onSubmit={handleSubmit} onInput={handleChanges}>
+              <form
+                onSubmit={handleSubmit}
+                onInput={handleChanges}
+                className="cd-padding-14"
+              >
                 <div>
                   <Name
                     name="firstname"
@@ -193,25 +217,25 @@ function SignUP(props) {
                   >
                     confirm
                   </button>
-                  <Popup
-                    trigger={buttonPopup}
-                    setTrigger={() => {
-                      navigate("/recovery-codes");
-                    }}
-                    buttonLable="OK"
-                  >
-                    <h5>Account recovery information</h5>
-                    <div className="p-3">
-                      <img className="image" alt="" />
-                    </div>
-                    <p className="para">
-                      We’re going to display the account recovery information on
-                      the next screen. Please ensure that you have good internet
-                      connection and no individual is watching.
-                    </p>
-                  </Popup>
                 </div>
               </form>
+              <Popup
+                trigger={buttonPopup}
+                setTrigger={() => {
+                  handleSuccessPopupButtonClick();
+                }}
+                buttonLable="OK"
+              >
+                <h5>Account recovery information</h5>
+                <div className="p-3">
+                  <img className="cd-lock-image" src={Lock} alt="Lock Image" />
+                </div>
+                <p className="para">
+                  We’re going to display the account recovery information on the
+                  next screen. Please ensure that you have good internet
+                  connection and no individual is watching.
+                </p>
+              </Popup>
             </div>
           </div>
         </div>

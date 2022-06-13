@@ -28,7 +28,7 @@ const signup = baseApi.injectEndpoints({
         },
       }),
       transformResponse: (response) => {
-        store.dispatch(auth.endpoints.refresh.initiate())
+      
         return response;
       },
     }),

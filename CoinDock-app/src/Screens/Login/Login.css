@@ -1,5 +1,6 @@
 .content {
   height: 100%;
+  padding: 43px;
 }
 
 .form-control {
@@ -17,6 +18,8 @@
 .cf {
   flex: 0.5;
 }
-.cd-login-button {
- 
+.cd-login-error {
+  color: red;
+  font-size: 18px;
+  text-align: center;
 }

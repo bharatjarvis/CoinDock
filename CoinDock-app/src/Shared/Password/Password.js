@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import "Shared/common-styles/space.css";
+import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
+import "./Password.css";
 export const passwordValidation = ({
   value,
   label = "Password",
@@ -47,6 +49,7 @@ const Password = ({ name, placeholder, label, formErrors }) => {
   };
   const [formValues, setformValues] = useState(initialValues);
   const [fieldsTouched, setFieldsTouched] = useState(false);
+  const [isShow, setIsShow] = useState(false);
 
   const handleChanges = (e) => {
     const { name, value } = e.target;
@@ -55,23 +58,33 @@ const Password = ({ name, placeholder, label, formErrors }) => {
   const handleFocus = (e) => {
     setFieldsTouched(true);
   };
+  const togglePassword = () => {
+    setIsShow(isShow ? false : true);
+  };
 
   return (
     <>
-      <div className="form-group">
-        <div>
-          <label className="cd-mt-12">{label}</label>
+      <div className=" form-group">
+        <label className="cd-mt-12">{label}</label>
+        <div className="cd-password-container">
           <input
-            type="password"
+            type={isShow ? "text" : "password"}
             className="form-control cd-mt-8"
             name={name}
             placeholder={placeholder}
             onChange={handleChanges}
             defaultValue={formValues.name}
             onBlur={handleFocus}
+            data-toggle="password"
+          
           />
-          {fieldsTouched && <p className="text-danger">{formErrors[name]}</p>}
+
+          <span onClick={() => togglePassword()} className="cd-eye">
+            {isShow ? <RiEyeLine /> : <RiEyeOffLine />}
+          </span>
         </div>
+
+        {fieldsTouched && <p className="text-danger">{formErrors[name]}</p>}
       </div>
     </>
   );

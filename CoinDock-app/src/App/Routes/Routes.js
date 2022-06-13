@@ -12,11 +12,9 @@ const Direction = () => {
       <Header />
       <div style={{ flexGrow: 1 }}>
         <RouteLoader>
-          <PublicRoutes/>
+          <PublicRoutes />
           <AuthRoutes />
-          <Routes>
-            <Route path="/signup" element={<SignUp />} />
-          </Routes>
+         
         </RouteLoader>
       </div>
     </BrowserRouter>
