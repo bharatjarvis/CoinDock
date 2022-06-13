@@ -20,7 +20,8 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('wallet_id');
-            $table->double('balance',3);
+            $table->double('balance',5);
+            $table->double('balance(USD)',10);
             $table->string('name')->nullable();
             $table->timestamps();
         });

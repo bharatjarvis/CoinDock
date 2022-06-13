@@ -16,18 +16,20 @@ class Wallet extends Model
         'user_id',
         'wallet_id',
         'balance',
+        'balance(USD)',
         'name'
     ];
 
 
     //wallet creation
-    public function WalletCreate($userId, $walletId, $userCoinId, $balance)
+    public function WalletCreate($userId, $walletId, $userCoinId, $balance ,$balanceInUsd)
     {
         Wallet::create([
             'user_id' => $userId,
             'wallet_id' => $walletId,
             'coin_id' => $userCoinId,
-            'balance' => $balance
+            'balance' => $balance,
+            'balance(USD)'=>$balanceInUsd
         ]);
 
         return response([
@@ -66,6 +68,34 @@ class Wallet extends Model
     }
 
 
+
+
+
+    //getting crypto coin short name based on coin name 
+    public function cryptoToUsd($coin){
+        $shortNames = config('shortnames.shorted_coin_list');
+        $shortNamesKeys = array_keys($shortNames);
+        
+        foreach ($shortNamesKeys as $crypto){
+            if($crypto == $coin){
+                $shortedCryptoName = $shortNames[$coin];
+            }
+        }
+
+        $cryptConversionBasePath = config('exchange.cryp_exchange');
+        $cryptConversionPath = str_replace('{id}',$shortedCryptoName,$cryptConversionBasePath);
+        $balanceInUsd = Http::get($cryptConversionPath)['USD'];
+
+        return $balanceInUsd;
+    }
+
+
+
+
+
+
+
+
     //Fetching Wallet balance through the Response
     public function balance($response)
     {
@@ -78,6 +108,7 @@ class Wallet extends Model
                 $balance = $responseArray[$jsonKey];
 
                 return $balance;
+
             } elseif ($jsonKey == 'confirmed') {
 
 
@@ -106,6 +137,10 @@ class Wallet extends Model
 
 
         $userCoin = $request->coin;
+
+
+        $balanceInUsd = $this->cryptoToUsd($userCoin);
+        
         $userCoinId = Coin::whereName($userCoin)->first();
         $userCoinId = $userCoinId->id;
         $basePath = $this->basePath($userCoinId, $walletId);
@@ -117,7 +152,7 @@ class Wallet extends Model
             $balance = $this->balance($response);
 
             if(is_numeric($balance)){
-                return $this->WalletCreate($user->id, $walletId, $userCoinId, $balance);
+                return $this->WalletCreate($user->id, $walletId, $userCoinId, $balance, $balanceInUsd);
             }
             else{
                 return response([
