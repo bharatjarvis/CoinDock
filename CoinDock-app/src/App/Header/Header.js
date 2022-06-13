@@ -16,6 +16,7 @@ function Header() {
   const navigate = useNavigate();
   const [buttonPopup, setButtonPopup] = useState(false);
   const [logout] = useLogout();
+  
   const handleLogoutClick = async () => {
     try {
       await logout().unwrap();
@@ -24,7 +25,11 @@ function Header() {
       navigate("/login");
     }
   };
-
+ const handleAccountClick = () =>{
+  
+    navigate("/account");
+  
+ }
   return (
     <React.Fragment>
       <div className="cd-header-dimensions"></div>
@@ -63,6 +68,9 @@ function Header() {
                   </div>
                 }
               >
+                <NavDropdown.Item onClick={handleAccountClick} className="cd-account">
+              Account
+            </NavDropdown.Item>
                 <NavDropdown.Item
                   onClick={handleLogoutClick}
                   className="cd-logout"

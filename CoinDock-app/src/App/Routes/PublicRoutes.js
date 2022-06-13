@@ -6,6 +6,7 @@ import Login from "Screens/Login/Login";
 import SignUp from "Screens/SignUp/SignUp";
 import Loading from "Shared/Loading/Loading";
 
+
 const PublicRoutes = () => {
   const isAuthenticated = useIsAuthenticated();
   if (isAuthenticated) {
