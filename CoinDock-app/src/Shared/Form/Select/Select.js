@@ -16,6 +16,7 @@ const Select = ({
   emptyPlaceHolder,
   name,
   formErrors,
+  onInput,
 
   ...props
 }) => {
@@ -31,6 +32,10 @@ const Select = ({
   const handleFocus = (e) => {
     setFieldsTouched(true);
   };
+  const handleInput = (e) => {
+    setFieldsTouched(true);
+    onInput?.(e);
+  };
 
   return (
     <>
@@ -43,7 +48,12 @@ const Select = ({
         {emptyPlaceHolder && <option />}
         {options.map(({ value, label }, index) => {
           return (
-            <option value={value} key={index} onClick={handleChanges}>
+            <option
+              value={value}
+              key={index}
+              onClick={handleChanges}
+              onInput={handleInput}
+            >
               {label}
             </option>
           );

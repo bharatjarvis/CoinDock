@@ -52,5 +52,23 @@
   left: 22px;
   top: 83px;
 
-  margin-top: 0.5cm;
+  margin-top: 1cm;
+}
+.cd-account-heading {
+  position: absolute;
+  width: 252px;
+  height: 29px;
+  left: 22px;
+  top: 32px;
+
+  /* Link */
+
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 160%;
+  /* identical to box height, or 29px */
+
+  color: #000000;
 }

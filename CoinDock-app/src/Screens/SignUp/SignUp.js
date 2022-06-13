@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import "./SignUp.css";
 import Name from "Shared/Form/Name/Name.js";
@@ -226,9 +226,11 @@ function SignUP(props) {
                 }}
                 buttonLable="OK"
               >
-                <h5>Account recovery information</h5>
+                <h5 className="cd-account-heading">
+                  Account recovery information
+                </h5>
                 <div className="p-3">
-                  <img className="cd-lock-image" src={Lock} alt="Lock Image" />
+                  <img className="cd-lock-image" src={Lock} alt="Lock" />
                 </div>
                 <p className="para">
                   We’re going to display the account recovery information on the

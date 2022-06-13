@@ -69,6 +69,12 @@ function Header() {
                 >
                   Logout
                 </NavDropdown.Item>
+                <NavDropdown.Item
+                  onClick={handleLogoutClick}
+                  className="cd-logout"
+                >
+                  Profile
+                </NavDropdown.Item>
               </NavDropdown>
             </Nav>
           </>

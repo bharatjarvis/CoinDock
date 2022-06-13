@@ -26,7 +26,7 @@
 }
 .cd-performance-wrap {
   display: flex;
-  padding:14px;
+  padding: 14px;
   flex-direction: row;
   justify-content: space-between;
 }
@@ -45,4 +45,7 @@
 }
 .cd-mt-23 {
   margin-top: 23px;
+}
+.cd-pie-chartjs {
+  padding: 20px;
 }

@@ -1,13 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-
-import { useNavigate, useLocation } from "react-router-dom";
 import { RiCloseLine } from "react-icons/ri";
 import Select from "Shared/Form/Select";
 import Name from "Shared/Form/Name/Name";
 import Popup from "Screens/Popup/Popup";
 
 function AddWallet() {
-  const [buttonPopup, setButtonPopup] = useState(false); 
+  const [buttonPopup, setButtonPopup] = useState(false);
 
   return (
     <div>
