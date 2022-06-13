@@ -10,11 +10,14 @@ import { RiCloseLine } from "react-icons/ri";
 import Popup from "Screens/Popup/Popup";
 import { useIsAuthenticated } from "App/Auth/hooks";
 import { useLogout } from "App/Api/auth";
+
+
 function Header() {
   const isAuthenticated = useIsAuthenticated()
   const navigate = useNavigate();
   const [buttonPopup, setButtonPopup] = useState(false);
   const [logout] = useLogout();
+  
   const handleLogoutClick = async () => {
     try {
       await logout().unwrap();
@@ -23,7 +26,11 @@ function Header() {
       navigate("/login");
     }
   };
-
+ const handleAccountClick = () =>{
+  
+    navigate("/account");
+  
+ }
   return (
     <React.Fragment>
       <div className="cd-header-dimensions"></div>
@@ -59,6 +66,9 @@ function Header() {
               </div>
             }
           >
+            <NavDropdown.Item onClick={handleAccountClick} className="cd-account">
+              Account
+            </NavDropdown.Item>
             <NavDropdown.Item onClick={handleLogoutClick} className="cd-logout">
               Logout
             </NavDropdown.Item>

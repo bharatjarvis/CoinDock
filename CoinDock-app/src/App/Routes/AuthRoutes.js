@@ -2,6 +2,7 @@ import { useIsAuthenticated } from 'App/Auth/hooks';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Logout from 'Screens/Logout/Logout';
+import Account from 'Screens/Account/Account'
 import RecoveryCodeTestStep from 'Screens/SignUp/RecoveryCodeTestStep';
 import RecoveryCodeBoxStep from "Screens/SignUp/RecoveryStep/RecoveryStep";
 
@@ -13,6 +14,7 @@ const AuthRoutes = (props) => {
   }
   return <Routes>
     <Route path="/" element={<Logout />} />
+    <Route path="/account" element={<Account/>}/>
     <Route path="/logout" element={<Logout />} />
     <Route path="/recovery-codes" element={<RecoveryCodeBoxStep />} />
     <Route path="/recovery-test" element={<RecoveryCodeTestStep />} />

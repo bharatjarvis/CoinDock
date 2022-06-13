@@ -3,6 +3,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Login from 'Screens/Login/Login';
 
+
 const PublicRoutes = () => {
   const isAuthenticated = useIsAuthenticated()
   if(isAuthenticated){

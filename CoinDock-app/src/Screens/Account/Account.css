@@ -1,0 +1,45 @@
+
+  .cd-accordion {
+    width:250%;
+    max-width: 500px;
+    /* margin: 2rem auto; */
+    /* margin-top: 5%; */
+  }
+  
+  .cd-accordion-title {
+    display: flex;
+    border: rgb(224, 238, 238) 1px;
+    flex-direction: row;
+    justify-content: space-between;
+    cursor: pointer;
+    background-color: #ebf2f3;
+    border-style: groove;
+  }
+  
+  .cd-accordion-title:hover {
+    background-color: #b6dbe2;
+  }
+  
+  .cd-accordion-title,
+  .cd-accordion-content {
+    padding: 1rem;
+  }
+  
+  .cd-accordion-content {
+    background-color: #d6b0ec;
+  }
+  
+ .container{
+   max-width: 480px;
+ }
+  
+  @media screen and (max-width: 700px) {
+    body {
+      font-size: 18px;
+    }
+  
+    .accordion {
+      width: 90%;
+      margin-top:'7%';
+    }
+  }
