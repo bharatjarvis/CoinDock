@@ -24,10 +24,6 @@ Route::group(['prefix' => 'users'], function () {
 });
 
 
-// Route::group(['prefix' => 'graph'], function () {
-//     Route::post('{user}/real-time-graph', [WalletCoinController::class, 'show']);
-// });
-
 
 Route::middleware('auth:api')
     ->prefix('users')
@@ -63,8 +59,6 @@ Route::middleware('auth:api')
                         404,
                     ),
                 );
-
-                Route::post('/real-time-graph', [WalletCoinController::class, 'show']);
 
             });
         });
