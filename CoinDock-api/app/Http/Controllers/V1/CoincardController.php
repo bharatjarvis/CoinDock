@@ -9,7 +9,7 @@ use App\Models\V1\User;
 use App\Models\V1\{Wallet,Coin};
 use Illuminate\Support\Facades\DB;
 
-class HomeController extends Controller
+class CoincardController extends Controller
 {
     //Number of coins
     public function numberOfCoins(User $user){
@@ -57,3 +57,4 @@ class HomeController extends Controller
 
 
 }
+
