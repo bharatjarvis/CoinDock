@@ -1,5 +1,6 @@
 import { React, useState } from "react";
 import "./Select.css";
+import propTypes from "prop-types";
 import "Shared/common-styles/space.css";
 
 export const countryValidation = (value) => {
@@ -65,5 +66,7 @@ const Select = ({
     </>
   );
 };
-
+Select.propTypes = {
+  label: propTypes.string,
+};
 export default Select;

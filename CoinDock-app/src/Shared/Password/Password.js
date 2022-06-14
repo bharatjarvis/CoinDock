@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "Shared/common-styles/space.css";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
+import propTypes from "prop-types";
 import "./Password.css";
 export const passwordValidation = ({
   value,
@@ -92,5 +93,8 @@ const Password = ({ name, placeholder, label, formErrors, onInput }) => {
       </div>
     </>
   );
+};
+Password.propTypes = {
+  label: propTypes.string,
 };
 export default Password;

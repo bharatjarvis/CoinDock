@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
+import propTypes from "prop-types";
 import moment from "moment";
 import "Shared/common-styles/space.css";
 import "react-datepicker/dist/react-datepicker.css";
@@ -47,4 +48,7 @@ function DatePick({ name, onChange, formErrors }) {
     </React.Fragment>
   );
 }
+DatePick.propTypes = {
+  label: propTypes.number,
+};
 export default DatePick;

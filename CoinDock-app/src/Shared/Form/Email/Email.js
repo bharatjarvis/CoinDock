@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import propTypes from "prop-types";
 import "Shared/common-styles/space.css";
 export const emailValidation = (value) => {
   let error = null;
@@ -50,5 +51,8 @@ const Email = ({ name, formErrors, onInput }) => {
       </div>
     </>
   );
+};
+Email.propTypes = {
+  label: propTypes.string,
 };
 export default Email;

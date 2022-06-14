@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Component, useState } from "react";
 
 import "./SignUp.css";
 import Name from "Shared/Form/Name/Name.js";
