@@ -33,5 +33,3 @@ Route::middleware('auth:api')->prefix('users')->group(
         );
     }
 );
-
-Route::get('/wallets', [WalletController::class ,'index']);
