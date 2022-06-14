@@ -2,6 +2,7 @@
 
 namespace App\Models\V1;
 
+use Composer\DependencyResolver\Request;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,6 +15,7 @@ class Wallet extends Model
         'user_id',
         'wallet_id',
         'balance',
+        'bUSD',
         'name'
     ];
 

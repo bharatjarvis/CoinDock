@@ -17,6 +17,23 @@ use App\Http\Controllers\V1\HomeController;
 */
 /* ----Dashboard ---*/
 
-Route::get('users/{user}/numberOfCoins', [HomeController::class, 'numberOfCoins']);
+Route::middleware('auth:api')->prefix('users')->group(
+    function(){
+        Route::prefix('{user}')->group(
+            function(){
+                Route::get('/numberOfCoins', [HomeController::class, 'numberOfCoins']);
+                Route::get('/coinBtc',[HomeController::class,'coinBtc']);
+                Route::get('/getprimaryCurrency', [HomeController::class, 'getPrimaryCurrency']);
+                Route::post('/primaryCurrency', [HomeController::class, 'primaryCurrency']);
+                Route::get('/getsecondarycurrency',[HomeController::class, 'getSecondaryCurrency']);
+                Route::post('/secondaryCurrency', [HomeController::class, 'secondaryCurrency']);
+
+                
+            }
+        );
+    }
+);
+
+
 
 

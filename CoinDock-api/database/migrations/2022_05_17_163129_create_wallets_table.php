@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('wallet_id');
             $table->double('balance',2);
+            $table->double('bUSD',2);
             $table->timestamps();
         });
     }
