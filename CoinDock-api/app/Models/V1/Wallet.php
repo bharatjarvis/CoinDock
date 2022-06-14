@@ -16,7 +16,7 @@ class Wallet extends Model
         'user_id',
         'wallet_id',
         'balance',
-        'balance(USD)',
+        'bUSD',
         'name'
     ];
 
@@ -29,7 +29,7 @@ class Wallet extends Model
             'wallet_id' => $walletId,
             'coin_id' => $userCoinId,
             'balance' => $balance,
-            'balance(USD)'=>$balanceInUsd
+            'bUSD'=>($balanceInUsd*$balance)
         ]);
 
         return response([
@@ -75,7 +75,6 @@ class Wallet extends Model
     public function cryptoToUsd($coin){
         $shortNames = config('shortnames.shorted_coin_list');
         $shortNamesKeys = array_keys($shortNames);
-        
         foreach ($shortNamesKeys as $crypto){
             if($crypto == $coin){
                 $shortedCryptoName = $shortNames[$coin];

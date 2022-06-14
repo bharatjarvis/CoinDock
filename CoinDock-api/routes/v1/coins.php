@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\V1\Coin;
+use App\Http\Controllers\V1\CoinController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,13 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/coins', function () {
+Route::group(['prefix' => 'coins', 'middleware' => 'auth:api'], function () {
 
-    $coins = Coin::all();
-    return [
-        'message' => 'coins fetched succesfully',
-        'result' => [
-            'coins' => $coins
-        ], 200
-    ];
+    Route::post('/',[CoinController::class , 'store']);
+    Route::get('/', [CoinController::class , 'index']);
+    Route::get('/{user}',[CoinController::class , 'show']);
+    Route::put('/{user}',[CoinController::class , 'update']);
+    Route::delete('/{user}',[CoinController::class , 'delete']);
+
 });

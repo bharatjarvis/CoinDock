@@ -46,7 +46,7 @@ class handleWalletBalance extends Command
 
 
             //Updating Wallet 
-            $wallet->update(['balance(USD)'=>$balanceInUsd]);
+            $wallet->bUSD=($balance*$balanceInUsd);
             $wallet->balance = $balance;
             $wallet->save();
 
