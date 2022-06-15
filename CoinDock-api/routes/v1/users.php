@@ -55,7 +55,14 @@ Route::middleware('auth:api')
                 );
             });
 
+
             
+            Route::prefix('add-wallet')->group(
+                function(){     
+                    Route::post('/' ,[WalletController::class,'addWallet']);
+            });
+
+
             Route::prefix('graph')->group(function () {
                 Route::get('/', [WalletCoinController::class, 'index'])->missing(
                     fn () => response(
