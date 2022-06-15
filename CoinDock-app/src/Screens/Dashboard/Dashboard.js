@@ -5,7 +5,6 @@ import "./Dashboard.css";
 import { PieChart } from "Shared/Chart/PieChart/PieChart";
 import { LineChart } from "Shared/Chart/LineChart/LineChart";
 import "Shared/common-styles/space.css";
-import Wallet from "Screens/Wallets/Wallet";
 
 function Dashboard() {
   return (
@@ -26,7 +25,6 @@ function Dashboard() {
             <PieChart />
           </div>
         </div>
-        {/* <Wallet /> */}
       </div>
     </React.Fragment>
   );

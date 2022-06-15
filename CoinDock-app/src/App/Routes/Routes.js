@@ -1,7 +1,6 @@
 import React from "react";
 import Header from "App/Header/Header";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import SignUp from "Screens/SignUp";
+import { BrowserRouter } from "react-router-dom";
 import AuthRoutes from "./AuthRoutes";
 import PublicRoutes from "./PublicRoutes";
 import RouteLoader from "./RouteLoader";
@@ -14,7 +13,6 @@ const Direction = () => {
         <RouteLoader>
           <PublicRoutes />
           <AuthRoutes />
-         
         </RouteLoader>
       </div>
     </BrowserRouter>

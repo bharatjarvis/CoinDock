@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import propTypes from "prop-types";
 import "./Login.css";
@@ -146,4 +146,3 @@ Login.propTypes = {
   password: propTypes.string,
 };
 export default Login;
-      

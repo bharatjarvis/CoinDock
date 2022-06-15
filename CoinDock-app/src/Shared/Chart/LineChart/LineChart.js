@@ -11,8 +11,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Chart, Line } from "react-chartjs-2";
-import { data } from "../PieChart/PieChart";
+import { Line } from "react-chartjs-2";
 
 ChartJS.register(
   CategoryScale,
@@ -40,26 +39,6 @@ export const options = {
 const labels = ["January", "February", "March", "April", "May", "June", "July"];
 const label = ["Dataset1", "Dataset2"];
 
-// export const data = {
-//   labels,
-//   datasets: [
-//     {
-//       label: label[0],
-
-//       data: [35, 5, 80, 31, 26, 15, 4],
-//       borderColor: "rgb(255, 99, 132)",
-//       backgroundColor: "rgba(255, 99, 132, 0.5)",
-//     },
-//     {
-//       label: label[1],
-
-//       data: [65, 59, 80, 81, 56, 55, 40],
-//       borderColor: "rgb(53, 162, 235)",
-//       backgroundColor: "rgba(53, 162, 235, 0.5)",
-//     },
-//   ],
-// };
-
 const allData = [
   {
     label: label[0],
@@ -76,7 +55,6 @@ const allData = [
     backgroundColor: "rgba(53, 162, 235, 0.5)",
   },
 ];
-const index = null;
 
 export function LineChart() {
   const refContainer = useRef();
