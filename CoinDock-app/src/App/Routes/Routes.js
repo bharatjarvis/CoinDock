@@ -18,24 +18,4 @@ const Direction = () => {
     </BrowserRouter>
   );
 };
-
-// const publicRoutes = [
-//   { path: "/", element: Login },
-//   { path: "/signup", element: SignUP },
-// ];
-
-// const privateRoutes = [
-//   {
-//     path: "/logout",
-//     element: Logout,
-//     path: "/recovery-codes",
-//     element: RecoveryCodeBoxStep,
-//     path: "/recovery-test",
-//     element: RecoveryCodeTestStep,
-//   },
-// ];
-
-// const useAuthChecker = () => {
-//   const [isAuth, setIsAuth] = useState({});
-// };
 export default Direction;

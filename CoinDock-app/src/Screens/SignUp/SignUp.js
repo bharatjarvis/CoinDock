@@ -3,7 +3,7 @@ import React, { Component, useState } from "react";
 import "./SignUp.css";
 import Name from "Shared/Form/Name/Name.js";
 import Email from "Shared/Form/Email/Email.js";
-import Popup from "../Popup/Popup.js";
+import Popup from "../../Shared/Popup/Popup.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { emailValidation } from "Shared/Form/Email/Email.js";
 import "Shared/common-styles/common.css";

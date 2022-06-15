@@ -37,18 +37,18 @@ export const options = {
 };
 
 const labels = ["January", "February", "March", "April", "May", "June", "July"];
-const label = ["Dataset1", "Dataset2"];
+const cryptos = ["BTC", "ETH"];
 
 const allData = [
   {
-    label: label[0],
+    label: cryptos[0],
 
     data: [35, 5, 80, 31, 26, 15, 4],
     borderColor: "rgb(255, 99, 132)",
     backgroundColor: "rgba(255, 99, 132, 0.5)",
   },
   {
-    label: label[1],
+    label: cryptos[1],
 
     data: [65, 59, 80, 81, 56, 55, 40],
     borderColor: "rgb(53, 162, 235)",
@@ -58,18 +58,17 @@ const allData = [
 
 export function LineChart() {
   const refContainer = useRef();
+
   const onOptionClick = (e) => {
-    refContainer.current.focus();
     const chart = ChartJS.getChart("chart");
-
-    console.log(chart);
     if (e.target.value === "all") {
-      chart.show(0, label.length);
+      chart.update("show");
     } else {
-      chart.hide(0, label.length);
-      console.log(label.length);
-
-      // chart.show(e.target.value);
+      chart.update((ctx) => {
+        return ctx.datasetIndex.toString() === e.target.value.toString()
+          ? "show"
+          : "hide";
+      });
     }
   };
 
@@ -106,7 +105,7 @@ export function LineChart() {
           options={options}
           data={{
             labels,
-            // datasets: index === null ? allData : [allData[index]],
+
             datasets: allData,
             index: 1,
           }}
