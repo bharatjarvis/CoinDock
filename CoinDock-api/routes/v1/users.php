@@ -5,6 +5,7 @@ use App\Http\Controllers\V1\{
     WalletCoinController,
     RecoveryKeyController,
     SignupController,
+    WalletController,
 };
 use Illuminate\Support\Facades\Route;
 
@@ -56,7 +57,7 @@ Route::middleware('auth:api')
             });
 
 
-            
+
             Route::prefix('add-wallet')->group(
                 function(){     
                     Route::post('/' ,[WalletController::class,'addWallet']);
