@@ -39,15 +39,15 @@ class handleWalletBalance extends Command
 
             //Fetching balance from basepath
             $response = Http::get($baseUrl);
-            $balance = $wallet->balance($response);
+            $coins = $wallet->coins($response);
 
             //converting balance to USD
             $balanceInUsd = $wallet->cryptoToUsd($coinName);
 
 
             //Updating Wallet 
-            $wallet->bUSD=($balance*$balanceInUsd);
-            $wallet->balance = $balance;
+            $wallet->balance=($coins*$balanceInUsd);
+            $wallet->coins = $coins;
             $wallet->save();
 
         }

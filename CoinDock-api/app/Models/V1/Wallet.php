@@ -16,20 +16,20 @@ class Wallet extends Model
         'user_id',
         'wallet_id',
         'balance',
-        'bUSD',
+        'coins',
         'name'
     ];
 
 
     //wallet creation
-    public function WalletCreate($userId, $walletId, $userCoinId, $balance ,$balanceInUsd)
+    public function WalletCreate($userId, $walletId, $userCoinId, $coins, $balanceInUsd)
     {
         Wallet::create([
             'user_id' => $userId,
             'wallet_id' => $walletId,
             'coin_id' => $userCoinId,
-            'balance' => $balance,
-            'bUSD'=>($balanceInUsd*$balance)
+            'coins' => $coins,
+            'balance' => ($balanceInUsd * $coins)
         ]);
 
         return response([
@@ -72,17 +72,18 @@ class Wallet extends Model
 
 
     //getting crypto coin short name based on coin name 
-    public function cryptoToUsd($coin){
+    public function cryptoToUsd($coin)
+    {
         $shortNames = config('shortnames.shorted_coin_list');
         $shortNamesKeys = array_keys($shortNames);
-        foreach ($shortNamesKeys as $crypto){
-            if($crypto == $coin){
+        foreach ($shortNamesKeys as $crypto) {
+            if ($crypto == $coin) {
                 $shortedCryptoName = $shortNames[$coin];
             }
         }
 
         $cryptConversionBasePath = config('exchange.cryp_exchange');
-        $cryptConversionPath = str_replace('{id}',$shortedCryptoName,$cryptConversionBasePath);
+        $cryptConversionPath = str_replace('{id}', $shortedCryptoName, $cryptConversionBasePath);
         $balanceInUsd = Http::get($cryptConversionPath)['USD'];
 
         return $balanceInUsd;
@@ -96,7 +97,7 @@ class Wallet extends Model
 
 
     //Fetching Wallet balance through the Response
-    public function balance($response)
+    public function coins($response)
     {
         $responseArray = json_decode($response, true);
         $responseArrayKeys = array_keys($responseArray);
@@ -104,10 +105,9 @@ class Wallet extends Model
 
         foreach ($responseArrayKeys as $jsonKey) {
             if ($jsonKey == 'balance' || $jsonKey == 'result' || $jsonKey == 'data' || $jsonKey == 'result') {
-                $balance = $responseArray[$jsonKey];
+                $coins = $responseArray[$jsonKey];
 
-                return $balance;
-
+                return $coins;
             } elseif ($jsonKey == 'confirmed') {
 
 
@@ -115,8 +115,8 @@ class Wallet extends Model
                 $confirmedResponse = json_encode($confirmedResponse['confirmed'], true);
                 $confirmedResponseArray = json_decode($confirmedResponse, true);
 
-                $balance = $confirmedResponseArray['nanoErgs'];
-                return $balance;
+                $coins = $confirmedResponseArray['nanoErgs'];
+                return $coins;
             }
         }
     }
@@ -139,7 +139,7 @@ class Wallet extends Model
 
 
         $balanceInUsd = $this->cryptoToUsd($userCoin);
-        
+
         $userCoinId = Coin::whereName($userCoin)->first();
         $userCoinId = $userCoinId->id;
         $basePath = $this->basePath($userCoinId, $walletId);
@@ -148,17 +148,15 @@ class Wallet extends Model
 
         if ($this->isJson($response)) {
 
-            $balance = $this->balance($response);
+            $coins = $this->coins($response);
 
-            if(is_numeric($balance)){
-                return $this->WalletCreate($user->id, $walletId, $userCoinId, $balance, $balanceInUsd);
-            }
-            else{
+            if (is_numeric($coins)) {
+                return $this->WalletCreate($user->id, $walletId, $userCoinId, $coins, $balanceInUsd);
+            } else {
                 return response([
                     'message' => 'Wallet Cannot be Added'
                 ], 404);
             }
-            
         }
 
 
