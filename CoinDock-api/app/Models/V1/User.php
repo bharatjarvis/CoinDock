@@ -2,9 +2,10 @@
 
 namespace App\Models\V1;
 
+use App\Enums\V1\UserStatus;
 use App\Enums\V1\UserType;
-use App\Http\Requests\V1\SignupRequest;
-use App\Models\V1\Traits\Encryptable;
+use App\Models\V1\{Coin,Signup};
+use App\Http\Requests\V1\CreateUserRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -28,8 +29,8 @@ class User extends Authenticatable
         'country',
         'email',
         'password',
-        're_enter_password',
-        'status'
+        'status',
+        'recovery_attempts',
     ];
 
     /**
@@ -37,13 +38,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $hidden = [
-        'password',
-        're_enter_password',
-        'remember_token',
-    ];
-
-    // protected $encryptable = ['date_of_birth'];
+    protected $hidden = ['password', 'remember_token'];
 
     /**
      * The attributes that should be cast.
@@ -53,6 +48,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected $table = 'users';
 
     /**
      * @param string $value
@@ -64,15 +61,14 @@ class User extends Authenticatable
         $this->attributes['password'] = Hash::make($value);
     }
 
-
     public function recoveryKey()
     {
         return $this->hasOne(RecoveryKey::class);
     }
 
-    public function store(SignupRequest $request): self
+    public function store(CreateUserRequest $request): self
     {
-        return User::create([
+        $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'type' => UserType::User,
@@ -80,9 +76,28 @@ class User extends Authenticatable
             'country' => $request->country,
             'email' => $request->email,
             'password' => $request->password,
-            're_enter_password' => $request->re_enter_password,
-            'status' => $request->status
+            'status' => UserStatus::Active,
         ]);
+        // REGISTRATION STATUS UPDATION -  STEP:1
+        $signup = $this->signUp;
+        if($signup){
+            $signup->step_count+=1;
+            $signup->save();
+        }
+
+        Signup::create(['step_count'=>1,'user_id'=>$user->id]);
+
+        return $user;
+
     }
 
+    public function recoveryKeys()
+    {
+        return $this->hasMany(RecoveryKey::class, 'user_id', 'id');
+    }
+
+    public function signUp()
+    {
+        return $this->hasOne(Signup::class);
+    }
 }

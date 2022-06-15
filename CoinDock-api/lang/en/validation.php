@@ -151,9 +151,6 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
-        're_enter_password' => [
-            're_enter_password.required' =>'Passwords are not matching',
-        ],
 
         'date_of_birth' => [
             'date_of_birth.required' => 'You need to be 15 years old to register for CoinDock',

@@ -4,7 +4,7 @@ namespace App\Http\Requests\V1;
 
 use App\Http\Requests\FormRequest;
 
-class LoginRequest extends FormRequest
+class RecoveryKeyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,9 @@ class LoginRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'email' => 'required|email',
-            'password' => 'required',
+        return  [
+            'key_response' => 'required|array',
+            'key_response.*' => 'required|string|max:6|min:4',
         ];
     }
 }

@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\V1\Auth;
 
+use App\Exceptions\AuthenticationException;
+use App\Http\Requests\V1\CreateUserRequest;
 use App\Http\Requests\V1\LoginRequest;
-use App\Http\Requests\V1\SignupRequest;
 use App\Http\Resources\V1\UserResource;
 use App\Models\V1\User;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Symfony\Component\HttpFoundation\Response;
 
-class UserController extends AccessTokenController
+class AuthController extends AccessTokenController
 {
     use BuildPassportTokens;
 
     /**
      * SignupRequest
      */
-    public function store(SignupRequest $request)
+    public function store(CreateUserRequest $request)
     {
         $user = new User();
 
@@ -55,8 +55,8 @@ class UserController extends AccessTokenController
             [
                 'Access-Token' => $response['access_token'],
                 'Refresh-Token' => $response['refresh_token'],
-                'Expires-In' => $response['expires_in']
-            ]
+                'Expires-In' => $response['expires_in'],
+            ],
         );
     }
 
@@ -66,7 +66,9 @@ class UserController extends AccessTokenController
      */
     public function logout()
     {
-        auth()->user()->tokens->map(fn ($token) => $token->delete());
+        auth()
+            ->user()
+            ->tokens->map(fn($token) => $token->delete());
 
         return response(['message' => 'Successfully logged out'], 200);
     }
@@ -75,14 +77,10 @@ class UserController extends AccessTokenController
     {
         $response = $this->requestRefreshGrant($request);
 
-        return response(
-            ['message' => 'Refreshed token successfully',],
-            Response::HTTP_OK,
-            [
-                'Access-Token' => $response['access_token'],
-                'Refresh-Token' => $response['refresh_token'],
-                'Expires-In' => $response['expires_in']
-            ]
-        );
+        return response(['message' => 'Refreshed token successfully'], Response::HTTP_OK, [
+            'Access-Token' => $response['access_token'],
+            'Refresh-Token' => $response['refresh_token'],
+            'Expires-In' => $response['expires_in'],
+        ]);
     }
 }

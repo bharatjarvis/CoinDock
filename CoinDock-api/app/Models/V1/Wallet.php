@@ -164,4 +164,8 @@ class Wallet extends Model
             'message' => 'Wallet Cannot be Added'
         ], 404);
     }
+
+
+
 }
+
