@@ -1,27 +1,10 @@
-.required label:after {
-  content: "*";
-}
-.dropdown-toggle::after {
-  content: none;
-}
 .cd-performance-wrap {
   display: flex;
   padding: 14px;
   flex-direction: row;
   justify-content: space-between;
 }
-.cd-addwallet-button {
-  width: 81px;
-  height: 26px;
 
-  font-family: "Lora";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 160%;
-
-  color: #ffffff;
-}
 .cd-mt-23 {
   margin-top: 23px;
 }

@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 
 import "./SignUp.css";
 import Name from "Shared/Form/Name/Name.js";
@@ -11,7 +11,7 @@ import Stepper from "Shared/Form/Ellipse/Stepper";
 import { usePostRegisterMutation } from "App/Api/signup";
 import Select from "Shared/Form/Select";
 import DatePick, { dateValidation } from "Shared/Date/DatePick";
-import { nameValidation } from "Shared/Form/Name/Name.js";
+import { nameValidation } from "Shared/Form/Name/Name";
 import Password from "Shared/Password/Password";
 import { passwordValidation } from "Shared/Password/Password";
 import { reenterpasswordValidation } from "Shared/Password/Password";
@@ -23,7 +23,6 @@ import Lock from "Shared/images/Lock.png";
 function SignUP(props) {
   const navigate = useNavigate();
   const [refresh] = useRefresh();
-
   const [buttonPopup, setButtonPopup] = useState(false);
   const [register] = usePostRegisterMutation();
   const [isValid, setValid] = useState(false);

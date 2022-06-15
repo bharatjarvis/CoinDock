@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 function Header() {
   const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
-  // const [buttonPopup, setButtonPopup] = useState(false);
+  
   const [logout] = useLogout();
   const dispatch = useDispatch();
 
