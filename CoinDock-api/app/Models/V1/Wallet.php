@@ -76,8 +76,8 @@ class Wallet extends Model
     {
         $shortNames = config('shortnames.shorted_coin_list');
         $shortNamesKeys = array_keys($shortNames);
-        foreach ($shortNamesKeys as $crypto) {
-            if ($crypto == $coin) {
+        foreach ($shortNamesKeys as $shortNameKey) {
+            if ($shortNameKey == $coin) {
                 $shortedCryptoName = $shortNames[$coin];
             }
         }
