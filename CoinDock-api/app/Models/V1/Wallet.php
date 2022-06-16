@@ -4,7 +4,7 @@ namespace App\Models\V1;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\V1\{ User, Coin};
+use App\Models\V1\{ User, Coin, Setting};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -31,8 +31,39 @@ class Wallet extends Model
                 return $e->sum();
             })
             ->toArray();
+        // return $wallets;
+        
+        $walletShortCode = [];
+        $shortNameList = config('shortnames.shorted_coin_list');
+        $shortNameCode = "";
 
-        return $wallets;
+        foreach($shortNameList as $key1=>$value1){
+            foreach($wallets as $key2=>$value2){
+                if(strtolower($key1) == strtolower($key2)){
+
+                    $userSetting = Setting::whereUserId($user->id)->first();
+
+                    $primaryCurrency = $userSetting->primary_currency;
+                
+                    $cryptConversionBasePath = config('cryptohistoricaldata');
+                    
+                    $cryptConversionPath = str_replace('{id1}', $shortNameList[$key1], $cryptConversionBasePath['convertor']);
+
+                    $replaceStringNewVar = $cryptConversionPath;
+                    $cryptConversionPath = str_replace('{id2}', $primaryCurrency, $replaceStringNewVar);
+                    
+                   
+                    $balanceInUsd = Http::get($cryptConversionPath); 
+
+                    $totalPriceInUSD =  $balanceInUsd[$primaryCurrency] * $wallets[$key2];
+
+                    $walletShortCode[$shortNameList[$key1]]=$totalPriceInUSD;
+
+                    
+                }
+            }
+        }
+        return $walletShortCode;
     }
 
 
