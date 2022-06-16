@@ -47,7 +47,7 @@ class Wallet extends Model
     }
 
 
-    //getting basePath for particular Coin 
+    //getting basePath for for checking Wallet Balance
     public function basePath($userCoinId, $walletId)
     {
         $userCoin = Coin::whereId($userCoinId)->first();
@@ -71,7 +71,7 @@ class Wallet extends Model
 
 
 
-    //getting crypto coin short name based on coin name 
+    //Converting every crypto currency into USD
     public function cryptoToUsd($coin)
     {
         $shortNames = config('shortnames.shorted_coin_list');
@@ -96,7 +96,7 @@ class Wallet extends Model
 
 
 
-    //Fetching Wallet balance through the Response
+    //Fetching number of coins through the Response
     public function coins($response)
     {
         $responseArray = json_decode($response, true);
@@ -121,6 +121,7 @@ class Wallet extends Model
         }
     }
 
+    
     //Adding Wallet for Particular User
     public function addWallet(User $user, Request $request)
     {

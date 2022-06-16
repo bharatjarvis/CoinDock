@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class WalletController extends Controller
 {
-    public function addWallet(User $user, Request $request){
+    public function create(User $user, Request $request){
         $wallet = new Wallet();
 
         return $wallet->addWallet($user ,$request);
