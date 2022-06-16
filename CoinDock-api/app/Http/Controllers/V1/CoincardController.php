@@ -19,9 +19,9 @@ class CoincardController extends Controller
     }
 
     //Coin BTC
-    public function coinBtc(Request $request, User $user){
+    public function coinBtc(User $user){
         $change = new Coin();
-        return $change->coinBtc($user , $request);
+        return $change->coinBtc($user);
 
 
     }

@@ -35,36 +35,9 @@ class Coin extends Model
         return $grouped;
     }
 
-    //Coin in the form of BTC
-    public function coinBtc(User $user, Request $request){
-        $content=Wallet::select(['coin_id',
-                                  'bUSD',
-                                ])
-                                ->whereUserId($user->id)
-                                ->get();
-        $grouped = $content->mapToGroups(function($wallet){
-                            return [$wallet->coin_id =>$wallet->bUSD];})
-                        ->map(function ($row) {
-                            return $row->sum();
-        });
-        //dd($grouped);
-        $from= 'USD';
-        $to = 'BTC';
-        $url = file_get_contents("https://min-api.cryptocompare.com/data/price?fsym=".$from."&tsyms=".$to."");   
-        $priceValue = explode(":",$url);        
-        $priceValue = str_replace("}","",$priceValue[1]);       
-        $priceArray = array();
-        foreach($grouped as $groupedValue){
-            $priceValue = $priceValue * $groupedValue;
-            $priceArray = array_merge($priceArray,[$priceValue]);
-        }
-        return $priceArray;
-    }
-
-     //PrimaryCurrency Exchange
-    public function exChange(Request $request,User $user){
-        $from= 'INR';
-        $to = $request->to;
+    //Convertion
+    public function priceConversion($from, $to, User $user)
+    {
         $grouped =$this->countCoins($user)->toArray();
         $url = file_get_contents("https://min-api.cryptocompare.com/data/price?fsym=".$from."&tsyms=".$to."");   
         $priceValue = explode(":",$url);        
@@ -75,40 +48,34 @@ class Coin extends Model
             $priceArray = array_merge($priceArray,[$priceValue]);
         }
         return $priceArray;
+        
+    }
+
+     //PrimaryCurrency Exchange
+    public function exChange(Request $request,User $user){
+        $from= config('currency.currency.primarycurrency') ;
+        $to = $request->to;
+        $data = $this->priceConversion($from,$to ,$user);
+        return $data;
     }
 
 
     //get the primary currency value
     public function getPrimaryCurrency(User $user){
 
-        $from= 'BTC';
-        $to = 'INR';
-        $grouped =$this->countCoins($user)->toArray();
-        $url = file_get_contents("https://min-api.cryptocompare.com/data/price?fsym=".$from."&tsyms=".$to."");   
-        $priceValue = explode(":",$url);        
-        $priceValue = str_replace("}","",$priceValue[1]);       
-        $priceArray = array();
-        foreach($grouped as $groupedValue){
-            $priceValue = $priceValue * $groupedValue;
-            $priceArray = array_merge($priceArray,[$priceValue]);
-        }
-        return $priceArray;
+        //$from= 'BTC';
+        $from =config('shortnames.shorted_coin_list.Bitcoin');
+        $to = config('currency.currency.primarycurrency');
+        $data = $this->priceConversion($from,$to ,$user);
+        return $data;
 
     }
     //Secondary currency exchange
     public function secondayCurrencyexChange(Request $request,User $user){
-        $from= 'USD';
+        $from= config('currency.currency.secondarycurrency');
         $to = $request->to;
-        $grouped =$this->countCoins($user)->toArray();
-        $url = file_get_contents("https://min-api.cryptocompare.com/data/price?fsym=".$from."&tsyms=".$to."");   
-        $priceValue = explode(":",$url);        
-        $priceValue = str_replace("}","",$priceValue[1]);       
-        $priceArray = array();
-        foreach($grouped as $groupedValue){
-            $priceValue = $priceValue * $groupedValue;
-            $priceArray = array_merge($priceArray,[$priceValue]);
-        }
-        return $priceArray;
+        $data = $this->priceConversion($from,$to ,$user);
+        return $data;
     }
 
     //get secondary currency value
@@ -125,5 +92,22 @@ class Coin extends Model
         });
         return $grouped;
 
+    }
+
+    //Coin in the form of BTC
+    public function coinBtc(User $user)
+    {       
+        $grouped=$this->getSecondaryCurrency($user);
+        $from= config('currency.currency.secondarycurrency');
+        $to = config('shortnames.shorted_coin_list.Bitcoin');
+        $url = file_get_contents("https://min-api.cryptocompare.com/data/price?fsym=".$from."&tsyms=".$to."");   
+        $priceValue = explode(":",$url);        
+        $priceValue = str_replace("}","",$priceValue[1]);       
+        $priceArray = array();
+        foreach($grouped as $groupedValue){
+            $priceValue = $priceValue * $groupedValue;
+            $priceArray = array_merge($priceArray,[$priceValue]);
+        }
+        return $priceArray;
     }
 }
