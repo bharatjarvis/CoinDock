@@ -17,33 +17,39 @@ class Wallet extends Model
     //     'wallet_id',
     //     'balance'
     // ];
-    public function totalBtc(User $user)
+    public function totalBTC(User $user)
     {
-        $userwallets = Wallet::whereUserId($user->id)->orderBy('user_id', 'asc')->get();
+        $userWalletsDetails = Wallet::whereUserId($user->id)->orderBy('user_id', 'asc')->get();
         $balanceTotal = 0;
-        foreach ($userwallets as $user) {
-            $balanceTotal += $user->balance_USD;
+        foreach ($userWalletsDetails as $userWalletsDetail) {
+            $balanceTotal += $userWalletsDetail->balance_USD;
         }
 
-        $url = file_get_contents("https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=BTC");
-        $obj = json_decode($url, true);
-        $totalBtc = $balanceTotal * $obj['BTC'];
+        $UsdToBtcConvertorApi = file_get_contents("https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=BTC");
+        $decodeUSDtoBTCConvertorAPI = json_decode($UsdToBtcConvertorApi, true);
+        $totalBtc = $balanceTotal * $decodeUSDtoBTCConvertorAPI['BTC'];
 
-        return $totalBtc;
+        return ["Total BTC"=> $totalBtc];
     }
+
 
 
 
     public function currencyConverter(User $user)
     {
         $userSetting = Setting::whereUserId($user->id)->first();
+        
         $primaryCurrency = $userSetting->primary_currency;
-        $totalBtc = $this->totalBtc($user);
+        
         $primaryBalancePath = 'https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=' . $primaryCurrency;
+        
         $primaryBalance = file_get_contents($primaryBalancePath);
-        $obj = json_decode($primaryBalance, true);
-        $primaryBalance = $obj[$primaryCurrency];
-        return $primaryBalance;
+        
+        $primaryBalanceDecode = json_decode($primaryBalance, true);
+        
+        $primaryBalance = $primaryBalanceDecode[$primaryCurrency];
+        
+        return [$primaryCurrency => $primaryBalance];
     }
 
 
@@ -59,39 +65,42 @@ class Wallet extends Model
                 return [$wallet->coin->name];
             })->toArray();
 
-
-        // converting the 2-array to single array
-        $newArray = array();
-        foreach ($coinNames as $key => $value) {
-            foreach ($value as $key2 => $value2) {
-                $newArray[$key2] = $value2;
-            }
-        }
-
-        // removing the duplicates
-        $newArray = array_unique($newArray);
-
-        // getting the realtimevalue to find the top performer
-        $topPerformerBalance = PHP_INT_MIN;
-        $topPerformerCoin = "";
-        $dataDisplay = [];
-        foreach ($newArray as $coinNameMatch) {
-            foreach ($shortNameList as $key => $value) {
-                if ($coinNameMatch === strtolower($key)) {
-                    $shortNameCode = $shortNameList[$key];
-                    $currentPrice = file_get_contents('https://min-api.cryptocompare.com/data/price?fsym=' . $shortNameCode . '&tsyms=USD');
-                    $obj = json_decode($currentPrice, true);
-                    if ($topPerformerBalance < $obj['USD']) {
-                        $topPerformerBalance = $obj['USD'];
-                        $topPerformerCoin = $shortNameCode;
-                    }
-                    $dataDisplay[$topPerformerCoin] = $topPerformerBalance;
+        if($coinNames==NULL){
+            return ["User Wallet Doesn't Exists"];
+        }else{
+            // converting the 2-array to single array
+            $singleArrayConvertion = array();
+            foreach ($coinNames as $key => $value) {
+                foreach ($value as $key2 => $value2) {
+                    $singleArrayConvertion[$key2] = $value2;
                 }
             }
+
+            // removing the duplicates
+            $singleArrayConvertion = array_unique($singleArrayConvertion);
+
+            // getting the realtimevalue to find the top performer
+            $topPerformerBalance = PHP_INT_MIN;
+            $topPerformerCoin = "";
+            $dataDisplay = [];
+            foreach ($singleArrayConvertion as $singleArrayConvertionCoin) {
+                foreach ($shortNameList as $key => $value) {
+                    if ($singleArrayConvertionCoin === strtolower($key)) {
+                        $shortNameCode = $shortNameList[$key];
+                        $currentPrice = file_get_contents('https://min-api.cryptocompare.com/data/price?fsym=' . $shortNameCode . '&tsyms=USD');
+                        $currentPriceDecode = json_decode($currentPrice, true);
+                        if ($topPerformerBalance < $currentPriceDecode['USD']) {
+                            $topPerformerBalance = $currentPriceDecode['USD'];
+                            $topPerformerCoin = $shortNameCode;
+                        }
+                        $dataDisplay[$topPerformerCoin] = $topPerformerBalance;
+                    }
+                }
+            }
+            $result = [];
+            $result[$topPerformerCoin] = $topPerformerBalance;
+            return $result;
         }
-        $result = [];
-        $result[$topPerformerCoin] = $topPerformerBalance;
-        return $result;
     }
 
 
@@ -108,31 +117,33 @@ class Wallet extends Model
             ->mapToGroups(function ($wallet) {
                 return [$wallet->coin->name];
             })->toArray();
-
-
+            
+        if($coinNames==NULL){
+            return ["User Wallet Doesn't Exists"];
+        }else{
         // converting the 2-array to single array
-        $newArray = array();
+        $singleArrayConverstion = array();
         foreach ($coinNames as $key => $value) {
             foreach ($value as $key2 => $value2) {
-                $newArray[$key2] = $value2;
+                $singleArrayConverstion[$key2] = $value2;
             }
         }
-
-        // removing the duplicates
-        $newArray = array_unique($newArray);
+    // removing the duplicates
+        $singleArrayConverstion = array_unique($singleArrayConverstion);
 
         // getting the realtimevalue to find the low performer
         $lowPerformerBalance = PHP_INT_MAX;
         $lowPerformerCoin = "";
         $dataDisplay = [];
-        foreach ($newArray as $coinNameMatch) {
+        foreach ($singleArrayConverstion as $coinNameMatch) {
             foreach ($shortNameList as $key => $value) {
                 if ($coinNameMatch === strtolower($key)) {
                     $shortNameCode = $shortNameList[$key];
                     $currentPrice = file_get_contents('https://min-api.cryptocompare.com/data/price?fsym=' . $shortNameCode . '&tsyms=USD');
-                    $obj = json_decode($currentPrice, true);
-                    if ($lowPerformerBalance > $obj['USD']) {
-                        $lowPerformerBalance = $obj['USD'];
+                    $currentPriceDecode = json_decode($currentPrice, true);
+
+                    if ($lowPerformerBalance > $currentPriceDecode['USD']) {
+                        $lowPerformerBalance = $currentPriceDecode['USD'];
                         $lowPerformerCoin = $shortNameCode;
                     }
                     $dataDisplay[$lowPerformerCoin] = $lowPerformerBalance;
@@ -143,6 +154,7 @@ class Wallet extends Model
         $result[$lowPerformerCoin] = $lowPerformerBalance;
         return $result;
     }
+}
     public function coin()
     {
         return $this->belongsTo(Coin::class);

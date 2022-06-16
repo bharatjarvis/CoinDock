@@ -17,7 +17,7 @@ class CoinsController extends Controller
   public function totalBtc(User $user)
   {
     $wallet = new Wallet();
-    return $wallet->totalBtc($user);
+    return $wallet->totalBTC($user);
   }
   public function currencyConverter(User $user)
   {
@@ -27,12 +27,12 @@ class CoinsController extends Controller
 
   public function topPerformer(User $user, Wallet $wallet)
   {
-    $balanceName = new Wallet();
-    return $balanceName->topPerformer($user, $wallet);
+    $wallet = new Wallet();
+    return $wallet->topPerformer($user, $wallet);
   }
   public function lowPerformer(User $user, Wallet $wallet)
   {
-    $balanceName = new Wallet();
-    return $balanceName->lowPerformer($user, $wallet);
+    $wallet = new Wallet();
+    return $wallet->lowPerformer($user, $wallet);
   }
 }
