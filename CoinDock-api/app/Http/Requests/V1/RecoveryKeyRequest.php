@@ -26,10 +26,7 @@ class RecoveryKeyRequest extends FormRequest
         return  [
             'key_response' => 'required|array',
             'key_response.*' => 'required|string|max:6|min:4',
-<<<<<<< HEAD
         
-=======
->>>>>>> 1.changes
         ];
         
     }
