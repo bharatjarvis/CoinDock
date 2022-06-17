@@ -53,4 +53,9 @@ return [
         'scopes' => ['web-app-user'],
     ],
 
+    'personal_access_client' => [
+        'id' => env('CLIENT_ID'),
+        'secret' => env('CLIENT_SECRET'),
+    ],
+
 ];

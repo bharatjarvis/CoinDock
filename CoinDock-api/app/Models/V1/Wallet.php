@@ -161,3 +161,4 @@ class Wallet extends Model
     }
     
 }
+

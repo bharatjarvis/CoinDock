@@ -1,11 +1,13 @@
 <?php
 
-use App\Http\Controllers\V1\Auth\UserController;
-use App\Http\Controllers\V1\CoinsController;
-use App\Http\Controllers\V1\RecoveryKeyController;
 use Illuminate\Support\Facades\Route;
-
-
+use App\Http\Controllers\V1\{
+    UserController,
+    WalletCoinController,
+    RecoveryKeyController,
+    SignupController,
+    CoinsController,
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -18,26 +20,57 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/signup', [UserController::class, 'store'])->name('users.signup');
-Route::post('/login', [UserController::class, 'login']);
-Route::post('/refresh', [UserController::class, 'refresh']);
-Route::middleware('auth:api')->group(function () {
-
-    Route::post('logout', [UserController::class, 'logout']);
-    Route::get('logout', [UserController::class, 'logout']);
+Route::group(['prefix' => 'users'], function () {
+    Route::post('/', [UserController::class, 'create'])->name('users.create');
 });
 
-Route::middleware('auth:api')->prefix('users')->group(
-    function () {
+Route::middleware('auth:api')
+    ->prefix('users')
+    ->group(function () {
+        Route::prefix('{user}')->group(function () {
 
-        Route::prefix('{user}')->group(
-            function () {
 
-                Route::get('/total-btc', [CoinsController::class, 'totalBTC']);
+            Route::prefix('recovery-codes')->group(function () {
+                Route::post('/', [RecoveryKeyController::class, 'create']);
+
+                Route::get('/download', [RecoveryKeyController::class, 'download']);
+
+                Route::get('/random', [RecoveryKeyController::class, 'random']);
+
+                Route::put('/activate', [RecoveryKeyController::class, 'activate']);
+            });
+
+
+
+            Route::prefix('signup')->group(function () {
+                Route::get('/info', [SignupController::class, 'info'])->missing(
+                    fn () => response(
+                        [
+                            'error' => ['message' => 'User record not found'],
+                        ],
+                        404,
+                    ),
+                );
+            });
+
+
+
+            Route::prefix('graph')->group(function () {
+                Route::get('/', [WalletCoinController::class, 'index'])->missing(
+                    fn () => response(
+                        [
+                            'error' => ['message' => 'User record not found'],
+                        ],
+                        404,
+                    ),
+                );
+
+            });
+
+
+            Route::get('/total-btc', [CoinsController::class, 'totalBTC']);
                 Route::get('/primary-currency',[CoinsController::class, 'currencyConverter']);
                 Route::get('/top-performer', [CoinsController::class, 'topPerformer']);
                 Route::get('/low-performer', [CoinsController::class, 'lowPerformer']);
-            }
-        );
-    }
-);
+        });
+    });
