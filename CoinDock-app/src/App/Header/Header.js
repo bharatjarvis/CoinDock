@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 function Header() {
   const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
-  
+
   const [logout] = useLogout();
   const dispatch = useDispatch();
 

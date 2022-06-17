@@ -99,17 +99,17 @@ export function LineChart() {
               <option value="One year">One Year</option>
             </select>
           </div>
-        </div>
-        <Line
-          id="chart"
-          options={options}
-          data={{
-            labels,
 
-            datasets: allData,
-            index: 1,
-          }}
-        />
+          <Line
+            id="chart"
+            options={options}
+            data={{
+              labels,
+
+              datasets: allData,
+            }}
+          />
+        </div>
       </div>
     </div>
   );

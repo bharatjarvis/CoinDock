@@ -21,7 +21,6 @@
 .cd-button {
   padding: 8px 24px;
 
-
   background: #e0e0e0;
   border-radius: 20px;
   border-left-width: 0px;
@@ -100,4 +99,10 @@
   list-style: none;
   gap: 100px;
   margin: 2%;
+}
+.cd-lable-signup {
+  font-family: "Lora";
+  font-style: normal;
+
+  color: #000000;
 }

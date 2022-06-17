@@ -11,7 +11,7 @@
   margin-bottom: 30px;
   padding: 4px;
 
-  width: 200px;
+  width: 180px;
 
   top: 81px;
 
@@ -29,16 +29,6 @@
   border-radius: 10px;
 }
 .cd-currency-performance {
-  margin-top: 4px;
-  padding-bottom: 15px;
-  padding-left: 4px;
-  padding-right: 123px;
-
-  width: 29px;
-  height: 38px;
-
-  top: 81px;
-
   font-family: "Lora";
   font-style: "normal";
   font-weight: 400;
@@ -47,17 +37,6 @@
   color: #ffffff;
 }
 .cd-currency-value {
-  text-align: right;
-  position: absolute;
-  width: 113px;
-  height: 29px;
-  padding-right: 4px;
-  padding-left: 50px;
-  padding-top: 18px;
-  padding-bottom: 12px;
-
-  top: 113px;
-
   font-family: "Lora";
   font-style: normal;
   font-weight: 700;

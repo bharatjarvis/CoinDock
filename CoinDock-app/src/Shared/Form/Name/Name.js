@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import propTypes from "prop-types";
 import "Shared/common-styles/space.css";
+import "Shared/common-styles/common.css";
 export const nameValidation = (value, label = "Name", length = 0) => {
   let error = null;
 
@@ -35,7 +36,7 @@ const Name = ({ label, name, placeholder, formErrors, onInput }) => {
   return (
     <div className="form-group">
       <div>
-        <label className="cd-mt-12">{label}</label>
+        <label className="cd-mt-12 cd-lable-signup">{label}</label>
         <input
           type="text"
           className="form-control cd-mt-8"

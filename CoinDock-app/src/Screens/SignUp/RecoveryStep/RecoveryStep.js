@@ -45,12 +45,12 @@ function RecoveryCodeBoxStep() {
               <div className="p-3" />
               <div className="cd-recover-table">
                 {Boolean(recoveryCodes) &&
-                  [...Array(recoveryCodes.length).keys()].map((number) => {
+                 recoveryCodes.map((value, number) => {
                     return (
                       <RecoveryBoxs
                         key={number}
                         index={number + 1}
-                        code={recoveryCodes[number]}
+                        code={value}
                       />
                     );
                   })}

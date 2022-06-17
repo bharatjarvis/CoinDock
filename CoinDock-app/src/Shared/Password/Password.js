@@ -3,6 +3,7 @@ import "Shared/common-styles/space.css";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import propTypes from "prop-types";
 import "./Password.css";
+import "Shared/common-styles/common.css";
 export const passwordValidation = ({
   value,
   label = "Password",
@@ -70,7 +71,7 @@ const Password = ({ name, placeholder, label, formErrors, onInput }) => {
   return (
     <>
       <div className=" form-group">
-        <label className="cd-mt-12">{label}</label>
+        <label className="cd-mt-12 cd-lable-signup">{label}</label>
         <div className="cd-password-container">
           <input
             type={isShow ? "text" : "password"}

@@ -2,6 +2,7 @@ import { React, useState } from "react";
 import "./Select.css";
 import propTypes from "prop-types";
 import "Shared/common-styles/space.css";
+import "Shared/common-styles/common.css";
 
 export const countryValidation = (value) => {
   let error = null;
@@ -40,7 +41,7 @@ const Select = ({
 
   return (
     <>
-      <label className="cd-mt-12">{label}</label>
+      <label className="cd-mt-12 cd-lable-signup">{label}</label>
       <select
         className="form-control cd-select cd-mt-8"
         name={name}

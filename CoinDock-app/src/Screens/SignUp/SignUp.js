@@ -204,7 +204,7 @@ function SignUP(props) {
                   />
                 </div>
 
-                <p className="condition">
+                <p className="condition cd-mt-12">
                   By clicking on confirm, you agreed to the CoinDock terms and
                   conditions
                 </p>
