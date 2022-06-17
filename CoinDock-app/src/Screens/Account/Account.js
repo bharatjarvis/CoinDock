@@ -33,7 +33,7 @@ function Account() {
            <button className='cd-button cd-button-2 cd-logout-button' onClick={handleLogoutClick}>Logout</button>
          </div>
      </div>
-      
+
     );
 };
 export default Account;

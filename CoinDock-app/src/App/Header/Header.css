@@ -21,14 +21,10 @@
   content: "*";
 }
 .dropdown-toggle::after {
+  display: none !important;
   content: none;
 }
-.cd-performance-wrap {
-  display: flex;
 
-  flex-direction: row;
-  justify-content: space-between;
-}
 .cd-addwallet-button {
   width: 81px;
   height: 26px;
@@ -38,7 +34,6 @@
   font-weight: 700;
   font-size: 16px;
   line-height: 160%;
-  /* identical to box height, or 26px */
 
   color: #ffffff;
 }

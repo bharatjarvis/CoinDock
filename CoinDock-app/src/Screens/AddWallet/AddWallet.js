@@ -30,7 +30,7 @@ function AddWallet() {
           <Select
             name="Wallet"
             className="form-control"
-            label="Wallet"
+            label="Coin"
             options={[
               { label: "" },
               { label: "BitCoin", value: 1 },

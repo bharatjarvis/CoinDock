@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import propTypes from "prop-types";
 import "Shared/common-styles/space.css";
+import "Shared/common-styles/common.css";
 export const emailValidation = (value) => {
   let error = null;
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
@@ -35,7 +36,7 @@ const Email = ({ name, formErrors, onInput }) => {
     <>
       <div className="form-group">
         <div>
-          <label className="cd-mt-12">Email</label>
+          <label className="cd-mt-12 cd-lable-signup">Email</label>
           <input
             type="email"
             className="form-control cd-mt-8"
