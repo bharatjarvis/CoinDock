@@ -10,7 +10,7 @@ const accapi = baseApi.injectEndpoints({
        }),
       transformResponse: (response) => [
          {key:'ProfileSettings', name: 'Profile settings', items: [
-             {id:1,name: 'Name', key: 'name',type:'edit'},
+             {id:1,name: 'Name', key: 'name'},
              {id:2,name: 'Gender', key: 'gender'},
              {id:3,name: 'Country', key: 'country'}
           ]},
