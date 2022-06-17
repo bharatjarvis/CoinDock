@@ -26,10 +26,8 @@ function Header() {
     }
   };
  const handleAccountClick = () =>{
-  
-    navigate("/account");
-  
- }
+  navigate("/account");
+  }
   return (
     <React.Fragment>
       <div className="cd-header-dimensions"></div>
@@ -68,9 +66,12 @@ function Header() {
                   </div>
                 }
               >
-                <NavDropdown.Item onClick={handleAccountClick} className="cd-account">
-              Account
-            </NavDropdown.Item>
+                <NavDropdown.Item 
+                  onClick={handleAccountClick} 
+                  className="cd-account"
+                >
+                   Account
+                </NavDropdown.Item>
                 <NavDropdown.Item
                   onClick={handleLogoutClick}
                   className="cd-logout"

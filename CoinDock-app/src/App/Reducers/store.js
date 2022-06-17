@@ -6,10 +6,12 @@ import { logger } from "redux-logger";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import auth from "App/Api/auth";
 import { authReducer } from "App/Auth/reducers";
+import accReducer  from "App/Auth/reducers/accReducer"
 
 const reducer = combineReducers({
   [baseApi.reducerPath]: baseApi.reducer,
   auth: authReducer,
+  account: accReducer,
 });
 
 const rootReducer = (state, action) => {
@@ -22,6 +24,7 @@ const rootReducer = (state, action) => {
 const store = configureStore({
   initialState: {},
   reducer: rootReducer,
+
   middleware: (getDefaultMiddleWare) => getDefaultMiddleWare({
     serializableCheck: false
   }).concat([thunk, baseApi.middleware, logger, auth.middleware]),
