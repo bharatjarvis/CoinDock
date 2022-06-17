@@ -1,5 +1,5 @@
 import React from 'react';
-import Popup from "Screens/Popup/Popup";
+import Popup from 'Shared/Popup/Popup';
 import { RiCloseLine } from "react-icons/ri";
 import Email from 'Shared/Form/Email';
 import Password from 'Shared/Password/Password';
