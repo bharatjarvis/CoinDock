@@ -29,6 +29,7 @@ function Account() {
          {account && account.map((accs,id) => {
            return (<Accordion key={id} name={accs.name} items={accs.items}/>)
          })}
+        {/* Added logout button */}
        </div><div className='d-flex justify-content-start'>
            <button className='cd-button cd-button-2 cd-logout-button' onClick={handleLogoutClick}>Logout</button>
          </div>
