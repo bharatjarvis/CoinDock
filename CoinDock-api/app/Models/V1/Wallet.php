@@ -128,7 +128,7 @@ class Wallet extends Model
                 $singleArrayConverstion[$key2] = $value2;
             }
         }
-    // removing the duplicates
+         // removing the duplicates
         $singleArrayConverstion = array_unique($singleArrayConverstion);
 
         // getting the realtimevalue to find the low performer
@@ -159,4 +159,5 @@ class Wallet extends Model
     {
         return $this->belongsTo(Coin::class);
     }
+    
 }
