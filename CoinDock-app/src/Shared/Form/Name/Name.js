@@ -12,7 +12,7 @@ export const nameValidation = (value, label = "Name", length = 0) => {
   return error;
 };
 
-const Name = ({ label, name, placeholder, formErrors }) => {
+const Name = ({ label, name, placeholder, formErrors, onInput }) => {
   const initialValues = {
     firstname: "",
     lastname: "",
@@ -26,6 +26,10 @@ const Name = ({ label, name, placeholder, formErrors }) => {
   };
   const handleFocus = (e) => {
     setFieldsTouched(true);
+  };
+  const handleInput = (e) => {
+    setFieldsTouched(true);
+    onInput?.(e);
   };
 
   return (
@@ -41,6 +45,7 @@ const Name = ({ label, name, placeholder, formErrors }) => {
           onChange={handleChanges}
           defaultValue={formValues.name}
           onBlur={handleFocus}
+          onInput={handleInput}
         />
       </div>
       {formErrors && fieldsTouched && (

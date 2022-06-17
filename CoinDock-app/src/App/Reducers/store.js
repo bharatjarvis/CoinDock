@@ -7,19 +7,21 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import auth from "App/Api/auth";
 import { authReducer } from "App/Auth/reducers";
 import accReducer  from "App/Auth/reducers/accReducer"
+import { popupReducer } from "Screens/AddWallet/AddWalletSlice";
 
 const reducer = combineReducers({
   [baseApi.reducerPath]: baseApi.reducer,
   auth: authReducer,
   account: accReducer,
+  addwallet: popupReducer,
 });
 
 const rootReducer = (state, action) => {
-  if(action.type === 'RESET'){
-    return reducer(undefined, action)
+  if (action.type === "RESET") {
+    return reducer(undefined, action);
   }
-  return reducer(state,action)
-}
+  return reducer(state, action);
+};
 
 const store = configureStore({
   initialState: {},
@@ -30,6 +32,6 @@ const store = configureStore({
   }).concat([thunk, baseApi.middleware, logger, auth.middleware]),
 });
 
-setupListeners(store.dispatch)
+setupListeners(store.dispatch);
 
 export default store;

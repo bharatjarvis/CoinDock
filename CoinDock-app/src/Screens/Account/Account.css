@@ -2,10 +2,10 @@
   .cd-accordion {
     width:260%;
     max-width: 500px;
-    /* margin: 1.2rem auto;
-    margin-top: 2%; */
+    /* margin: 2rem auto; */
+
   }
-  
+
   .cd-accordion-title {
     display: flex;
     border: rgb(115, 118, 119) 1px;
@@ -15,17 +15,16 @@
     background-color: #ebf2f3;
     border-style: groove;
   }
-  
+
   .cd-accordion-title:hover {
     background-color: #b6dbe2;
   }
-  
-  .cd-accordion-title
-   {
-   
+
+  .cd-accordion-title,
+  .cd-accordion-content {
     padding: 1rem;
   }
-  
+
   .cd-accordion-content {
     background-color: #e4d3ee;
     padding: 4px;
@@ -42,9 +41,9 @@
       margin:auto;
       margin-right:5%
     }
-  
+
     .accordion {
       width: 90%;
       margin-top:'7%';
     }
-  }
+  } 

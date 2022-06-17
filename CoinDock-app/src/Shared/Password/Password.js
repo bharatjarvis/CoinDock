@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "Shared/common-styles/space.css";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
+import propTypes from "prop-types";
 import "./Password.css";
 export const passwordValidation = ({
   value,
@@ -42,7 +43,7 @@ export const reenterpasswordValidation = (
   return error;
 };
 
-const Password = ({ name, placeholder, label, formErrors }) => {
+const Password = ({ name, placeholder, label, formErrors, onInput }) => {
   const initialValues = {
     password: "",
     reenterpassword: "",
@@ -61,6 +62,10 @@ const Password = ({ name, placeholder, label, formErrors }) => {
   const togglePassword = () => {
     setIsShow(isShow ? false : true);
   };
+  const handleInput = (e) => {
+    setFieldsTouched(true);
+    onInput?.(e);
+  };
 
   return (
     <>
@@ -76,7 +81,7 @@ const Password = ({ name, placeholder, label, formErrors }) => {
             defaultValue={formValues.name}
             onBlur={handleFocus}
             data-toggle="password"
-          
+            onInput={handleInput}
           />
 
           <span onClick={() => togglePassword()} className="cd-eye">
@@ -88,5 +93,8 @@ const Password = ({ name, placeholder, label, formErrors }) => {
       </div>
     </>
   );
+};
+Password.propTypes = {
+  label: propTypes.string,
 };
 export default Password;

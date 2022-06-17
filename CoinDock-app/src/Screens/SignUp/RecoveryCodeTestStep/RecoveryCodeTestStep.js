@@ -10,7 +10,7 @@ import {
 } from "App/Api/recoveryCodes";
 import { useNavigate } from "react-router-dom";
 import "./RecoveryCodeTest.css";
-import Popup from "Screens/Popup/Popup";
+import Popup from "Shared/Popup/Popup";
 
 function RecoveryCodeTestStep() {
   const navigate = useNavigate();

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import propTypes from "prop-types";
 import "./Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
@@ -140,5 +141,8 @@ function Login() {
     </div>
   );
 }
-
+Login.propTypes = {
+  email: propTypes.string,
+  password: propTypes.string,
+};
 export default Login;

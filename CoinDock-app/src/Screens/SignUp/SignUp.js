@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import "./SignUp.css";
 import Name from "Shared/Form/Name/Name.js";
 import Email from "Shared/Form/Email/Email.js";
-import Popup from "../Popup/Popup.js";
+import Popup from "../../Shared/Popup/Popup.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { emailValidation } from "Shared/Form/Email/Email.js";
 import "Shared/common-styles/common.css";
@@ -11,7 +11,7 @@ import Stepper from "Shared/Form/Ellipse/Stepper";
 import { usePostRegisterMutation } from "App/Api/signup";
 import Select from "Shared/Form/Select";
 import DatePick, { dateValidation } from "Shared/Date/DatePick";
-import { nameValidation } from "Shared/Form/Name/Name.js";
+import { nameValidation } from "Shared/Form/Name/Name";
 import Password from "Shared/Password/Password";
 import { passwordValidation } from "Shared/Password/Password";
 import { reenterpasswordValidation } from "Shared/Password/Password";
@@ -23,7 +23,6 @@ import Lock from "Shared/images/Lock.png";
 function SignUP(props) {
   const navigate = useNavigate();
   const [refresh] = useRefresh();
-
   const [buttonPopup, setButtonPopup] = useState(false);
   const [register] = usePostRegisterMutation();
   const [isValid, setValid] = useState(false);
@@ -226,9 +225,11 @@ function SignUP(props) {
                 }}
                 buttonLable="OK"
               >
-                <h5>Account recovery information</h5>
+                <h5 className="cd-account-heading">
+                  Account recovery information
+                </h5>
                 <div className="p-3">
-                  <img className="cd-lock-image" src={Lock} alt="Lock Image" />
+                  <img className="cd-lock-image" src={Lock} alt="Lock" />
                 </div>
                 <p className="para">
                   We’re going to display the account recovery information on the
