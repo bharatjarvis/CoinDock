@@ -12,15 +12,15 @@ const Accordion = ({name,items}) => {
   return (
     <div className="cd-accordion">
      <div className="cd-accordion-title" onClick={() => setIsActive(!isActive)}>
-          <div>{name}</div>
+          <div>{name} </div>
             <div>{isActive ? '-' : '>'}</div>
           </div>
-     
+        
         {isActive && 
         items.map(subitem =>(
         <div 
         className="cd-accordion-content d-flex justify-content-between" 
-        key={subitem.id}>{subitem.name}
+        key={subitem.id}>{subitem.name} : {subitem.value}
         {subitem.type === 'edit'? <button className='cd-button cd-button-2 cd-edit-button' onClick={() => dispatch(openDialogue({type :subitem.key,payload:{open :true}}))}>Edit</button> : ''}
        </div>))
        } 

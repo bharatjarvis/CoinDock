@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import "./SignUp.css";
 import Name from "Shared/Form/Name/Name.js";
 import Email from "Shared/Form/Email/Email.js";

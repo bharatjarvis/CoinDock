@@ -13,7 +13,7 @@ export const emailValidation = (value) => {
   return error;
 };
 
-const Email = ({ name, formErrors, onInput }) => {
+const Email = ({ name, formErrors, onInput}) => {
   const initialValues = {
     email: "",
   };
@@ -52,6 +52,9 @@ const Email = ({ name, formErrors, onInput }) => {
       </div>
     </>
   );
+};
+Email.defaultProps ={
+  formErrors : {}
 };
 Email.propTypes = {
   label: propTypes.string,

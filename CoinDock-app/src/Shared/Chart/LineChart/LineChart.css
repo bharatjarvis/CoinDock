@@ -1,8 +1,8 @@
 .cd-line-chart {
-  width: 700px;
+  width: 700px; 
   padding: 40px;
   border: 1px solid #09bbff;
 }
-.cd-select-coins {
+/* .cd-select-coins {
   margin-left: 400px;
-}
+} */

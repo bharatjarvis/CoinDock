@@ -2,6 +2,11 @@ import React from "react";
 import "./Popup.css";
 
 function Popup(props) {
+  const handleClick =() =>{
+    props.buttonOnclick?.()
+    props.setTrigger(false)
+  }
+
   return props.trigger ? (
     <div className="cd-popup">
       <div className="cd-popup-inner">
@@ -9,7 +14,7 @@ function Popup(props) {
         <div className="d-flex justify-content-center cd-mt-39">
           <button
             className="cd-button cd-button-2 "
-            onClick={() => props.setTrigger(false)}
+            onClick={handleClick}
           >
             {props.buttonLable}
           </button>
