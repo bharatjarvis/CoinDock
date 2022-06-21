@@ -4,8 +4,10 @@ namespace App\Models\V1;
 
 use App\Enums\V1\UserStatus;
 use App\Enums\V1\UserType;
-use App\Models\V1\{Coin,Signup};
+use App\Models\V1\{Coin, Signup};
 use App\Http\Requests\V1\CreateUserRequest;
+use App\Http\Requests\V1\updatePasswordRequest;
+use App\Http\Requests\V1\updateProfileRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -80,15 +82,14 @@ class User extends Authenticatable
         ]);
         // REGISTRATION STATUS UPDATION -  STEP:1
         $signup = $this->signUp;
-        if($signup){
-            $signup->step_count+=1;
+        if ($signup) {
+            $signup->step_count += 1;
             $signup->save();
         }
 
-        Signup::create(['step_count'=>1,'user_id'=>$user->id]);
+        Signup::create(['step_count' => 1, 'user_id' => $user->id]);
 
         return $user;
-
     }
 
     public function recoveryKeys()
@@ -99,5 +100,42 @@ class User extends Authenticatable
     public function signUp()
     {
         return $this->hasOne(Signup::class);
+    }
+
+    public function updateProfile(updateProfileRequest $request, User $user)
+    {
+        if (!$user) {
+            return response([
+                'message' => 'User Not Found'
+            ], 404);
+        }
+
+        $updatedUser = $request->all();
+        $user->update($updatedUser);
+
+        return response([
+            'message' => 'Profile Updated Succesfully',
+            'result' => [
+                'user' => $user
+            ]
+        ],200);
+    }
+
+    public function changePassword(updatePasswordRequest $request, User $user)
+    {
+        $updatedPassword = $request->password;
+        if (!$user) {
+            return response([
+                'message' => 'User Not Found'
+            ], 404);
+        }
+        User::whereId($user->id)->update(['password' => bcrypt($updatedPassword)]);
+        return response([
+            'message' => 'Password has been updated successfully',
+            'result' => [
+                'user' => $user
+            ]
+
+        ], 200);
     }
 }
