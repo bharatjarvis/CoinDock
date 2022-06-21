@@ -15,8 +15,8 @@ class CoinSeeder extends Seeder
      */
     public function run()
     {
-        //
-        $coinNames = ['Bitcoin', 'Ethereum', 'Ethereum Classic', 'Ravencoin', 'Firo', 'Flux', 'Metaverse ETP', 'Ergo', 'Callisto', 'BitcoinZ', 'Monero', 'ZCash', 'LiteCoin', 'Grin', 'Ton', 'Dash'];
+        
+        $coinNames = ['Bitcoin', 'Ethereum', 'Ethereum Classic', 'Ravencoin', 'Firo', 'Flux','Ergo', 'Callisto', 'BitcoinZ','LiteCoin','Ton','Dash','Aeternity', 'Expanse','Vertcoin','Conflux'];
 
         foreach ($coinNames as $coin) {
             Coin::create(['name' => $coin]);

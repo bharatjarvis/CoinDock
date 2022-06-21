@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class Wallet extends Model
 {
@@ -38,6 +39,39 @@ class Wallet extends Model
         ], 200);
     }
 
+
+    //checking
+    public function coinCheck($coin,$coins){
+        $coinsString = (string)$coins;
+
+        if(Str::contains($coinsString,'E') && Str::contains($coinsString,'.')){
+            $coinsInteger = (int)$coinsString;
+            return $this->satoshiToCrypt($coin,$coinsInteger);
+        }
+        elseif(!Str::contains($coinsString,'E') && Str::contains($coinsString,'.')){
+            return $coins;
+        }
+        else{
+            $coinsInteger = (int)$coinsString;
+            return $this->satoshiToCrypt($coin,$coinsInteger);
+        }
+
+    }
+
+
+    //converting Sathosis into Corresponding crypto coins
+    public function satoshiToCrypt($coin,$sathosis){
+
+            $satsToCryptbasePath = config('exchange.sats_to_crypt');
+            $shortCoinName = config('shortnames.shorted_coin_list');
+            $shortCoinName = $shortCoinName[$coin];
+            
+            $satsToCryptPath = str_replace('{id}',$shortCoinName,$satsToCryptbasePath);
+            $satsToCryptConversion = Http::get($satsToCryptPath);
+            $coins = $satsToCryptConversion[$shortCoinName];
+            // return ($coin." ".$coins);
+            return ($coins*$sathosis);
+    }
 
     //function to check whether the response is in json or not 
     public function isJson($string)
@@ -97,17 +131,18 @@ class Wallet extends Model
 
 
     //Fetching number of coins through the Response
-    public function coins($response)
+    public function coins($response ,$coin)
     {
         $responseArray = json_decode($response, true);
         $responseArrayKeys = array_keys($responseArray);
 
-
         foreach ($responseArrayKeys as $jsonKey) {
             if ($jsonKey == 'balance' || $jsonKey == 'result' || $jsonKey == 'data' || $jsonKey == 'result') {
+
                 $coins = $responseArray[$jsonKey];
 
-                return $coins;
+                return $this->coinCheck($coin,$coins);
+
             } elseif ($jsonKey == 'confirmed') {
 
 
@@ -116,7 +151,8 @@ class Wallet extends Model
                 $confirmedResponseArray = json_decode($confirmedResponse, true);
 
                 $coins = $confirmedResponseArray['nanoErgs'];
-                return $coins;
+
+                return $this->coinCheck($coin,$coins);
             }
         }
     }
@@ -149,8 +185,7 @@ class Wallet extends Model
 
         if ($this->isJson($response)) {
 
-            $coins = $this->coins($response);
-
+            $coins = $this->coins($response,$userCoin);
             if (is_numeric($coins)) {
                 return $this->WalletCreate($user->id, $walletId, $userCoinId, $coins, $balanceInUsd);
             } else {
@@ -159,7 +194,6 @@ class Wallet extends Model
                 ], 404);
             }
         }
-
 
         return response([
             'message' => 'Wallet Cannot be Added'
