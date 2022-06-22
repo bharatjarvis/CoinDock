@@ -48,6 +48,30 @@ class RecoveryKeyController extends Controller
         );
     }
 
+
+
+    public function reGenerateRecoveryKeys(User $user){
+
+        $recovery = new RecoveryKey();
+
+        $recoveryKeys = $recovery->reGenerateRecoveryKeys($user);
+
+        return response(
+            [
+                'message' => 'Recovery codes Re-generated successfully',
+                'results' => [
+                    'recovery_code' => new RecoveryCodeResource($recoveryKeys),
+                    'completed' => 3,
+                ],
+            ],
+            200,
+        );
+        
+
+    }
+
+
+    
     public function download(User $user)
     {
         $recovery = new RecoveryKey();

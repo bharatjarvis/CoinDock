@@ -7,6 +7,7 @@ use App\Http\Requests\V1\CreateUserRequest;
 use App\Http\Requests\V1\updatePasswordRequest;
 use App\Http\Requests\V1\updateProfileRequest;
 use App\Http\Requests\V1\updateUserRequest;
+use App\Models\V1\Setting;
 use App\Models\V1\User;
 use Composer\DependencyResolver\Request;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
@@ -24,10 +25,17 @@ class UserController extends AccessTokenController
     public function create(CreateUserRequest $request)
     {
         $user = new User();
-        $user->store($request);
+        $userData = $user->store($request);
 
         $response = $this->requestPasswordGrant($request);
 
+        //creating default user settings
+        Setting::create([
+            'user_id'=>$userData->id,
+            'primary_currency'=>'INR',
+            'secondary_currency'=>'USD'
+        ]);
+        
         return response(
             [
                 'status' => 'success', 'message' => 'Success! User registered.',
@@ -54,4 +62,6 @@ class UserController extends AccessTokenController
         return $user->updateProfile($request,$user);
 
     }
+
+    
 }

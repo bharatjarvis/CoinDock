@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Http\Requests\V1\RecoveryKeyRequest;
 use App\Models\V1\Signup;
 use Illuminate\Support\Arr;
+use Laminas\Code\Reflection\FunctionReflection;
 
 class RecoveryKey extends Model
 {
@@ -57,6 +58,26 @@ class RecoveryKey extends Model
 
         return $recoveryGeneration;
     }
+
+
+
+    //Reg-generarion of recovery-codes
+    public function reGenerateRecoveryKeys(User $user){
+        
+        $recovery = RecoveryKey::whereUserId($user->id)->first();
+        //randomizing the dictionary words
+        $recoveryArray = Arr::random(
+            config('random_keys.recovery_codes'),
+            config('random_keys.recovery.block_length'),
+        );
+
+        //coverting to string
+        $recoveryString = implode(" ", $recoveryArray);
+
+        $recovery->update(['recovery_code'=>$recoveryString]);
+        return $recovery;
+    }
+
 
     //Downloading RecoveryWords
     public function download(User $user)

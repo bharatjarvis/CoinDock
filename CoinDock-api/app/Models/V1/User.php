@@ -104,11 +104,11 @@ class User extends Authenticatable
 
     public function updateProfile(updateProfileRequest $request, User $user)
     {
-        if (!$user) {
-            return response([
-                'message' => 'User Not Found'
-            ], 404);
-        }
+        // if (!$user) {
+        //     return response([
+        //         'message' => 'User Not Found'
+        //     ], 404);
+        // }
 
         $updatedUser = $request->all();
         $user->update($updatedUser);
@@ -124,11 +124,12 @@ class User extends Authenticatable
     public function changePassword(updatePasswordRequest $request, User $user)
     {
         $updatedPassword = $request->password;
-        if (!$user) {
-            return response([
-                'message' => 'User Not Found'
-            ], 404);
-        }
+        // if (!$user) {
+        //     return response([
+        //         'message' => 'User Not Found'
+        //     ], 404);
+        // }
+        
         User::whereId($user->id)->update(['password' => bcrypt($updatedPassword)]);
         return response([
             'message' => 'Password has been updated successfully',
