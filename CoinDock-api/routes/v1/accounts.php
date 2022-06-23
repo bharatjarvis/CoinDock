@@ -22,16 +22,16 @@ Route::group(['prefix'=>'accounts','middleware'=>'auth:api'],function(){
             /*
                     For        : Recovery Codes generation
                     RouteName  : accounts/users/{user}/profile/
-                    Method     : POST
+                    Method     : PUT
                     Access     : Private
             */
             Route::put('/profile',[UserController::class,'updateProfile']);
 
 
             /*
-                    For        : Recovery Codes generation
+                    For        : Recovery Codes Re-generation
                     RouteName  : accounts/users/{user}/recovery-codes/
-                    Method     : POST
+                    Method     : PUT
                     Access     : Private
             */
             Route::put('/recovery-codes',[RecoveryKeyController::class,'reGenerateRecoveryKeys']);
@@ -41,7 +41,7 @@ Route::group(['prefix'=>'accounts','middleware'=>'auth:api'],function(){
             /*
                     For        : Recovery Codes generation
                     RouteName  : accounts/users/{user}/settings/
-                    Method     : POST
+                    Method     : PUT
                     Access     : Private
             */
             Route::put('/settings',[SettingController::class,'editCurrency']);

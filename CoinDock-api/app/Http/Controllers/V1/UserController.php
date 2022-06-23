@@ -6,10 +6,8 @@ use App\Http\Controllers\V1\Auth\BuildPassportTokens;
 use App\Http\Requests\V1\CreateUserRequest;
 use App\Http\Requests\V1\updatePasswordRequest;
 use App\Http\Requests\V1\updateProfileRequest;
-use App\Http\Requests\V1\updateUserRequest;
 use App\Models\V1\Setting;
 use App\Models\V1\User;
-use Composer\DependencyResolver\Request;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Symfony\Component\HttpFoundation\Response;
 

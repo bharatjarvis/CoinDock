@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\V1\Setting;
 use App\Models\V1\User;
 use Illuminate\Http\Request;
-use SebastianBergmann\CodeUnit\FunctionUnit;
 
 class SettingController extends Controller
 {

@@ -70,7 +70,7 @@ Route::middleware('auth:api')
                 /*
                     For        : Activating Recovery Codes
                     RouteName  : /users/{user}/recovery-codes/activate/
-                    Method     : POST
+                    Method     : PUT
                     Access     : Private
                 */
                 Route::put('/activate', [RecoveryKeyController::class, 'activate']);
