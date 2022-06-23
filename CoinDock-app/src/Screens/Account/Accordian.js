@@ -6,7 +6,6 @@ import EditPopup from './EditPopup';
 import "Shared/common-styles/common.css";
 import { useNavigate } from 'react-router-dom';
 
-
 const Accordion = ({name,items}) => {
   const navigate =useNavigate();
   
