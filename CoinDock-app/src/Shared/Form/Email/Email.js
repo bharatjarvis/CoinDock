@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import propTypes from "prop-types";
 import "Shared/common-styles/space.css";
 import "Shared/common-styles/common.css";
+
 export const emailValidation = (value) => {
   let error = null;
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
@@ -13,13 +14,12 @@ export const emailValidation = (value) => {
   return error;
 };
 
-const Email = ({ name, formErrors, onInput}) => {
+const Email = ({ name,formErrors,onInput,email}) => {
   const initialValues = {
     email: "",
   };
   const [formValues, setformValues] = useState(initialValues);
   const [fieldsTouched, setFieldsTouched] = useState(false);
-
   const handleChanges = (e) => {
     const { name, value } = e.target;
     setformValues({ ...formValues, [name]: value });
@@ -31,8 +31,8 @@ const Email = ({ name, formErrors, onInput}) => {
     setFieldsTouched(true);
     onInput?.(e);
   };
-
-  return (
+ 
+ return (
     <>
       <div className="form-group">
         <div>
@@ -43,7 +43,7 @@ const Email = ({ name, formErrors, onInput}) => {
             name={name}
             placeholder="Enter your Email address"
             onChange={handleChanges}
-            defaultValue={formValues.email}
+            defaultValue={email}
             onBlur={handleFocus}
             onInput={handleInput}
           />

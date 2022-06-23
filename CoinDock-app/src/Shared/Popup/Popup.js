@@ -6,7 +6,7 @@ function Popup(props) {
     props.buttonOnclick?.()
     props.setTrigger(false)
   }
-
+ 
   return props.trigger ? (
     <div className="cd-popup">
       <div className="cd-popup-inner">
@@ -15,6 +15,7 @@ function Popup(props) {
           <button
             className="cd-button cd-button-2 "
             onClick={handleClick}
+            disabled={props.disabled}
           >
             {props.buttonLable}
           </button>

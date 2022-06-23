@@ -14,9 +14,9 @@ const accapi = baseApi.injectEndpoints({
             {id:3,name: 'Country', key: 'country',value:'UK'}
          ]},
          {key:'AccountSettings', name: 'Account settings', items: [
-           {id:1,name: 'Email', key: 'email', type: 'edit',value:'jdsjs@gmail.com'},
-           {id:2,name: 'Change password', key: 'changePassword', type: 'edit'},
-           {id:3,name: 'Regenerate recovery words', key: 'regenerateRecoveryWords', type: 'edit'}
+           {id:1,name: 'Email', key: 'email', type: 'edit',value:'will.carrie@example.org'},
+           {name: 'Change password', key: 'changePassword', type: 'edit'},
+           {name: 'Regenerate recovery words', key: 'regenerateRecoveryWords'}
         ]},
         {key:'SystemSettings', name: 'System settings', items: [
          {id:1,name: 'Primary currency', key: 'primaryCurrency'},

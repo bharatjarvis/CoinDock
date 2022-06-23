@@ -3,7 +3,6 @@ import Popup from 'Shared/Popup/Popup';
 import { RiCloseLine } from "react-icons/ri";
 import Email from 'Shared/Form/Email';
 import Password from 'Shared/Password/Password';
-import RecoveryBoxes from 'Shared/Form/RecoveryBoxes';
 import { useSelector } from 'react-redux';
 import {closeDialogue} from 'App/Auth/reducers/accReducer';
 import { useDispatch } from 'react-redux';
@@ -12,8 +11,9 @@ import { useNavigate } from 'react-router-dom';
 import { passwordValidation } from 'Shared/Password/Password';
 import { emailValidation } from 'Shared/Form/Email/Email';
 
+
 const EditPopup =() =>{
-const {open, type} = useSelector(state => state.account)
+const {open,type,email} = useSelector(state => state.account)
 const dispatch = useDispatch();
 const [formValues, setformValues] = useState(null);
 const [getData ]= useData();
@@ -21,6 +21,11 @@ let navigate = useNavigate();
 const [formErrors, setformErrors] = useState({});
 const [isValid, setValid] = useState(false);
 const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
+
+const handleInput = (e) => {
+  const { name, value } = e.target;
+  setformValues({ ...formValues, [name]: value });
+};
 
 const handleValidation =(values) =>{
   const errors = {};
@@ -35,7 +40,7 @@ const handleValidation =(values) =>{
     maxlength: 45,
   }) }
   const isValid = !Object.values(errors).some(Boolean)
-  console.log(errors,values,type);
+  setformErrors(errors);
   setValid(isValid);
   return {
     isValid,
@@ -45,6 +50,7 @@ const handleValidation =(values) =>{
 const handleChanges = (e) => {
   const { name, value } = e.target;
   setformValues({ ...formValues, [name]: value });
+  handleValidation({ ...formValues, [name]: value });
 };
 const resetInputField = () => {
   setformValues(null);
@@ -66,9 +72,8 @@ const handleSubmit = () => {
           setDisplayErrorMessage(true);
         });
     }
-    console.log(formValues);
-    
 };
+
 const handleSetTrigger = () => {
 dispatch(closeDialogue());
 };
@@ -86,6 +91,8 @@ return(
     setTrigger={handleSetTrigger}
     buttonLable="Done"
     buttonOnclick={handleSubmit}
+    disabled={!isValid}
+
   >
     <div className="d-flex justify-content-between">
       <h4>Account settings</h4>
@@ -98,20 +105,21 @@ return(
     { type === 'email' ? 
     <Email
       name="email"
+      formErrors={formErrors}
+      email={email}
+      onChange={handleInput}
       />:
      type === 'changePassword' ? 
     <Password 
       name="password"
+      formErrors={formErrors}
       placeholder="Enter your password"
       label="Password"
-    /> :
-     type === 'regenerateRecoveryWords' ? 
-    <RecoveryBoxes
-      label="RecoveryWords"
-    /> :''}
- 
-  </Popup>
+    /> :''
+    }
+   </Popup>
  </form>
+ 
  </div>
 
 )}
