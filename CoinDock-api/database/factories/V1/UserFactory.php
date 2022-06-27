@@ -18,6 +18,7 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
+            'title'=>$this->faker->title(),
             'first_name' => $this->faker->name(),
             'last_name'=> $this->faker->name(),
             'type'=> UserType::User,
