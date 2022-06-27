@@ -76,7 +76,7 @@ class Wallet extends Model
                         return [$wallet->coin->name];
                     })->toArray();
         
-        
+
          // converting the 2-array to single array
          $singleArrayConversion = array();
          foreach($coinNames as $key => $value) {

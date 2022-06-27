@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\V1\User;
 use App\Http\Controllers\V1\{
     UserController,
     WalletCoinController,
@@ -33,6 +34,7 @@ Route::middleware('auth:api')
     ->prefix('users')
     ->group(function () {
         Route::prefix('{user}')->group(function () {
+
             Route::get('/coinlist',[WalletCoinController::class,'showUserCoins']);
 
             Route::prefix('recovery-codes')->group(function () {
@@ -59,6 +61,8 @@ Route::middleware('auth:api')
             });
 
             Route::prefix('graph')->group(function () {
+
+
                 Route::get('/', [WalletCoinController::class, 'showPiechartData'])->missing(
                     fn () => response(
                         [
@@ -67,8 +71,10 @@ Route::middleware('auth:api')
                         404,
                     ),
                 );
+
+
                 
-                Route::post('/real-time-graph/{coin_name}/{range}', [WalletCoinController::class, 'showCoinRangeData']);
+                Route::get('/real-time-graph/{coin_name}/{range}', [WalletCoinController::class, 'showCoinRangeData']);
                 Route::get('/real-time-graph/coins', [WalletCoinController::class, 'realtimeCoinHistoricalData']);
 
             });
