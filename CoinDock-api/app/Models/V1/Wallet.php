@@ -44,10 +44,7 @@ class Wallet extends Model
     public function coinCheck($coin, $coins)
     {
         $coinsString = (string)$coins;
-
-        if (Str::contains($coinsString, 'E') && Str::contains($coinsString, '.')) {
-            return $this->satoshiToCrypt($coin, $coinsString);
-        } elseif (!Str::contains($coinsString, 'E') && Str::contains($coinsString, '.')) {
+        if (!Str::contains($coinsString, 'E') && Str::contains($coinsString, '.')) {
             return $coins;
         } else {
             return $this->satoshiToCrypt($coin, $coinsString);
@@ -59,7 +56,7 @@ class Wallet extends Model
     public function satoshiToCrypt($coin, $sathosis)
     {
         $satsToCoins = config('exchange');
-        return ($satsToCoins[$coin]*$sathosis);
+        return ($satsToCoins[$coin] * $sathosis);
     }
 
     //function to check whether the response is in json or not 

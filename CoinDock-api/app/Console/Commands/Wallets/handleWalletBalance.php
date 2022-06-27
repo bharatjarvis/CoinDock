@@ -21,7 +21,7 @@ class handleWalletBalance extends Command
      *
      * @var string
      */
-    protected $description = 'This will fetch the wallet balnce every 5 minutes';
+    protected $description = 'This will refresh wallet table';
 
     /**
      * Execute the console command.
