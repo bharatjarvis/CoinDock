@@ -9,13 +9,13 @@ const accapi = baseApi.injectEndpoints({
        }),
        transformResponse: (response) => [
         {key:'ProfileSettings', name: 'Profile settings', items: [
-            {id:1,name: 'Name', key: 'name',value :'Jadyn Hayes'},
+            {id:1,name: 'Name', key: 'name',value :'Jadyn Hayes',type: 'edit'},
             {id:2,name: 'Gender', key: 'gender',value:'Male'},
             {id:3,name: 'Country', key: 'country',value:'UK'}
          ]},
          {key:'AccountSettings', name: 'Account settings', items: [
            {id:1,name: 'Email', key: 'email', type: 'edit',value:'will.carrie@example.org'},
-           {name: 'Change password', key: 'changePassword', type: 'edit'},
+           {name: 'Change password', key: 'changePassword',value:'',type: 'edit1'},
            {name: 'Regenerate recovery words', key: 'regenerateRecoveryWords'}
         ]},
         {key:'SystemSettings', name: 'System settings', items: [

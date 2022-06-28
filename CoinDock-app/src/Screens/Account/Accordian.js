@@ -10,7 +10,7 @@ const Accordion = ({name,items}) => {
   const navigate =useNavigate();
   
     const handleRecoveryButton = () => {
-    navigate("/recovery-codes");
+    navigate("/recovery-codes-account");
      };
   const [isActive, setIsActive] = useState(false);
   const dispatch =useDispatch();
@@ -22,14 +22,14 @@ const Accordion = ({name,items}) => {
           </div>
         
         {isActive && 
-        items.map(subitem =>(
+        items.map((subitem,id) =>(
          subitem.id ?
-         <div className="cd-accordion-content d-flex justify-content-between" key={subitem.id}> {subitem.name}:{subitem.value}
-         {subitem.type === 'edit'? <button className='cd-button cd-button-2 cd-edit-button' onClick={() => dispatch(openDialogue({type :subitem.key,email: subitem.value}))}>Edit</button> :''}
+         <div className="cd-accordion-content d-flex justify-content-between" key={id}>{subitem.name}:{subitem.value}
+         {subitem.type === 'edit'? <button className='cd-button cd-button-2 cd-edit-button' onClick={() => dispatch(openDialogue({type :subitem.key,currentFieldValue: subitem.value}))}>Edit</button> :''}
         </div>
         :
-        <div className="cd-accordion-content d-flex justify-content-between" > {subitem.name} {subitem.value}
-         {subitem.type === 'edit'? <button className='cd-button cd-button-2 cd-edit-button' onClick={() => dispatch(openDialogue({type :subitem.key,payload:{open :true}}))}>Edit</button> :subitem.key==='regenerateRecoveryWords' ?<button className='cd-button cd-button-2 cd-edit-button' onClick={()=>{handleRecoveryButton()}}>Edit</button>:''}
+        <div className="cd-accordion-content d-flex justify-content-between" key={id}> {subitem.name}
+         {subitem.type === 'edit1'? <button className='cd-button cd-button-2 cd-edit-button' onClick={() => dispatch(openDialogue({type :subitem.key,currentFieldValue: subitem.value}))}>Edit</button> :subitem.key==='regenerateRecoveryWords' ?<button className='cd-button cd-button-2 cd-edit-button' onClick={()=>{handleRecoveryButton()}}>Edit</button>:''}
         </div>))
        } 
       <EditPopup/> 

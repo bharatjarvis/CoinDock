@@ -13,7 +13,7 @@ export const nameValidation = (value, label = "Name", length = 0) => {
   return error;
 };
 
-const Name = ({ label, name, placeholder, formErrors, onInput }) => {
+const Name = ({ label, name, placeholder, formErrors, onInput, currentFieldValue }) => {
   const initialValues = {
     firstname: "",
     lastname: "",
@@ -42,9 +42,8 @@ const Name = ({ label, name, placeholder, formErrors, onInput }) => {
           className="form-control cd-mt-8"
           name={name}
           placeholder={placeholder}
-          value={formValues.name}
           onChange={handleChanges}
-          defaultValue={formValues.name}
+          defaultValue={currentFieldValue}
           onBlur={handleFocus}
           onInput={handleInput}
         />

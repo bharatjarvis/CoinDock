@@ -7,31 +7,31 @@ import { useSelector } from 'react-redux';
 import {closeDialogue} from 'App/Auth/reducers/accReducer';
 import { useDispatch } from 'react-redux';
 import { useData } from 'App/Api/accapi';
-import { useNavigate } from 'react-router-dom';
 import { passwordValidation } from 'Shared/Password/Password';
 import { emailValidation } from 'Shared/Form/Email/Email';
-
+import Name from 'Shared/Form/Name/Name';
+import { nameValidation } from 'Shared/Form/Name/Name';
 
 const EditPopup =() =>{
-const {open,type,email} = useSelector(state => state.account)
+const {open,type,currentFieldValue} = useSelector(state => state.account)
 const dispatch = useDispatch();
 const [formValues, setformValues] = useState(null);
 const [getData ]= useData();
-let navigate = useNavigate();
 const [formErrors, setformErrors] = useState({});
 const [isValid, setValid] = useState(false);
 const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
 
-const handleInput = (e) => {
-  const { name, value } = e.target;
-  setformValues({ ...formValues, [name]: value });
-};
-
+const [first, last] = currentFieldValue?.split(' ');
 const handleValidation =(values) =>{
   const errors = {};
   if(type == 'email'){
     errors.email = emailValidation(values.email)
   }
+  if(type == 'name'){
+    errors.firstname = nameValidation(values.firstname,'First Name',45) ;
+    errors.lastname = nameValidation(values.lastname,'Last name',45);
+  }
+ 
   if(type == 'changePassword'){
    errors.password = passwordValidation({
     value: values.password,
@@ -64,10 +64,6 @@ const handleSubmit = () => {
       getData({
         ...formValues,
       }) 
-        .unwrap()
-        .then(() => {
-          navigate("/dashboard");
-        })
         .catch(() => {
           setDisplayErrorMessage(true);
         });
@@ -83,6 +79,7 @@ useEffect (()=>{
     resetInputField()
   }
 },[open])
+
 return(
 <div>
 <form  onInput ={handleChanges} >
@@ -92,8 +89,7 @@ return(
     buttonLable="Done"
     buttonOnclick={handleSubmit}
     disabled={!isValid}
-
-  >
+    >
     <div className="d-flex justify-content-between">
       <h4>Account settings</h4>
       <RiCloseLine
@@ -106,8 +102,7 @@ return(
     <Email
       name="email"
       formErrors={formErrors}
-      email={email}
-      onChange={handleInput}
+      email={currentFieldValue}
       />:
      type === 'changePassword' ? 
     <Password 
@@ -115,8 +110,26 @@ return(
       formErrors={formErrors}
       placeholder="Enter your password"
       label="Password"
-    /> :''
-    }
+    /> :
+    type === 'name'?
+    <div>
+   <Name
+      name="firstname"
+      placeholder="Enter First Name"
+      label="First Name"
+      currentFieldValue={first}
+      formErrors={formErrors}
+      /> 
+    <Name
+      name="lastname"
+      placeholder="Enter Last Name"
+      label="Last Name"
+      currentFieldValue={last}
+      formErrors={formErrors}
+      />
+    </div>:''
+                 
+}
    </Popup>
  </form>
  
