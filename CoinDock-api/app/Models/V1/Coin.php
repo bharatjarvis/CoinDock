@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Models\V1\User;
+use Composer\Config;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Http;
 
 class Coin extends Model
 {
@@ -38,9 +40,13 @@ class Coin extends Model
     //Convertion
     public function priceConversion($from, $to, User $user)
     {
-        $grouped =$this->countCoins($user)->toArray();
-        $url = file_get_contents("https://min-api.cryptocompare.com/data/price?fsym=".$from."&tsyms=".$to."");   
-        $priceValue = explode(":",$url);        
+        $grouped =$this->countCoins($user)->toArray(); 
+        $url = Config('coinapi.coinapi.coinapiurl'); 
+        $cryptConversionId1 = str_replace('{from}', $from,$url);
+        $cryptConversionId1 = $cryptConversionId1;
+        $cryptConversionURL = str_replace('{to}', $to, $cryptConversionId1);
+        $balanceCurrency = Http::get($cryptConversionURL); 
+        $priceValue = explode(":",$balanceCurrency);        
         $priceValue = str_replace("}","",$priceValue[1]);       
         $priceArray = array();
         foreach($grouped as $groupedValue){
@@ -100,8 +106,12 @@ class Coin extends Model
         $grouped=$this->getSecondaryCurrency($user);
         $from= config('currency.currency.secondarycurrency');
         $to = config('shortnames.shorted_coin_list.Bitcoin');
-        $url = file_get_contents("https://min-api.cryptocompare.com/data/price?fsym=".$from."&tsyms=".$to."");   
-        $priceValue = explode(":",$url);        
+       $url = Config('coinapi.coinapi.coinapiurl'); 
+        $cryptConversionId1 = str_replace('{from}', $from,$url);
+         $cryptConversionId1 = $cryptConversionId1;
+        $cryptConversionURL = str_replace('{to}', $to, $cryptConversionId1);
+        $balanceCurrency = Http::get($cryptConversionURL);
+        $priceValue = explode(":",$balanceCurrency);        
         $priceValue = str_replace("}","",$priceValue[1]);       
         $priceArray = array();
         foreach($grouped as $groupedValue){
