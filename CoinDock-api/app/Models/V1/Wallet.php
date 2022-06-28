@@ -8,6 +8,7 @@ use App\Models\V1\{ User, Coin, Setting};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
+
 class Wallet extends Model
 {
     use HasFactory;
@@ -31,39 +32,41 @@ class Wallet extends Model
                 return $e->sum();
             })
             ->toArray();
-        // return $wallets;
+
+        $coinDataAll = Coin::all();
         
-        $walletShortCode = [];
-        $shortNameList = config('shortnames.shorted_coin_list');
-        $shortNameCode = "";
-
-        foreach($shortNameList as $key1=>$value1){
-            foreach($wallets as $key2=>$value2){
-                if(strtolower($key1) == strtolower($key2)){
-
-                    $userSetting = Setting::whereUserId($user->id)->first();
-
-                    $primaryCurrency = $userSetting->primary_currency;
+        $userCoinConvertedPrimaryCurrencyData = [];
+        foreach($wallets as $key1=>$value1){
+            foreach($coinDataAll as $coinData){
                 
-                    $cryptConversionBasePath = config('cryptohistoricaldata');
+                if(strtolower($coinData->name) == strtolower($key1)){
+                    $userSettingPrimaryCurrency = Setting::whereUserId($user->id)->first()->primary_currency;
+
+                    $cryptConversionBasePath = config('cryptohistoricaldata.coin_api.coin_api_url');
+                    $cryptConversionApiKey = config('cryptohistoricaldata.coin_api.coin_api_key');
+                    $cryptConversionBasePath = $cryptConversionBasePath."/exchangerate/$coinData->coin_id/$userSettingPrimaryCurrency?apikey=$cryptConversionApiKey";
+                    $balanceInPrimaryCurrency = Http::get($cryptConversionBasePath);
+                    //echo $balanceInPrimaryCurrency." ";
+
+                    $totalPriceInPrimaryCurrency = $balanceInPrimaryCurrency['rate'] * $wallets[$key1];
+                    $userCoinConvertedPrimaryCurrencyData[$coinData->coin_id] = $totalPriceInPrimaryCurrency;
+
+
+
+
+
                     
-                    $cryptConversionPath = str_replace('{id1}', $shortNameList[$key1], $cryptConversionBasePath['convertor']);
-
-                    $replaceStringNewVar = $cryptConversionPath;
-                    $cryptConversionPath = str_replace('{id2}', $primaryCurrency, $replaceStringNewVar);
-                    
-                   
-                    $balanceInUsd = Http::get($cryptConversionPath); 
-
-                    $totalPriceInUSD =  $balanceInUsd[$primaryCurrency] * $wallets[$key2];
-
-                    $walletShortCode[$shortNameList[$key1]]=$totalPriceInUSD;
-
-                    
+                    #echo $balanceInPrimaryCurrency." ";
+                    // $cryptConversionId1 = str_replace('{id1}', $coinData->coin_id, $cryptConversionBasePath['piechartconvertor']);
+                    // $cryptConversionId1 = $cryptConversionId1;
+                    // $cryptConversionURL = str_replace('{id2}', $userSettingPrimaryCurrency, $cryptConversionId1);
+                    // $balanceInPrimaryCurrency = Http::get($cryptConversionURL.);
+                    // $totalPriceInPrimaryCurrency = $balanceInPrimaryCurrency['rate'] * $wallets[$key1];
+                    // $userCoinConvertedPrimaryCurrencyData[$coinData->coin_id] = $totalPriceInPrimaryCurrency;
                 }
             }
         }
-        return $walletShortCode;
+       return $userCoinConvertedPrimaryCurrencyData;
     }
 
 
@@ -125,6 +128,8 @@ class Wallet extends Model
     }
 
     public function realtimeCoinHistoricalData(Request $request,User $user){
+
+
         // getting the coins associated with the users
         $coinNames = Wallet::select('coin_id')
                     ->whereUserId($user->id)
@@ -141,16 +146,25 @@ class Wallet extends Model
          }
         // removing the duplicates
         $singleArrayConverstion = array_unique($singleArrayConverstion);
-        $shortNameList = config('shortnames.shorted_coin_list');
+        //dd($singleArrayConverstion);
+
+        $coinDataAll = Coin::all();
         // finding the code for coins
         $shortNames = [];
         foreach ($singleArrayConverstion as $singleArrayConverstionDataCoin) {
-            foreach ($shortNameList as $key => $value) {
-                if (strtolower($singleArrayConverstionDataCoin) === strtolower($key)) {
-                    array_push($shortNames,$shortNameList[$key]);
+            foreach ($coinDataAll as $coinData) {
+                if (strtolower($singleArrayConverstionDataCoin) === strtolower($coinData->name)) {
+                    array_push($shortNames,$coinData->coin_id);
                 }
             }
         }
+
+        //return $shortNames;
+
+        $cryptConversionBaseURL = config('cryptohistoricaldata.coin_api.coin_api_key');
+        // $cryptConversionBasePath = $cryptConversionBaseURL."/exchangerate/$shortName/$userSettingPrimaryCurrency/history?period_id=?apikey=$cryptConversionApiKey";
+
+
         $finalDataDisplay = [];
         $realTimeDataForUserCoins = [];
         $rangeList = config('cryptohistoricaldata');

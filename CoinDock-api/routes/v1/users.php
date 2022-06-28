@@ -35,7 +35,7 @@ Route::middleware('auth:api')
     ->group(function () {
         Route::prefix('{user}')->group(function () {
 
-            Route::get('/coinlist',[WalletCoinController::class,'showUserCoins']);
+            Route::get('/coinslist',[WalletCoinController::class,'showUserCoins']);
 
             Route::prefix('recovery-codes')->group(function () {
                 Route::post('/', [RecoveryKeyController::class, 'create']);
@@ -61,9 +61,7 @@ Route::middleware('auth:api')
             });
 
             Route::prefix('graph')->group(function () {
-
-
-                Route::get('/', [WalletCoinController::class, 'showPiechartData'])->missing(
+                Route::get('/piechartdata', [WalletCoinController::class, 'showPiechartData'])->missing(
                     fn () => response(
                         [
                             'error' => ['message' => 'User record not found'],
@@ -71,9 +69,6 @@ Route::middleware('auth:api')
                         404,
                     ),
                 );
-
-
-                
                 Route::get('/real-time-graph/{coin_name}/{range}', [WalletCoinController::class, 'showCoinRangeData']);
                 Route::get('/real-time-graph/coins', [WalletCoinController::class, 'realtimeCoinHistoricalData']);
 
