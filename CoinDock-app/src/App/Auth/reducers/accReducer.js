@@ -3,17 +3,20 @@ export const accReducer = createSlice ({
     name:'account',
     initialState :{
         open: false,
-        type: null
+        type: null,
+        currentFieldValue: ''
     },
     reducers:{
         openDialogue:(state,action) =>{
             state.type = action.payload.type
             state.open = true
+            state.currentFieldValue = action.payload.currentFieldValue
         },
         closeDialogue:(state)=>{
             state.open = false
             state.type = null
-        }
+        },
+       
     }
 })
 export const {openDialogue,closeDialogue} = accReducer.actions;

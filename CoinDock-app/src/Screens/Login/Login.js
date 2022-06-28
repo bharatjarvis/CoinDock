@@ -35,9 +35,8 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+   
     const { errors, isValid } = handleValidation(formValues);
-
     if (!isValid) {
       setformErrors(errors);
     } else {

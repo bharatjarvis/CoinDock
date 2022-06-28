@@ -95,6 +95,9 @@ const Password = ({ name, placeholder, label, formErrors, onInput }) => {
     </>
   );
 };
+Password.defaultProps ={
+  formErrors : {}
+};
 Password.propTypes = {
   label: propTypes.string,
 };
