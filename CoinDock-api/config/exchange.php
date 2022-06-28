@@ -2,6 +2,7 @@
 
 return [
 
+    
     'cryp_exchange' => 'https://min-api.cryptocompare.com/data/price?fsym={id}&tsyms=USD',
     'Ethereum Classic'=>0.000000000000000000999978871994,
     'Ergo'=>0.000000000999996471231868024494,
