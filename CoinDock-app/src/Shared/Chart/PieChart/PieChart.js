@@ -46,10 +46,10 @@ export const data = {
 
 export function PieChart() {
   return (
-    <div className="container">
-      <div className="cd-pie-chart ">
-        <Pie options={options} data={data} />
-      </div>
+    // <div className="container">
+    <div className="cd-pie-chart ">
+      <Pie options={options} data={data} />
     </div>
+    // </div>
   );
 }

@@ -73,44 +73,43 @@ export function LineChart() {
   };
 
   return (
-    <div className="container">
-      <div className="cd-line-chart">
-        <div className="row">
-          <div className="col cd-select-coins">
-            <select name="coins" ref={refContainer} onChange={onOptionClick}>
-              <option value="all">Coins</option>
+    // <div className="container">
+    <div className="cd-line-chart">
+      <div className="row">
+        <div className="col cd-select-coins">
+          <select name="coins" ref={refContainer} onChange={onOptionClick}>
+            <option value="all">Coins</option>
 
-              <option value={0}>BTC</option>
+            <option value={0}>BTC</option>
 
-              <option value={1}>ETH</option>
-            </select>
-          </div>
-          <div className="col">
-            <select
-              name="range"
-              onChange={(e) => {
-                console.log(e);
-              }}
-            >
-              <option>Range</option>
-
-              <option value="one Week">One Week</option>
-              <option value="One month">One Month</option>
-              <option value="One year">One Year</option>
-            </select>
-          </div>
-
-          <Line
-            id="chart"
-            options={options}
-            data={{
-              labels,
-
-              datasets: allData,
+            <option value={1}>ETH</option>
+          </select>
+        </div>
+        <div className="col">
+          <select
+            name="range"
+            onChange={(e) => {
+              console.log(e);
             }}
-          />
+          >
+            <option>Range</option>
+
+            <option value="one Week">One Week</option>
+            <option value="One month">One Month</option>
+            <option value="One year">One Year</option>
+          </select>
         </div>
       </div>
+      <Line
+        id="chart"
+        options={options}
+        data={{
+          labels,
+
+          datasets: allData,
+        }}
+      />
     </div>
+    // </div>
   );
 }

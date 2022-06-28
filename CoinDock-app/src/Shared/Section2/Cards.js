@@ -1,5 +1,6 @@
 import React from "react";
 import "./Cards.css";
+
 const Cards = ({ name, value }) => {
   return (
     <div className="cd-flex-content-container">

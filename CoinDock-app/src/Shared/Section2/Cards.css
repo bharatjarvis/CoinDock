@@ -1,11 +1,11 @@
-.cd-flex-container {
+/* .cd-flex-container {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
 
   margin-top: 1cm;
   padding: 14px;
-}
+} */
 .cd-flex-content-container {
   margin-top: 30px;
   margin-bottom: 30px;

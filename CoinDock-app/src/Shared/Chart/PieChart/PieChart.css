@@ -1,8 +1,14 @@
 .cd-pie-chart {
-  width: 400px;
   padding: 8px;
   border: 1px solid #09bbff;
 }
-.cd-pie-margin {
-  margin-left: 74px;
+@media screen {
+  .cd-pie-chart {
+    max-width: 345px;
+  }
+  @media (min-width: 360px) and (max-width: 768px) {
+    .cd-pie-chart {
+      margin-top: 6px;
+    }
+  }
 }
