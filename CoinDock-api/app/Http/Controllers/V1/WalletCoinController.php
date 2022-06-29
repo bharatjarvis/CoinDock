@@ -19,9 +19,9 @@ class WalletCoinController extends Controller
      */
 
     // function to get pie chart values
-    public function showPiechartData(User $user){
+    public function showPiechartData(User $user,Request $request){
         $wallet = new Wallet();
-        return $wallet->showPiechartData($user);
+        return $wallet->showPiechartData($user,$request);
     }
 
     // function to display the coins of user
