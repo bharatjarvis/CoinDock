@@ -15,7 +15,8 @@ return [
         'Ethereum Classic' => [
             'coin_id' => 'ETC',
             'bal_path' => 'https://blockscout.com/etc/mainnet/api?module=account&action=balance&address={id}',
-            'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/604ae4533d9f4ad09a489905cce617c2.png'
+            'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/604ae4533d9f4ad09a489905cce617c2.png',
+            'sats_to_crypt'=>0.000000000000000000999978871994
         ],
         'Ravencoin' => [
             'coin_id' => 'RVN',
@@ -31,17 +32,22 @@ return [
         'FLUX' => [
             'coin_id' => 'FLUX',
             'bal_path' => 'https://api.runonflux.io/explorer/balance?address={id}',
-            'img_path' => ''
+            'img_path' => '',
+            'sats_to_crypt'=>0.00000001
+
         ],
         'Ergo' => [
             'coin_id' => 'ERGO',
             'bal_path' => 'https://api.ergoplatform.com/api/v1/addresses/{id}/balance/total',
-            'img_path' => ''
+            'img_path' => '',
+            'sats_to_crypt'=>0.000000000999996471231868024494
         ],
         'Callisto Network' => [
             'coin_id' => 'CLO',
             'bal_path' => 'https://explorer.callisto.network/api?module=account&action=balance&address={id}',
-            'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/bb5be7857eb74991adfa26a7e641301c.png'
+            'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/bb5be7857eb74991adfa26a7e641301c.png',
+            'sats_to_crypt'=>0.000000000000000001
+
         ],
         'BitcoinZ' => [
             'coin_id' => 'BTCZ',
@@ -56,7 +62,9 @@ return [
         'TON' => [
             'coin_id' => 'TON',
             'bal_path' => 'https://toncenter.com/api/v2/getAddressBalance?address={id}',
-            'img_path' => ''
+            'img_path' => '',
+            'sats_to_crypt'=>0.000000000999658829081551391916
+
         ],
         'Dash' => [
             'coin_id' => 'DASH',
@@ -66,7 +74,9 @@ return [
         'Aeternity' => [
             'coin_id' => 'AE',
             'bal_path' => 'https://mainnet.aeternity.io/v3/accounts/{id}',
-            'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/8ab076bf9aa44639bd2d776bacd899ee.png'
+            'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/8ab076bf9aa44639bd2d776bacd899ee.png',
+            'sats_to_crypt'=>0.00000000000000000099999951939
+
         ],
         'Expanse' => [
             'coin_id' => 'EXP',
@@ -82,7 +92,8 @@ return [
         'Conflux' => [
             'coin_id' => 'CFX',
             'bal_path' => 'https://chainz.cryptoid.info/explorer/address.summary2.dws?coin=vtc&id={id}',
-            'img_path' => ''
+            'img_path' => '',
+            'sats_to_crypt'=>0.000000000000000000999999998343
         ],
         'US Dollar' => [],
         'Indian Rupee' => [],
@@ -94,7 +105,7 @@ return [
         'key' => env('COINAPI_KEY'),
         'assets_path' => '/assets',
         'asset_images' => '/assets/icons/BTC',
-        'crypto_usd'=>'/exchangerate/{id}/USD'
+        'crypto_usd'=>'/exchangerate/{id}/USD'  
 
     ]
 

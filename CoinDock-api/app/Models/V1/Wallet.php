@@ -55,8 +55,9 @@ class Wallet extends Model
     //converting Sathosis into Corresponding crypto coins
     public function satoshiToCrypt($coin, $sathosis)
     {
-        $satsToCoins = config('exchange');
-        return ($satsToCoins[$coin] * $sathosis);
+        $satsToCoins = array_keys(config('assets.accepted_coins'));
+
+        return ($satsToCoins[$coin]['sats_to_crypt'] * $sathosis);
     }
 
     //function to check whether the response is in json or not 
@@ -155,7 +156,7 @@ class Wallet extends Model
 
         $userCoinId = Coin::whereName($userCoin)->first();
         $userCoinId = $userCoinId->id;
-        
+
         $basePath = $this->basePath($userCoinId, $walletId);
         $response = Http::get($basePath);
 
