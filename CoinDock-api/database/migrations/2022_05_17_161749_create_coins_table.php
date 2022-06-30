@@ -16,10 +16,11 @@ return new class extends Migration
         Schema::create('coins', function (Blueprint $table) {
             $table->id();
             $table->string('coin_id');
-            $table->integer('is_crypto');
-            $table->integer('is_accepted');
-            $table->string('img_path');
             $table->string('name');
+            $table->integer('is_crypto');
+            $table->integer('status')->default(0);
+            $table->string('img_path')->default('');
+            $table->integer('is_default')->default(0);
             $table->timestamps();
         });
     }

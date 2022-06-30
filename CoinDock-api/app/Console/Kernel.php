@@ -12,6 +12,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('passport:purge')->hourly();
         $schedule->command('wallet:handle_balance')->everyFiveMinutes();
+        $schedule->command('coins:handle')->everyMinute();
     }
 
     /**

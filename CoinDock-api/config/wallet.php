@@ -13,7 +13,7 @@ return [
         'Callisto' => 'https://explorer.callisto.network/api?module=account&action=balance&address={id}',
         'BitcoinZ' => 'https://explorer.btcz.rocks/api/addr/{id}/?noTxList=1',
         'Aeternity' => 'https://mainnet.aeternity.io/v3/accounts/{id}',
-        'Expanse' => '',
+        'Expanse' => 'https://explorer.expanse.tech/web3relay',
         'LiteCoin' => 'https://api.blockcypher.com/v1/ltc/main/addrs/{id}/balance',
         'Vertcoin' => 'https://chainz.cryptoid.info/explorer/address.summary2.dws?coin=vtc&id={id}',
         'Ton' => 'https://toncenter.com/api/v2/getAddressBalance?address={id}',

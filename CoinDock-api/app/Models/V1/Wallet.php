@@ -73,14 +73,15 @@ class Wallet extends Model
         $userCoin = Coin::whereId($userCoinId)->first();
         $userCoinName = $userCoin->name;
 
-        $coinList = config('wallet.base_url_lst');
+        $coinList = config('assets.accepted_coins');
         $coinKeys =  array_keys($coinList);
 
         $basePath = '';
 
         foreach ($coinKeys as $coin) {
             if ($userCoinName == $coin) {
-                $basePath  = $coinList[$coin];
+                $basePath  = config('assets.accepted_coins');
+                $basePath = $basePath[$coin]['bal_path'];
             }
         }
 
@@ -94,17 +95,14 @@ class Wallet extends Model
     //Converting every crypto currency into USD
     public function cryptoToUsd($coin)
     {
-        $shortNames = config('shortnames.shorted_coin_list');
-        $shortNamesKeys = array_keys($shortNames);
-        foreach ($shortNamesKeys as $shortNameKey) {
-            if ($shortNameKey == $coin) {
-                $shortedCryptoName = $shortNames[$coin];
-            }
-        }
+        $assetsConfig = config('assets.accepted_coins');
+        $assetShortName = $assetsConfig[$coin]['coin_id'];
+        
 
-        $cryptConversionBasePath = config('exchange.cryp_exchange');
-        $cryptConversionPath = str_replace('{id}', $shortedCryptoName, $cryptConversionBasePath);
-        $balanceInUsd = Http::get($cryptConversionPath)['USD'];
+        $cryptConversionBasePath = config('assets.coin_api.base_path').config('assets.coin_api.crypto_usd');
+        $cryptConversionPath = str_replace('{id}', $assetShortName, $cryptConversionBasePath);
+        $balanceInUsd = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
+        ->get($cryptConversionPath)['rate'];
 
         return $balanceInUsd;
     }
@@ -157,8 +155,8 @@ class Wallet extends Model
 
         $userCoinId = Coin::whereName($userCoin)->first();
         $userCoinId = $userCoinId->id;
+        
         $basePath = $this->basePath($userCoinId, $walletId);
-
         $response = Http::get($basePath);
 
         if ($this->isJson($response)) {
