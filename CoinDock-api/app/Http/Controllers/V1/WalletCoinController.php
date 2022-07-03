@@ -19,9 +19,9 @@ class WalletCoinController extends Controller
      */
 
     // function to get pie chart values
-    public function showPiechartData(User $user){
+    public function showPiechartData(User $user,Request $request){
         $wallet = new Wallet();
-        return $wallet->showPiechartData($user);
+        return $wallet->showPiechartData($user, $request);
     }
 
     // function to display the coins of user
@@ -30,15 +30,20 @@ class WalletCoinController extends Controller
     }
 
     // function to display historical data for particular coins
-    public function showCoinRangeData(Request $request, User $user){
+    public function displaySingleCoinHistoricalData(Request $request, User $user){
         $wallet = new Wallet();
-        return $wallet->showCoinRangeData($request,$user);
+        return $wallet->displaySingleCoinHistoricalData($request,$user);
     }
 
     // function to display historical data of user coins
-    public function realtimeCoinHistoricalData(Request $request,User $user){
+    public function displayUserAllCoinHistoricalData(Request $request,User $user){
         $wallet = new Wallet();
-        return $wallet->realtimeCoinHistoricalData($request,$user);
+        return $wallet->displayUserAllCoinHistoricalData($request,$user);
+    }
+
+    public function realtimeCoinHistoricalDataFilter(){
+        $wallet = new Wallet();
+        return $wallet->realtimeCoinHistoricalDataFilter();
     }
 
 }

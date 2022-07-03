@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Models\V1;
+use Illuminate\Support\Arr;
+use Carbon\Carbon;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -8,6 +10,7 @@ use App\Models\V1\{ User, Coin, Setting};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
+use function PHPUnit\Framework\isJson;
 
 class Wallet extends Model
 {
@@ -20,8 +23,23 @@ class Wallet extends Model
         'balance'
     ];
 
-    public function showPiechartData(User $user)
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+                    /* PIE chart Functionality */
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+    public function showPiechartData(User $user, Request $request)
     {
+        // getting the filter by condition from user
+        $filterByCondition = $request->filterby;
+
+        // getting the coin information
         $wallets = Wallet::select(['coin_id', 'balance'])
             ->whereUserId($user->id)
             ->get()
@@ -32,42 +50,75 @@ class Wallet extends Model
                 return $e->sum();
             })
             ->toArray();
-
+        // selecting the coin information 
         $coinDataAll = Coin::all();
-        
-        $userCoinConvertedPrimaryCurrencyData = [];
-        foreach($wallets as $key1=>$value1){
-            foreach($coinDataAll as $coinData){
+
+        if($filterByCondition==NULL || $filterByCondition=='bycoins'){
+
+            return response()->json([
+                'user_name' => $user->first_name,
+                'success' => TRUE,
+                'message' => $message ?? 'Data Fetched Successfully',
+                'exception' => $exception ?? Null,
+                'error_code' => $error_code ?? Null,
+                'result' => $wallets
                 
-                if(strtolower($coinData->name) == strtolower($key1)){
-                    $userSettingPrimaryCurrency = Setting::whereUserId($user->id)->first()->primary_currency;
+            ], 200);
 
-                    $cryptConversionBasePath = config('cryptohistoricaldata.coin_api.coin_api_url');
-                    $cryptConversionApiKey = config('cryptohistoricaldata.coin_api.coin_api_key');
-                    $cryptConversionBasePath = $cryptConversionBasePath."/exchangerate/$coinData->coin_id/$userSettingPrimaryCurrency?apikey=$cryptConversionApiKey";
-                    $balanceInPrimaryCurrency = Http::get($cryptConversionBasePath);
-                    //echo $balanceInPrimaryCurrency." ";
+        }else{
+            // array to store the coin information
+            $userCoinConvertedPrimaryCurrencyData = [];
+            // iterating and getting calculating the present market value based on the 
+            // present data
 
-                    $totalPriceInPrimaryCurrency = $balanceInPrimaryCurrency['rate'] * $wallets[$key1];
-                    $userCoinConvertedPrimaryCurrencyData[$coinData->coin_id] = $totalPriceInPrimaryCurrency;
-
-
-
-
-
+            foreach($wallets as $key1=>$value1){
+                foreach($coinDataAll as $coinData){
                     
-                    #echo $balanceInPrimaryCurrency." ";
-                    // $cryptConversionId1 = str_replace('{id1}', $coinData->coin_id, $cryptConversionBasePath['piechartconvertor']);
-                    // $cryptConversionId1 = $cryptConversionId1;
-                    // $cryptConversionURL = str_replace('{id2}', $userSettingPrimaryCurrency, $cryptConversionId1);
-                    // $balanceInPrimaryCurrency = Http::get($cryptConversionURL.);
-                    // $totalPriceInPrimaryCurrency = $balanceInPrimaryCurrency['rate'] * $wallets[$key1];
-                    // $userCoinConvertedPrimaryCurrencyData[$coinData->coin_id] = $totalPriceInPrimaryCurrency;
+                    if(strtolower($coinData->name) == strtolower($key1)){
+                        // getting the primary currency of the user
+                        $userSettingPrimaryCurrency = Setting::whereUserId($user->id)->first()->primary_currency;
+                        // calling the base url from config files
+                        $cryptoConversionBaseURL = config('cryptohistoricaldata.coin_api.coin_api_url').config('cryptohistoricaldata.coin_api.coin_exchange_url');
+                        // replacement of coins from -> to
+                        $cryptoConversionBaseURLId1Replace = str_replace('{id1}', $coinData->coin_id, $cryptoConversionBaseURL);
+                        $cryptoConversionBaseURLId1Replace = $cryptoConversionBaseURLId1Replace;
+                        $cryptoConversionBaseURLIdReplaced = str_replace('{id2}', $userSettingPrimaryCurrency, $cryptoConversionBaseURLId1Replace);
+                        // passing the base url with authorization key
+                        $cryptoConversionBaseURLwithHeaders = Http::withHeaders(['X-CoinAPI-Key'=>config('cryptohistoricaldata.coin_api.coin_api_key')])->get($cryptoConversionBaseURLIdReplaced);
+                        // calculating the price based on the coins
+                        $totalPriceInPrimaryCurrency = $cryptoConversionBaseURLwithHeaders['rate'] * $wallets[$key1];
+                        // storing the information in the array.
+                        $userCoinConvertedPrimaryCurrencyData[$coinData->coin_id] = $totalPriceInPrimaryCurrency;
+                    
+                    }
                 }
             }
+            // returing the information
+            return response()->json([
+                'user_name' => $user->first_name,
+                'success' => TRUE,
+                'message' => $message ?? 'Data Fetched Successfully',
+                'exception' => $exception ?? Null,
+                'error_code' => $error_code ?? Null,
+                'result' => $userCoinConvertedPrimaryCurrencyData
+                
+            ], 200);
+        // return $userCoinConvertedPrimaryCurrencyData;
         }
-       return $userCoinConvertedPrimaryCurrencyData;
     }
+
+
+
+
+
+
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+                    /* User Coins Functionality */
+
+    ///////////////////////////////////////////////////////////////////////////////////////
 
 
     public function showUserCoins(Wallet $wallet, User $user){
@@ -91,44 +142,210 @@ class Wallet extends Model
         // removing the duplicates
         $singleArrayConversion = array_unique($singleArrayConversion);
 
-        return ($singleArrayConversion);
+        return response()->json([
+            'user_name' => $user->first_name,
+            'success' => TRUE,
+            'message' => $message ?? 'Data Fetched Successfully',
+            'exception' => $exception ?? Null,
+            'error_code' => $error_code ?? Null,
+            'result' => $singleArrayConversion
+            
+        ], 200);
+
         
         
     }
 
 
+    ///////////////////////////////////////////////////////////////////////////////////////
 
-    public function showCoinRangeData(Request $request, User $user){
-        $coinNameFromUser = strtolower($request->coin_name);
+                    /* Real Time Coins Historical Data for a particular coin Functionality */
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+
+
+    public function displaySingleCoinHistoricalData(Request $request, User $user){
+        $coinNameFromUser = $request->coin_name;
         $range = $request->range;
+        // selecting the coin information 
+        $coinDataAll = Coin::where('name','=',$coinNameFromUser)->get();
+        $coinNameURLSend = $coinDataAll[0]['coin_id'];
 
-        $shortNameList = config('shortnames.shorted_coin_list');
-        $shortNameCode = "";
-        foreach ($shortNameList as $key => $value) {
-            if ($coinNameFromUser === strtolower($key)) {
-                $shortNameCode = $shortNameList[$key];
-            }
-        }
+        $end_date = Carbon::now()->format('Y-m-d');
+        $end_date = $end_date."T".Carbon::now()->format('H:i:m');
         
-        $rangeList = config('cryptohistoricaldata');
+        $realTimeDataDisplay = [];
 
-        $userRequestedRangeLink =  $rangeList[$range];
+        if($range=="weekly"){
+            $range = '7DAY';
+            $start_date = Carbon::now()->subYear(1);
+            $start_date  = str_replace(' ','T',$start_date);
+            
+            $cryptoConversionBaseURL = config('cryptohistoricaldata.coin_api.coin_api_url').config('cryptohistoricaldata.coin_api.coin_realtime_url');
 
-        $userRequestedRangeLink = str_replace('{id}',$shortNameCode,$userRequestedRangeLink);
+            $cryptoConversionBaseURLCoin1Replace = str_replace('{coin1}', $coinNameURLSend, $cryptoConversionBaseURL);
+            $cryptoConversionBaseURLCoin1Replaced = $cryptoConversionBaseURLCoin1Replace;
 
-        $getHistoricalData = Http::get($userRequestedRangeLink);
+            $cryptoConversionBaseURLRangeReplace = str_replace('{range}', $range, $cryptoConversionBaseURLCoin1Replaced);
+            $cryptoConversionBaseURLRangeReplaced = $cryptoConversionBaseURLRangeReplace;
 
-        $getHistoricalData =  $getHistoricalData['Data']['Data'];
+            $cryptoConversionBaseURLStartDateReplace = str_replace('{start_date}', $start_date, $cryptoConversionBaseURLRangeReplaced);
+            $cryptoConversionBaseURLStartDateReplaced = $cryptoConversionBaseURLStartDateReplace;
 
-        $userCoinData = [];
-        foreach($getHistoricalData as $data){
-            $userCoinData[date("Y-m-d h:i:s",substr($data['time'],0,10))] = $data['close'];
+            $cryptoConversionBaseURLwithAllIdsReplaced = str_replace('{end_date}', $end_date, $cryptoConversionBaseURLStartDateReplaced);
+
+            $cryptoConversionBaseURLwithAllIdsReplacedResponse = Http::withHeaders(['X-CoinAPI-Key'=>config('cryptohistoricaldata.coin_api.coin_api_key')])->get($cryptoConversionBaseURLwithAllIdsReplaced);
+            
+            $cryptoConversionBaseURLwithAllIdsReplacedResponse = json_decode($cryptoConversionBaseURLwithAllIdsReplacedResponse);
+            
+            foreach($cryptoConversionBaseURLwithAllIdsReplacedResponse as $response){
+                array_push($realTimeDataDisplay,[
+                    'date'=>$response->time_period_end,
+                    'price'=>$response->rate_close
+                ]);
+            }
+            // $realTimeDataDisplay[$coinNameURLSend] = [$cryptoConversionBaseURLwithAllIdsReplacedResponse['time_period_end'],$cryptoConversionBaseURLwithAllIdsReplacedResponse['rate_close']];
+
+            return response([
+                'message'=>'success',
+                'result'=>[
+                    'coin'=>$coinNameFromUser,
+                    'data'=>$realTimeDataDisplay
+                ]
+                
+            ],200);
+
         }
-        return $userCoinData;
+        if($range=="monthly"){
+            
+            $range = '10DAY';
+            $start_date = Carbon::now()->subYear(1);
+            $start_date  = str_replace(' ','T',$start_date);
+            
+            $cryptoConversionBaseURL = config('cryptohistoricaldata.coin_api.coin_api_url').config('cryptohistoricaldata.coin_api.coin_realtime_url');
+
+            $cryptoConversionBaseURLCoin1Replace = str_replace('{coin1}', $coinNameURLSend, $cryptoConversionBaseURL);
+            $cryptoConversionBaseURLCoin1Replaced = $cryptoConversionBaseURLCoin1Replace;
+
+            $cryptoConversionBaseURLRangeReplace = str_replace('{range}', $range, $cryptoConversionBaseURLCoin1Replaced);
+            $cryptoConversionBaseURLRangeReplaced = $cryptoConversionBaseURLRangeReplace;
+
+            $cryptoConversionBaseURLStartDateReplace = str_replace('{start_date}', $start_date, $cryptoConversionBaseURLRangeReplaced);
+            $cryptoConversionBaseURLStartDateReplaced = $cryptoConversionBaseURLStartDateReplace;
+
+            $cryptoConversionBaseURLwithAllIdsReplaced = str_replace('{end_date}', $end_date, $cryptoConversionBaseURLStartDateReplaced);
+
+            $cryptoConversionBaseURLwithAllIdsReplacedResponse = Http::withHeaders(['X-CoinAPI-Key'=>config('cryptohistoricaldata.coin_api.coin_api_key')])->get($cryptoConversionBaseURLwithAllIdsReplaced);
+            
+            $cryptoConversionBaseURLwithAllIdsReplacedResponse = json_decode($cryptoConversionBaseURLwithAllIdsReplacedResponse);
+
+            $priceArrayList = [];
+            foreach($cryptoConversionBaseURLwithAllIdsReplacedResponse as $response){
+                array_push($priceArrayList,$response->rate_close);
+            }
+
+            $priceArraySum = [];
+            $sum = 0;
+            $count = 0;
+            for($i=1;$i<count($priceArrayList);$i++){
+                $count=$i+1;
+                $sum = $sum + $priceArrayList[$i];
+                if($i%3==0){
+                    array_push($priceArraySum,$sum/3);
+                    $sum = 0;
+                }
+            }
+            //return $priceArraySum;
+
+            $everyMonth = [];
+            $endDate = Carbon::now();
+            $startDate = Carbon::now()->subYear(1);
+            for($i=0;$i<=count($priceArraySum)-1;$i++){
+                $startDate->addMonths(1);
+                array_push($everyMonth,$startDate->format('Y-m-d'));
+
+            }
+            //return $everyMonth;
+
+            $result = [];
+            foreach($priceArraySum as $price){
+                foreach($everyMonth as $month){
+                    array_push($result,[
+                        'date'=>$month,
+                        'price'=>$price
+                    ]);
+                   
+                }
+                break;
+            }
+            return $result;
+        }
+        if($range=="year"){
+            $range = '10DAY';
+            $start_date = Carbon::now()->subYear(1);
+            $start_date  = str_replace(' ','T',$start_date);
+            
+            $cryptoConversionBaseURL = config('cryptohistoricaldata.coin_api.coin_api_url').config('cryptohistoricaldata.coin_api.coin_realtime_url');
+
+            $cryptoConversionBaseURLCoin1Replace = str_replace('{coin1}', $coinNameURLSend, $cryptoConversionBaseURL);
+            $cryptoConversionBaseURLCoin1Replaced = $cryptoConversionBaseURLCoin1Replace;
+
+            $cryptoConversionBaseURLRangeReplace = str_replace('{range}', $range, $cryptoConversionBaseURLCoin1Replaced);
+            $cryptoConversionBaseURLRangeReplaced = $cryptoConversionBaseURLRangeReplace;
+
+            $cryptoConversionBaseURLStartDateReplace = str_replace('{start_date}', $start_date, $cryptoConversionBaseURLRangeReplaced);
+            $cryptoConversionBaseURLStartDateReplaced = $cryptoConversionBaseURLStartDateReplace;
+
+            $cryptoConversionBaseURLwithAllIdsReplaced = str_replace('{end_date}', $end_date, $cryptoConversionBaseURLStartDateReplaced);
+
+            $cryptoConversionBaseURLwithAllIdsReplacedResponse = Http::withHeaders(['X-CoinAPI-Key'=>config('cryptohistoricaldata.coin_api.coin_api_key')])->get($cryptoConversionBaseURLwithAllIdsReplaced);
+            
+            $cryptoConversionBaseURLwithAllIdsReplacedResponse = json_decode($cryptoConversionBaseURLwithAllIdsReplacedResponse);
+
+            $priceArrayList = [];
+            foreach($cryptoConversionBaseURLwithAllIdsReplacedResponse as $response){
+                array_push($priceArrayList,$response->rate_close);
+            }
+
+            $priceArraySum = [];
+            $sum = 0;
+            $count = 0;
+            for($i=1;$i<count($priceArrayList);$i++){
+                $count=$i+1;
+                $sum = $sum + $priceArrayList[$i];
+                if($i%3==0){
+                    array_push($priceArraySum,$sum/3);
+                    $sum = 0;
+                }
+            }
+            $res = 0;
+            foreach($priceArraySum as $val){
+                $res = $res + $val;
+            }
+            $avg = $res/12;
+            $date = Carbon::now()->format('Y');
+            return response([
+                'message'=>'success',
+                'result'=>[
+                    'Year'=>$date,
+                    'price'=>$avg
+                ]
+                
+            ],200);
+
+        }
     }
 
-    public function realtimeCoinHistoricalData(Request $request,User $user){
 
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+                    /* Real Time Coins Historical Data for a every coin Functionality */
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+
+    public function displayUserAllCoinHistoricalData(Request $request,User $user){
 
         // getting the coins associated with the users
         $coinNames = Wallet::select('coin_id')
@@ -138,55 +355,84 @@ class Wallet extends Model
                         return [$wallet->coin->name];
                     })->toArray();
          // converting the 2-array to single array
-         $singleArrayConverstion = array();
+         $singleArrayConversion = array();
          foreach($coinNames as $key => $value) {
              foreach($value as $key2 => $value2) {
-                 $singleArrayConverstion[$key2] = $value2;
+                 $singleArrayConversion[$key2] = $value2;
              }
          }
         // removing the duplicates
-        $singleArrayConverstion = array_unique($singleArrayConverstion);
-        //dd($singleArrayConverstion);
-
+        $singleArrayConversion = array_unique($singleArrayConversion);
+    
         $coinDataAll = Coin::all();
-        // finding the code for coins
-        $shortNames = [];
-        foreach ($singleArrayConverstion as $singleArrayConverstionDataCoin) {
-            foreach ($coinDataAll as $coinData) {
-                if (strtolower($singleArrayConverstionDataCoin) === strtolower($coinData->name)) {
-                    array_push($shortNames,$coinData->coin_id);
-                }
+
+        $coinShortNames = [];
+        foreach($coinDataAll as $coin){
+            foreach($singleArrayConversion as $filter)
+            if(strtolower($coin->name)==strtolower($filter)){
+                array_push($coinShortNames,$coin->coin_id);
             }
         }
+        
+        $newArrRes = [];
+        $start_date = Carbon::now()->subDays(1);
+        $start_date  = str_replace(' ','T',$start_date);
+        foreach($coinShortNames as $coinShortName){
+            $range = "1HRS";
+            $cryptoConversionBaseURL = config('cryptohistoricaldata.coin_api.coin_api_url').config('cryptohistoricaldata.coin_api.coin_users_realtime_url');
 
-        //return $shortNames;
+            $cryptoConversionBaseURLCoin1Replace = str_replace('{coin1}', $coinShortName, $cryptoConversionBaseURL);
+            $cryptoConversionBaseURLCoin1Replaced = $cryptoConversionBaseURLCoin1Replace;
 
-        $cryptConversionBaseURL = config('cryptohistoricaldata.coin_api.coin_api_key');
-        // $cryptConversionBasePath = $cryptConversionBaseURL."/exchangerate/$shortName/$userSettingPrimaryCurrency/history?period_id=?apikey=$cryptConversionApiKey";
+            $cryptoConversionBaseURLRangeReplace = str_replace('{range}', $range, $cryptoConversionBaseURLCoin1Replaced);
+            $cryptoConversionBaseURLRangeReplaced = $cryptoConversionBaseURLRangeReplace;
 
+            $cryptoConversionBaseURLStartDateReplace = str_replace('{start_date}', $start_date, $cryptoConversionBaseURLRangeReplaced);
+            $cryptoConversionBaseURLStartDateReplaced = $cryptoConversionBaseURLStartDateReplace;
+            //return $cryptoConversionBaseURLStartDateReplaced;
+            $cryptoConversionBaseURLwithAllIdsReplacedResponse = Http::withHeaders(['X-CoinAPI-Key'=>config('cryptohistoricaldata.coin_api.coin_api_key')])->get($cryptoConversionBaseURLStartDateReplaced);
+            $cryptoConversionBaseURLwithAllIdsReplacedResponse = json_decode($cryptoConversionBaseURLwithAllIdsReplacedResponse);
 
-        $finalDataDisplay = [];
-        $realTimeDataForUserCoins = [];
-        $rangeList = config('cryptohistoricaldata');
-
-        $userRequestedRange =  $rangeList['daily'];
-
-        foreach($shortNames as $shortName){
-
-            $userRequestedRange = str_replace('{id}',$shortName,$userRequestedRange);
-            $getHistoricalData = Http::get($userRequestedRange);            
-            $getHistoricalData =  $getHistoricalData['Data']['Data'];
-            foreach($getHistoricalData as $data){
-                $finalDataDisplay[date("Y-m-d",substr($data['time'],0,10))] = $data['close'];
-                
-            }
-            array_push($realTimeDataForUserCoins,[$shortName,$finalDataDisplay]);
+            array_push($newArrRes,[$coinShortName,$cryptoConversionBaseURLwithAllIdsReplacedResponse]);
 
         }
-        return $realTimeDataForUserCoins;
+        return response([
+            'message'=>'success',
+            'result'=>[
+                'data'=>$newArrRes
+            ]
+            
+        ],200);
+
+    }
+
+
+
+
+
+
+   public function realtimeCoinHistoricalDataFilter(){
+    $filterArray = [];
+    $cryptoConversionBaseURL = config('cryptohistoricaldata.coin_api.coin_api_url').config('cryptohistoricaldata.coin_api.coin_filter_url');
+    $cryptoConversionBaseURLwithHeaders = Http::withHeaders(['X-CoinAPI-Key'=>config('cryptohistoricaldata.coin_api.coin_api_key')])->get($cryptoConversionBaseURL);
+    $cryptoConversionBaseURLwithHeadersConvertedJsonDataAll  = json_decode($cryptoConversionBaseURLwithHeaders, true);
+    foreach($cryptoConversionBaseURLwithHeadersConvertedJsonDataAll as $cryptoConversionBaseURLwithHeadersConvertedJsonData ){
+        if($cryptoConversionBaseURLwithHeadersConvertedJsonData['unit_name']=='day'){
+            array_push($filterArray,$cryptoConversionBaseURLwithHeadersConvertedJsonData['period_id']);
+        }
+    }
+    return response()->json([
+        'success' => TRUE,
+        'message' => $message ?? 'Data Fetched Successfully',
+        'exception' => $exception ?? Null,
+        'error_code' => $error_code ?? Null,
+        'result' => $filterArray
+        
+    ], 200);
+   
    }
 
-
+    // relationship
     public function coin(){
         return $this->belongsTo(Coin::class);
     }

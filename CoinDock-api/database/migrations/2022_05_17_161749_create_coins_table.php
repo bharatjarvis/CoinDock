@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('coin_id');
             $table->string('name');
             $table->integer('is_crypto');
-            $table->integer('is_accepted');
+            $table->integer('is_default');
+            $table->integer('status');
             $table->timestamps();
         });
     }

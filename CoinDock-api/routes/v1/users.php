@@ -69,8 +69,9 @@ Route::middleware('auth:api')
                         404,
                     ),
                 );
-                Route::get('/real-time-graph/{coin_name}/{range}', [WalletCoinController::class, 'showCoinRangeData']);
-                Route::get('/real-time-graph/coins', [WalletCoinController::class, 'realtimeCoinHistoricalData']);
+                Route::get('/real-time-graph/display/', [WalletCoinController::class, 'displaySingleCoinHistoricalData']);
+                Route::get('/real-time-graph/coins', [WalletCoinController::class, 'displayUserAllCoinHistoricalData']);
+                Route::get('/real-time-graph/filter', [WalletCoinController::class, 'realtimeCoinHistoricalDataFilter']);
 
             });
         });
