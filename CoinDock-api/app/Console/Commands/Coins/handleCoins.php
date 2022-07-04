@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Coins;
 
 use App\Models\V1\Coin;
+use GrahamCampbell\ResultType\Success;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
@@ -33,60 +34,53 @@ class handleCoins extends Command
         //fetching coins and insering the coins if they were not in our database
 
 
-        // $AssetsUrl = config('assets.coin_api.base_path').config('assets.coin_api.assets_path');
-        // $assets = Http::withHeaders(['X-CoinAPI-Key'=>config('assets.coin_api.key')])
-        // ->get($AssetsUrl);
+        $AssetsUrl = config('assets.coin_api.base_path') . config('assets.coin_api.assets_path');
+        $assets = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
+            ->get($AssetsUrl);
 
-        // $assetArray = json_decode($assets);
-        // //Inserting Coins That we have fetched from the Api
-        // foreach ($assetArray as $asset){
-        //     Coin::create([
-        //         'coin_id'=>$asset->asset_id,
-        //         'name'=>$asset->name,
-        //         'is_crypto'=>$asset->type_is_crypto
-        //     ]);
-        // }
+        $assetArray = json_decode($assets);
+        //Inserting Coins That we have fetched from the Api
+        foreach ($assetArray as $asset) {
+            Coin::create([
+                'coin_id' => $asset->asset_id,
+                'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
+                'is_crypto' => $asset->type_is_crypto
+            ]);
+        }
 
 
 
 
         //Updating Accepting coins list
-        // $coins = Coin::all();
-        // $acceptedAssets = array_keys(config('assets.accepted_coins'));
+        $coins = Coin::all();
+        $acceptedAssets = array_keys(config('assets.accepted_coins'));
 
-        // foreach ($acceptedAssets as $acceptedAsset){
-        //     foreach($coins as $coin){
-        //         if($coin->name == $acceptedAsset){
-        //             $coin->update(['status'=>1]);
-        //         }
-        //     }
-        // }
-
-
-
-        //Updating CFX name as Conflux
-        // foreach ($coins as $coin){
-        //         if($coin->name =='CFX'){
-        //             $coin->update(['name'=>'Conflux']);
-        //         }
-        // }
+        foreach ($acceptedAssets as $acceptedAsset) {
+            foreach ($coins as $coin) {
+                if ($coin->name == $acceptedAsset) {
+                    $coin->update(['status' => 1]);
+                }
+            }
+        }
 
 
         //Inserting Image paths for every image
-        //     $assetImagesUrl = config('assets.coin_api.base_path') . config('assets.coin_api.asset_images');
+        $assetImagesUrl = config('assets.coin_api.base_path') . config('assets.coin_api.asset_images');
 
-        //     $assetImages = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
-        //         ->get($assetImagesUrl);
-        //     $assetImagesArray = json_decode($assetImages);
-        //     foreach ($assetImagesArray as $assetImage) {
-        //         foreach ($coins as $coin) {
-        //             if ($coin->coin_id == $assetImage->asset_id) {
-        //                 if ($coin->img_path == '') {
-        //                     $coin->update(['img_path' => $assetImage->url]);
-        //                 }
-        //             }
-        //         }
-        //     }
+        $assetImages = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
+            ->get($assetImagesUrl);
+        $assetImagesArray = json_decode($assetImages);
+        foreach ($assetImagesArray as $assetImage) {
+            foreach ($coins as $coin) {
+                if ($coin->coin_id == $assetImage->asset_id) {
+                    if ($coin->img_path == '') {
+                        $coin->update(['img_path' => $assetImage->url]);
+                    }
+                }
+            }
+        }
 
+        $this->info('Wallet Balance Updated ');
+        return Command::SUCCESS;
     }
 }
