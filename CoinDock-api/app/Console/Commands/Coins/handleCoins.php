@@ -31,6 +31,9 @@ class handleCoins extends Command
     public function handle()
     {
 
+        $coins = Coin::all();
+
+
         //fetching coins and insering the coins if they were not in our database
 
 
@@ -41,18 +44,30 @@ class handleCoins extends Command
         $assetArray = json_decode($assets);
         //Inserting Coins That we have fetched from the Api
         foreach ($assetArray as $asset) {
-            Coin::create([
-                'coin_id' => $asset->asset_id,
-                'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
-                'is_crypto' => $asset->type_is_crypto
-            ]);
+            if ($coins->isEmpty()) {
+                Coin::create([
+                    'coin_id' => $asset->asset_id,
+                    'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
+                    'is_crypto' => $asset->type_is_crypto
+                ]);
+            }
+            else{
+                foreach ($coins as $coin){
+                    if($coin->coin_id != $asset->asset_id){
+                        Coin::create([
+                            'coin_id' => $asset->asset_id,
+                            'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
+                            'is_crypto' => $asset->type_is_crypto
+                        ]);
+                    }
+                }
+            }
         }
 
 
 
 
         //Updating Accepting coins list
-        $coins = Coin::all();
         $acceptedAssets = array_keys(config('assets.accepted_coins'));
 
         foreach ($acceptedAssets as $acceptedAsset) {
@@ -80,7 +95,7 @@ class handleCoins extends Command
             }
         }
 
-        $this->info('Wallet Balance Updated ');
+        $this->info('Coins Updated ');
         return Command::SUCCESS;
     }
 }
