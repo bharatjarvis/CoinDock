@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Http;
 class Coin extends Model
 {
     use HasFactory;
-    protected $fillable = ['name'];
+    protected $fillable = ['coin_id','name', 'is_crypto', 'status', 'img_path', 'is_default'];
 
 
     public function wallet(){
@@ -30,7 +30,7 @@ class Coin extends Model
                             ->whereUserId($user->id)
                             ->get();
         $grouped = $data->mapToGroups(function($wallet){
-                            return [$wallet->coin->name => $wallet->balance];})
+                            return [$wallet->coin->coin_id => $wallet->balance];})
                         ->map(function ($row) {
                             return $row->sum();
         });
@@ -40,7 +40,8 @@ class Coin extends Model
     //Convertion
     public function priceConversion($from, $to, User $user)
     {
-        $grouped =$this->countCoins($user)->toArray(); 
+        $grouped =$this->countCoins($user)->toArray();
+        //dd($grouped); 
         $url = Config('coinapi.coinapi.coinapiurl'); 
         $cryptConversionId1 = str_replace('{from}', $from,$url);
         $cryptConversionId1 = $cryptConversionId1;
@@ -49,9 +50,11 @@ class Coin extends Model
         $priceValue = explode(":",$balanceCurrency);        
         $priceValue = str_replace("}","",$priceValue[1]);       
         $priceArray = array();
-        foreach($grouped as $groupedValue){
-            $priceValue = $priceValue * $groupedValue;
-            $priceArray = array_merge($priceArray,[$priceValue]);
+        
+        foreach($grouped as $key=>$value){
+    
+            $priceValue = $priceValue * $value;
+            $priceArray = array_merge($priceArray,[$key => $priceValue]);
         }
         return $priceArray;
         
@@ -73,6 +76,7 @@ class Coin extends Model
         $from =config('shortnames.shorted_coin_list.Bitcoin');
         $to = config('currency.currency.primarycurrency');
         $data = $this->priceConversion($from,$to ,$user);
+        //$data = (object)$data;
         return $data;
 
     }
@@ -92,7 +96,7 @@ class Coin extends Model
                                 ->whereUserId($user->id)
                                 ->get();
         $grouped = $content->mapToGroups(function($wallet){
-                            return [$wallet->coin_id =>$wallet->bUSD];})
+                            return [$wallet->coin->coin_id =>$wallet->bUSD];})
                         ->map(function ($row) {
                             return $row->sum();
         });
@@ -114,9 +118,10 @@ class Coin extends Model
         $priceValue = explode(":",$balanceCurrency);        
         $priceValue = str_replace("}","",$priceValue[1]);       
         $priceArray = array();
-        foreach($grouped as $groupedValue){
-            $priceValue = $priceValue * $groupedValue;
-            $priceArray = array_merge($priceArray,[$priceValue]);
+        foreach($grouped as $key=>$value){
+    
+            $priceValue = $priceValue * $value;
+            $priceArray = array_merge($priceArray,[$key => $priceValue]);
         }
         return $priceArray;
     }

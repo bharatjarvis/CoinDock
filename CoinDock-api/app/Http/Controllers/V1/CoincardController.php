@@ -51,10 +51,21 @@ class CoincardController extends Controller
         return $change->secondayCurrencyexChange($request , $user);
      }
 
-    
 
-    
 
+     public function coinCard(Request $request, User $user){
+        $data = new Coin();
+        $NumberOfCoins=$data->countCoins($user);
+        $coinBTC=$data->coinBtc($user);
+        $PrimaryCurrency = $data->getPrimaryCurrency($user);
+        $SecondaryCurrency = $data->getSecondaryCurrency($user);
+        return response([
+            'CoinBTC' =>$coinBTC,
+            'Number of coins' =>$NumberOfCoins,
+            'Primary Currency' =>$PrimaryCurrency,
+            'Secondary Currency' =>$SecondaryCurrency,
+        ], 200); 
+     }
 
 }
 

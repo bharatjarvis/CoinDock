@@ -21,14 +21,7 @@ Route::prefix('users')->group(
     function(){
         Route::prefix('{user}')->group(
             function(){
-                Route::get('/numberOfCoins', [CoincardController::class, 'numberOfCoins']);
-                Route::get('/coinBtc',[CoincardController::class,'coinBtc']);
-                Route::get('/getprimaryCurrency', [CoincardController::class, 'getPrimaryCurrency']);
-                Route::post('/primaryCurrency', [CoincardController::class, 'primaryCurrency']);
-                Route::get('/getsecondarycurrency',[CoincardController::class, 'getSecondaryCurrency']);
-                Route::post('/secondaryCurrency', [CoincardController::class, 'secondaryCurrency']);
-
-                
+                Route::get('/coinCard', [CoincardController::class, 'coinCard']);          
             }
         );
     }
