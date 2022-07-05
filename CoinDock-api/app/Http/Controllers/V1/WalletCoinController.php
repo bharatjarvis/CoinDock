@@ -25,8 +25,9 @@ class WalletCoinController extends Controller
     }
 
     // function to display the coins of user
-    public function showUserCoins(Wallet $wallet, User $user){
-        return $wallet->showUserCoins($wallet,$user);
+    public function showUserCoins(User $user){
+        $wallet = new Wallet();
+        return $wallet->showUserCoins($user);
     }
 
     // function to display historical data for particular coins

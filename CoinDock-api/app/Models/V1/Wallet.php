@@ -121,34 +121,32 @@ class Wallet extends Model
     ///////////////////////////////////////////////////////////////////////////////////////
 
 
-    public function showUserCoins(Wallet $wallet, User $user){
+    public function showUserCoins( User $user){
 
-        $coinNames = Wallet::select('coin_id')
-                    ->whereUserId($user->id)
-                    ->get()
-                    ->mapToGroups(function ($wallet) {
-                        return [$wallet->coin->name];
-                    })->toArray();
         
+        $coinNames = Wallet::
+                    whereUserId($user->id)
+                    ->get();
+        $coinIds = [];
+        foreach ($coinNames as $coinName){
+            array_push($coinIds,$coinName->coin_id);
+        }
+        $coinIds =array_unique($coinIds);
 
-         // converting the 2-array to single array
-         $singleArrayConversion = array();
-         foreach($coinNames as $key => $value) {
-             foreach($value as $key2 => $value2) {
-                 $singleArrayConversion[$key2] = $value2;
-             }
-         }
-        
-        // removing the duplicates
-        $singleArrayConversion = array_unique($singleArrayConversion);
-
+        $coinList=[];
+        foreach ($coinIds as $coinId){
+            $coinName = Coin::whereId($coinId)->first();
+            $coinName = $coinName->name;
+            array_push($coinList,$coinName);
+        }
+    
         return response()->json([
             'user_name' => $user->first_name,
             'success' => TRUE,
             'message' => $message ?? 'Data Fetched Successfully',
             'exception' => $exception ?? Null,
             'error_code' => $error_code ?? Null,
-            'result' => $singleArrayConversion
+            'result' => $coinList
             
         ], 200);
 
