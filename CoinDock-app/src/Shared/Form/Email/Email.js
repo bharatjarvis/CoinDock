@@ -14,7 +14,7 @@ export const emailValidation = (value) => {
   return error;
 };
 
-const Email = ({ name,formErrors,onInput,email}) => {
+const Email = ({ name,formErrors,onInput,value}) => {
   const initialValues = {
     email: "",
   };
@@ -43,7 +43,7 @@ const Email = ({ name,formErrors,onInput,email}) => {
             name={name}
             placeholder="Enter your Email address"
             onChange={handleChanges}
-            defaultValue={email}
+            defaultValue={value}
             onBlur={handleFocus}
             onInput={handleInput}
           />

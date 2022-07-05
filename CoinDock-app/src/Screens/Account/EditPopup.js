@@ -11,17 +11,26 @@ import { passwordValidation } from 'Shared/Password/Password';
 import { emailValidation } from 'Shared/Form/Email/Email';
 import Name from 'Shared/Form/Name/Name';
 import { nameValidation } from 'Shared/Form/Name/Name';
+import Select, { countryValidation } from 'Shared/Form/Select/Select';
+import DatePick ,{ dateValidation } from 'Shared/Date/DatePick';
 
 const EditPopup =() =>{
-const {open,type,currentFieldValue} = useSelector(state => state.account)
+const {open,type,value} = useSelector(state => state.account)
 const dispatch = useDispatch();
-const [formValues, setformValues] = useState(null);
+const initialValues = {
+  firstname: value.first_name,
+  lastname: value.last_name,
+  date: value.date_of_birth,
+  email: value.email,
+  country: value.country,
+  password: "",
+};
+
+const [formValues, setformValues] = useState(initialValues);
 const [getData ]= useData();
 const [formErrors, setformErrors] = useState({});
 const [isValid, setValid] = useState(false);
-const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
 
-const [first, last] = currentFieldValue?.split(' ');
 const handleValidation =(values) =>{
   const errors = {};
   if(type == 'email'){
@@ -31,7 +40,12 @@ const handleValidation =(values) =>{
     errors.firstname = nameValidation(values.firstname,'First Name',45) ;
     errors.lastname = nameValidation(values.lastname,'Last name',45);
   }
- 
+  if( type == 'dateofbirth'){
+    errors.date = dateValidation(values.date);
+  }
+  if( type == 'country'){
+    errors.country = countryValidation(values.country);
+  }
   if(type == 'changePassword'){
    errors.password = passwordValidation({
     value: values.password,
@@ -39,6 +53,7 @@ const handleValidation =(values) =>{
     minlength: 12,
     maxlength: 45,
   }) }
+  console.log(Object.values(errors));
   const isValid = !Object.values(errors).some(Boolean)
   setformErrors(errors);
   setValid(isValid);
@@ -53,7 +68,7 @@ const handleChanges = (e) => {
   handleValidation({ ...formValues, [name]: value });
 };
 const resetInputField = () => {
-  setformValues(null);
+  setformValues(initialValues);
 };
 
 const handleSubmit = () => {
@@ -64,10 +79,18 @@ const handleSubmit = () => {
       getData({
         ...formValues,
       }) 
-        .catch(() => {
-          setDisplayErrorMessage(true);
+        .catch((e) => {
+          console.log(e);
+          const {
+            date_of_birth,
+          } = e?.data?.errors ?? {};
+          // console.log(e?.data?.errors ?? {});
+          setformErrors({
+            date: date_of_birth,
+          });
         });
     }
+  
 };
 
 const handleSetTrigger = () => {
@@ -102,7 +125,7 @@ return(
     <Email
       name="email"
       formErrors={formErrors}
-      email={currentFieldValue}
+      value={formValues.email}
       />:
      type === 'changePassword' ? 
     <Password 
@@ -111,20 +134,40 @@ return(
       placeholder="Enter your password"
       label="Password"
     /> :
-    type === 'name'?
+    type == 'dateofbirth' ? 
+    <DatePick
+       name="date"
+       value={formValues.date}
+       onChange={handleChanges}
+       formErrors={formErrors}
+    />:
+    type == 'country' ?
+    <Select
+      name="country"
+      label="Country"
+      value={formValues.country}
+      options={[
+      {label:""},
+      { label: value.country },
+      { label: "India", value: 1 },
+      { label: "Pakistan", value: 2 },
+       ]}
+       formErrors={formErrors}
+      />:
+    type == 'name'?
     <div>
    <Name
       name="firstname"
       placeholder="Enter First Name"
       label="First Name"
-      currentFieldValue={first}
+      value={formValues.firstname}
       formErrors={formErrors}
       /> 
     <Name
       name="lastname"
       placeholder="Enter Last Name"
       label="Last Name"
-      currentFieldValue={last}
+      value={formValues.lastname}
       formErrors={formErrors}
       />
     </div>:''

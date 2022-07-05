@@ -27,9 +27,9 @@
 
   .cd-accordion-content {
     background-color: #e4d3ee;
-    padding: 4px;
-   
-  }
+    border: #edf0f0 ridge 2px;
+    padding: 8px;
+    }
   .container-1{
    margin: auto;
    max-width: 490px;

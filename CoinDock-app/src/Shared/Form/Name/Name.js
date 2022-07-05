@@ -13,7 +13,7 @@ export const nameValidation = (value, label = "Name", length = 0) => {
   return error;
 };
 
-const Name = ({ label, name, placeholder, formErrors, onInput, currentFieldValue }) => {
+const Name = ({ label, name, placeholder, formErrors, onInput, value }) => {
   const initialValues = {
     firstname: "",
     lastname: "",
@@ -43,11 +43,12 @@ const Name = ({ label, name, placeholder, formErrors, onInput, currentFieldValue
           name={name}
           placeholder={placeholder}
           onChange={handleChanges}
-          defaultValue={currentFieldValue}
+          defaultValue={value}
           onBlur={handleFocus}
           onInput={handleInput}
         />
       </div>
+     
       {formErrors && fieldsTouched && (
         <p className="text-danger">{formErrors[name]}</p>
       )}

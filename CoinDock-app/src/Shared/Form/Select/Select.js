@@ -16,6 +16,7 @@ const Select = ({
   options,
   label,
   emptyPlaceHolder,
+  value,
   name,
   formErrors,
   onInput,
@@ -25,6 +26,7 @@ const Select = ({
   const initialValues = {
     country: "",
   };
+  
   const [formValues, setformValues] = useState(initialValues);
   const [fieldsTouched, setFieldsTouched] = useState(false);
   const handleChanges = (e) => {
@@ -38,17 +40,18 @@ const Select = ({
     setFieldsTouched(true);
     onInput?.(e);
   };
-
+  
   return (
     <>
       <label className="cd-mt-12 cd-lable-signup">{label}</label>
       <select
         className="form-control cd-select cd-mt-8"
         name={name}
+        defaultValue={value}
         onBlur={handleFocus}
       >
         {emptyPlaceHolder && <option />}
-        {options.map(({ value, label }, index) => {
+        {options.map(({value,label}, index) => {
           return (
             <option
               value={value}
@@ -66,6 +69,9 @@ const Select = ({
       )}
     </>
   );
+};
+Select.defaultProps ={
+  formErrors : {}
 };
 Select.propTypes = {
   label: propTypes.string,

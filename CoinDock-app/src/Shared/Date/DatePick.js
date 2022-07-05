@@ -15,10 +15,10 @@ export const dateValidation = (value) => {
   }
   return error;
 };
-function DatePick({ name, onChange, formErrors }) {
-  const [selectedDate, setSelectedDate] = useState("");
-  const [fieldsTouched, setFieldsTouched] = useState(false);
-
+function DatePick({ name, onChange, formErrors,value}) {
+  
+ const [selectedDate, setSelectedDate] = useState(new Date(value));
+ const [fieldsTouched, setFieldsTouched] = useState(false);
   const handleChanges = (value) => {
     if (onChange) {
       onChange({
@@ -30,7 +30,8 @@ function DatePick({ name, onChange, formErrors }) {
     }
     setSelectedDate(value);
   };
-  const handleFocus = (e) => {
+
+  const handleFocus = () => {
     setFieldsTouched(true);
   };
 

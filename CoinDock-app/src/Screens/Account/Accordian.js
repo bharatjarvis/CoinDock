@@ -6,32 +6,25 @@ import EditPopup from './EditPopup';
 import "Shared/common-styles/common.css";
 import { useNavigate } from 'react-router-dom';
 
-const Accordion = ({name,items}) => {
-  const navigate =useNavigate();
-  
+const Accordion = ({label,field,value}) => {
+    const navigate =useNavigate();
     const handleRecoveryButton = () => {
     navigate("/recovery-codes-account");
      };
+     
   const [isActive, setIsActive] = useState(false);
   const dispatch =useDispatch();
   return (
     <div className="cd-accordion">
      <div className="cd-accordion-title" onClick={() => setIsActive(!isActive)}>
-          <div>{name} </div>
+          <div>{label}</div>
             <div>{isActive ? '-' : '>'}</div>
           </div>
-        
-        {isActive && 
-        items.map((subitem,id) =>(
-         subitem.id ?
-         <div className="cd-accordion-content d-flex justify-content-between" key={id}>{subitem.name}:{subitem.value}
-         {subitem.type === 'edit'? <button className='cd-button cd-button-2 cd-edit-button' onClick={() => dispatch(openDialogue({type :subitem.key,currentFieldValue: subitem.value}))}>Edit</button> :''}
-        </div>
-        :
-        <div className="cd-accordion-content d-flex justify-content-between" key={id}> {subitem.name}
-         {subitem.type === 'edit1'? <button className='cd-button cd-button-2 cd-edit-button' onClick={() => dispatch(openDialogue({type :subitem.key,currentFieldValue: subitem.value}))}>Edit</button> :subitem.key==='regenerateRecoveryWords' ?<button className='cd-button cd-button-2 cd-edit-button' onClick={()=>{handleRecoveryButton()}}>Edit</button>:''}
-        </div>))
-       } 
+          {isActive && field.map((i,id)=> (
+            <div className="cd-accordion-content d-flex justify-content-between" key={id}>{i.label}:{i.fieldKey=='name' ? value.first_name+' '+value.last_name: i.fieldKey == 'dateofbirth' ? value.date_of_birth :i.fieldKey=='country'?value.country :i.fieldKey=='email'?value.email:''} 
+              {i.type === 'edit' ? <button className='cd-button cd-button-3 cd-edit-button' onClick={() => dispatch(openDialogue({type :i.fieldKey,value}))}>Edit</button> :i.navigate ?<button className='cd-button cd-button-3 cd-edit-button' onClick={()=>{handleRecoveryButton()}}>Edit</button>:''}
+            </div> 
+             ))}
       <EditPopup/> 
       </div>
   
