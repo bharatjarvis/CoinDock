@@ -31,61 +31,23 @@ class handleCoins extends Command
      */
     public function handle()
     {
-
-        $coins = Coin::all();
-        $CoinListcheck = 0;
-
         //fetching coins and insering the coins if they were not in our database
-
-
         $AssetsUrl = config('assets.coin_api.base_path') . config('assets.coin_api.assets_path');
         $assets = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
             ->get($AssetsUrl);
 
         $assetArray = json_decode($assets);
 
-        $assetArray->LazyCollection::times(
-            500,
-            function ($asset , $CoinListcheck) {
-                if ($CoinListcheck == 0) {
-                    Coin::create([
-                        'coin_id' => $asset->asset_id,
-                        'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
-                        'is_crypto' => $asset->type_is_crypto
-                    ]);
-                    $CoinListcheck = 1;
-                } else {
-                    Coin::updateOrCreate(['coin_id' => !$asset->asset_id], [
-    
-                        'coin_id' => $asset->asset_id,
-                        'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
-                        'is_crypto' => $asset->type_is_crypto
-    
-                    ]);
-                }
-            }
-        );
+        //Inserting Coins That we have fetched from the Api
+        foreach ($assetArray as $asset) {
+            Coin::updateOrCreate(['coin_id' => !$asset->asset_id], [
 
+                'coin_id' => $asset->asset_id,
+                'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
+                'is_crypto' => $asset->type_is_crypto
 
-        // //Inserting Coins That we have fetched from the Api
-        // foreach ($assetArray as $asset) {
-        //     if ($CoinListcheck == 0) {
-        //         Coin::create([
-        //             'coin_id' => $asset->asset_id,
-        //             'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
-        //             'is_crypto' => $asset->type_is_crypto
-        //         ]);
-        //         $CoinListcheck = 1;
-        //     } else {
-        //         Coin::updateOrCreate(['coin_id' => !$asset->asset_id], [
-
-        //             'coin_id' => $asset->asset_id,
-        //             'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
-        //             'is_crypto' => $asset->type_is_crypto
-
-        //         ]);
-        //     }
-        // }
+            ]);
+        }
 
 
 
