@@ -14,26 +14,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class CoinsController extends Controller
 {
-  public function totalBtc(User $user)
-  {
-    $wallet = new Wallet();
-    return $wallet->totalDefault($user);
-  }
-  public function primaryCurrency(User $user)
-  {
-    $wallet = new Wallet();
-    return $wallet->totalPrimaryCurrency($user);
-  }
-
-  public function topPerformer(User $user)
-  {
-    $wallet = new Wallet();
-    return $wallet->topPerformer($user);
-  }
-  public function lowPerformer(User $user)
-  {
-    $wallet = new Wallet();
-    return $wallet->lowPerformer($user);
-  }
+  
 
 }

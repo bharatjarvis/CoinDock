@@ -68,10 +68,10 @@ Route::middleware('auth:api')
             });
 
 
-            Route::get('/total-default', [CoinsController::class, 'totalBTC']);
-            Route::get('/primary-currency',[CoinsController::class, 'primaryCurrency']);
-            Route::get('/top-performer', [CoinsController::class, 'topPerformer']);
-            Route::get('/low-performer', [CoinsController::class, 'lowPerformer']);
+            Route::get('/total-default', [UserController::class, 'totalBTC']);
+            Route::get('/primary-currency',[UserController::class, 'primaryCurrency']);
+            Route::get('/top-performer', [UserController::class, 'topPerformer']);
+            Route::get('/low-performer', [UserController::class, 'lowPerformer']);
     
         });
     });
