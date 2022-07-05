@@ -18,7 +18,7 @@ class RecoveryKeyController extends Controller
     {
         return response(
             [
-                'result' => Arr::random(
+                'results' => Arr::random(
                     range(1, config('random_keys.recovery.block_length')),
                     config('random_keys.recovery.test_block_length'),
                 ),
