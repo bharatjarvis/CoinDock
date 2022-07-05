@@ -6,6 +6,7 @@ use App\Models\V1\Coin;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\LazyCollection;
 
 class handleCoins extends Command
 {
@@ -32,7 +33,7 @@ class handleCoins extends Command
     {
 
         $coins = Coin::all();
-
+        $CoinListcheck = 0;
 
         //fetching coins and insering the coins if they were not in our database
 
@@ -42,58 +43,71 @@ class handleCoins extends Command
             ->get($AssetsUrl);
 
         $assetArray = json_decode($assets);
-        //Inserting Coins That we have fetched from the Api
-        foreach ($assetArray as $asset) {
-            if ($coins->isEmpty()) {
-                Coin::create([
-                    'coin_id' => $asset->asset_id,
-                    'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
-                    'is_crypto' => $asset->type_is_crypto
-                ]);
-            }
-            else{
-                foreach ($coins as $coin){
-                    if($coin->coin_id != $asset->asset_id){
-                        Coin::create([
-                            'coin_id' => $asset->asset_id,
-                            'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
-                            'is_crypto' => $asset->type_is_crypto
-                        ]);
-                    }
+
+        $assetArray->LazyCollection::times(
+            500,
+            function ($asset , $CoinListcheck) {
+                if ($CoinListcheck == 0) {
+                    Coin::create([
+                        'coin_id' => $asset->asset_id,
+                        'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
+                        'is_crypto' => $asset->type_is_crypto
+                    ]);
+                    $CoinListcheck = 1;
+                } else {
+                    Coin::updateOrCreate(['coin_id' => !$asset->asset_id], [
+    
+                        'coin_id' => $asset->asset_id,
+                        'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
+                        'is_crypto' => $asset->type_is_crypto
+    
+                    ]);
                 }
             }
-        }
+        );
+
+
+        // //Inserting Coins That we have fetched from the Api
+        // foreach ($assetArray as $asset) {
+        //     if ($CoinListcheck == 0) {
+        //         Coin::create([
+        //             'coin_id' => $asset->asset_id,
+        //             'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
+        //             'is_crypto' => $asset->type_is_crypto
+        //         ]);
+        //         $CoinListcheck = 1;
+        //     } else {
+        //         Coin::updateOrCreate(['coin_id' => !$asset->asset_id], [
+
+        //             'coin_id' => $asset->asset_id,
+        //             'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
+        //             'is_crypto' => $asset->type_is_crypto
+
+        //         ]);
+        //     }
+        // }
 
 
 
 
-        //Updating Accepting coins list
+        //Making Accepted coins status as 1
         $acceptedAssets = array_keys(config('assets.accepted_coins'));
 
         foreach ($acceptedAssets as $acceptedAsset) {
-            foreach ($coins as $coin) {
-                if ($coin->name == $acceptedAsset) {
-                    $coin->update(['status' => 1]);
-                }
-            }
+            Coin::updateOrCreate(['name' => $acceptedAsset], ['status' => 1]);
         }
 
 
-        //Inserting Image paths for every image
+        //Inserting Image paths for every Coin
         $assetImagesUrl = config('assets.coin_api.base_path') . config('assets.coin_api.asset_images');
-
         $assetImages = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
             ->get($assetImagesUrl);
         $assetImagesArray = json_decode($assetImages);
+
         foreach ($assetImagesArray as $assetImage) {
-            foreach ($coins as $coin) {
-                if ($coin->coin_id == $assetImage->asset_id) {
-                    if ($coin->img_path == '') {
-                        $coin->update(['img_path' => $assetImage->url]);
-                    }
-                }
-            }
+            Coin::updateOrCreate(['coin_id' => $acceptedAsset->asset_id], ['img_path' => $assetImage->url]);
         }
+
 
         $this->info('Coins Updated ');
         return Command::SUCCESS;

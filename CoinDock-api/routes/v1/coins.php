@@ -43,7 +43,7 @@ Route::group(['prefix' => 'coins', 'middleware' => 'auth:api'], function () {
     Method     : SHOW
     Access     : Private
     */
-    Route::get('/{user}',[CoinController::class , 'show']);
+    Route::get('/{coin}',[CoinController::class , 'show']);
 
 
     
@@ -53,7 +53,7 @@ Route::group(['prefix' => 'coins', 'middleware' => 'auth:api'], function () {
     Method     : PUT
     Access     : Private
     */
-    Route::put('/{user}',[CoinController::class , 'update']);
+    Route::put('/{coin}',[CoinController::class , 'update']);
 
 
     
@@ -63,7 +63,7 @@ Route::group(['prefix' => 'coins', 'middleware' => 'auth:api'], function () {
     Method     : DELETE
     Access     : Private
     */
-    Route::delete('/{user}',[CoinController::class , 'delete']);
+    Route::delete('/{coin}',[CoinController::class , 'delete']);
 
     
 });

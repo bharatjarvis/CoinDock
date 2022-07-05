@@ -30,22 +30,24 @@ class CoinController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(Request $request)
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 40000000000);
-        //$acceptedCoins = config('coinapi.accepted_coins');
-        $coins = Http::withHeaders([
-                'X-CoinAPI-Key' => config('coinapi.key'),
-                'connect_timeout' => 5,
-                'timeout' => 5,
-                'read_timeout' => 5,
-            ])
-            ->get(config('coinapi.base_path') . config('coinapi.assets_path'));
-        // $coins = Http::get(config('coinapi.base_path').config('coinapi.assets_path').'?apikey='.config('coinapi.key'));
 
-        return $coins;
+        $coin = Coin::create([
+        'name'=>$request->name,
+        'coin_id'=>$request->coin_id,
+        'is_crypto'=>$request->is_crypto,
+        'status'=>$request->status,
+        'is_default'=>$request->is_default,
+        'img_path'=>$request->img_path
+        ]);
+
+        return response([
+            'message'=>'Coin Created Successfully',
+            'result'=>[
+                'coin'=>$coin
+            ]
+        ],200);
     }
 
 
@@ -55,13 +57,14 @@ class CoinController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Coin $coin)
     {
-        $coin = Coin::findOrFail($id)->first();
-        return response(
-            ['result' => $coin],
-            200
-        );
+        return response([
+            'message'=>'success',
+            'result'=>[
+                'coin'=>$coin
+            ]
+            ],200);
     }
 
     /**
@@ -71,9 +74,9 @@ class CoinController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Coin $coin)
     {
-        $coin = Coin::whereId($id)->update(['name' => $request->name]);
+        $coin->update($request->all());
         return response([
             'message' => 'Coin Updated Successfully',
             'coin' => $coin
@@ -86,9 +89,9 @@ class CoinController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function delete(Coin $coin)
     {
-        Coin::whereId($id)->delete();
+        $coin->delete();
         return response([
             'message' => 'Coin Deleted Successfully',
         ], 200);
