@@ -15,4 +15,12 @@ class Wallet extends Model
         'wallet_id',
         'balance'
     ];
+
+
+    public function coin(){
+        return $this->belongsTo(Coin::class);
+    }
+
+
 }
+

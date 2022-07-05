@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { RiCloseLine } from "react-icons/ri";
 import Select from "Shared/Form/Select";
-import Name from "Shared/Form/Name/Name";
+
 import Popup from "Shared/Popup/Popup";
+
 import { useSelector, useDispatch } from "react-redux";
 import { closePopup } from "Screens/AddWallet/AddWalletSlice";
-import { nameValidation } from "Shared/Form/Name/Name";
+import { walletnameValidation } from "Shared/Form/WalletFields/WalletName";
+import WalletName from "Shared/Form/WalletFields/WalletName";
 import { countryValidation } from "Shared/Form/Select/Select";
 
 function AddWallet() {
@@ -19,6 +21,7 @@ function AddWallet() {
   const [formValues, setformValues] = useState(initialValues);
   const [formErrors, setformErrors] = useState({});
   const [isValid, setValid] = useState(false);
+
   const handleChanges = (e) => {
     const { name, value } = e.target;
     setformValues((formValues) => {
@@ -38,14 +41,11 @@ function AddWallet() {
 
     let isValid = true;
 
-    errors.walletname = nameValidation(values.walletname, "Wallet Name");
-    errors.walletaddress = nameValidation(
+    errors.walletaddress = walletnameValidation(
       values.walletaddress,
-      "Wallet Address"
+      "Wallet address"
     );
-
     errors.country = countryValidation(values.country);
-
     setValid(!Object.values(errors).some(Boolean));
     return {
       isValid,
@@ -59,6 +59,10 @@ function AddWallet() {
     if (!isValid) {
       setformErrors(errors);
     }
+    if (!Object.values(formValues).includes("")) {
+      formValues.id = formValues.id === undefined ? Date.now() : formValues.id;
+      setformValues({ ...formValues });
+    }
   };
 
   const handleSetTrigger = () => {
@@ -68,7 +72,13 @@ function AddWallet() {
   return (
     <div>
       <form onSubmit={handleSubmit} onInput={handleChanges}>
-        <Popup trigger={open} setTrigger={handleSetTrigger} buttonLable="Done">
+        <Popup
+          trigger={open}
+          // buttonOnclick={handleSubmit}
+          setTrigger={handleSetTrigger}
+          disabled={!isValid}
+          buttonLable="Done"
+        >
           <div className="d-flex justify-content-between">
             <h4>Wallet</h4>
             <RiCloseLine
@@ -79,31 +89,30 @@ function AddWallet() {
           </div>
 
           <Select
-            name="Wallet"
+            name="country"
             className="form-control"
             label="Coin"
+            value={formValues.country}
             options={[
               { label: "" },
               { label: "BitCoin", value: 1 },
               { label: "Ethereum", value: 2 },
             ]}
-            value={formValues.wallet}
             formErrors={formErrors}
           />
 
-          <Name
-            name="Wallet Address"
+          <WalletName
+            name="walletaddress"
             placeholder="Wallet Address "
             label="Wallet Address"
             value={formValues.walletaddress}
             formErrors={formErrors}
           />
-          <Name
-            name="Wallet Name"
+          <WalletName
+            name="walletname"
             placeholder="Wallet Name"
             label="Wallet Name"
             value={formValues.walletname}
-            formErrors={formErrors}
           />
         </Popup>
       </form>

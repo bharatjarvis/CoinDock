@@ -2,18 +2,16 @@ import React, { useState } from "react";
 import propTypes from "prop-types";
 import "Shared/common-styles/space.css";
 import "Shared/common-styles/common.css";
-export const nameValidation = (value, label = "Name", length = 0) => {
+export const walletnameValidation = (value, label = "Name", length = 0) => {
   let error = null;
 
   if (!value) {
     error = `${label} is required`;
-  } else if (value.length > 45) {
-    error = ` The ${label} may not be greater than ${length} characters.`;
   }
   return error;
 };
 
-const Name = ({
+const WalletName = ({
   label,
   name,
   placeholder,
@@ -22,8 +20,8 @@ const Name = ({
   currentFieldValue,
 }) => {
   const initialValues = {
-    firstname: "",
-    lastname: "",
+    walletname: "",
+    walletaddress: "",
   };
   const [formValues, setformValues] = useState(initialValues);
   const [fieldsTouched, setFieldsTouched] = useState(false);
@@ -53,7 +51,7 @@ const Name = ({
           defaultValue={currentFieldValue}
           onBlur={handleFocus}
           onInput={handleInput}
-        />
+        /> 
       </div>
       {formErrors && fieldsTouched && (
         <p className="text-danger">{formErrors[name]}</p>
@@ -62,7 +60,7 @@ const Name = ({
   );
 };
 
-Name.propTypes = {
+WalletName.propTypes = {
   label: propTypes.string,
 };
-export default Name;
+export default WalletName;

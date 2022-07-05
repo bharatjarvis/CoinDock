@@ -37,8 +37,8 @@ export const options = {
 };
 
 const labels = ["January", "February", "March", "April", "May", "June", "July"];
-const cryptos = ["BTC", "ETH"];
 
+const cryptos = ["BTC", "ETH"];
 const allData = [
   {
     label: cryptos[0],
@@ -101,6 +101,7 @@ export function LineChart() {
         </div>
       </div>
       <Line
+      className="p-14"
         id="chart"
         options={options}
         data={{

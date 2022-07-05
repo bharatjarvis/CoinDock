@@ -2,14 +2,14 @@
 
 namespace App\Enums\V1;
 
-use BenSampo\Enum\Enum;
+use App\Enums\BaseEnum;
 
 /**
  * @method static static OptionOne()
  * @method static static OptionTwo()
  * @method static static OptionThree()
  */
-final class UserStatus extends Enum
+final class UserStatus extends BaseEnum
 {
     const Active = 0;
     const Inactive = 1;

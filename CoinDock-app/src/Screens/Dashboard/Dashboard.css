@@ -1,10 +1,9 @@
 .cd-performance-wrap {
-  /* display: flex; */
+  display: flex;
   padding: 24px;
 
   flex-direction: row;
-  /* justify-content: space-between; */
-  margin-left: 80px;
+  justify-content: space-between;
 }
 
 .cd-mt-23 {

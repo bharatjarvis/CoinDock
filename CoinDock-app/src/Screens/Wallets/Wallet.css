@@ -1,6 +1,6 @@
 .cd-direction {
   display: flex;
-  padding: 14px;
+
   flex-direction: row;
   justify-content: space-between;
   margin-top: 12px;
