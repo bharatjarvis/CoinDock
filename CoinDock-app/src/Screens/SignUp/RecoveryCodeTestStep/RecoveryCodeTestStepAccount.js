@@ -63,7 +63,7 @@ function RecoveryCodeTestStep() {
 
                 <div className="p-3" />
 
-                <div className="cd-recover-test-table">
+                <div className="cd-recover-table">
                   {Boolean(recoveryCodes) &&
                     recoveryCodes.map((number, index) => {
                       return (
