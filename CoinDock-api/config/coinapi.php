@@ -1,10 +1,11 @@
 <?php
-
+ 
 return[
-
-    'coinapi' =>[
-        'coinapiurl' => "https://min-api.cryptocompare.com/data/price?fsym={from}&tsyms={to}",
-    
+ 
+    'coin' =>[
+        'apiurl' => env('COINAPI_URL'),
+        'apikey'=> env('COINAPI_KEY'),
+        'exchangeURL'=>'/exchangerate/{from}/{to}/',
     ],
-
+ 
 ];

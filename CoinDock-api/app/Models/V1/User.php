@@ -109,4 +109,10 @@ class User extends Authenticatable
     {
         $this->hasOne(RecoveryKey::class, 'user_id', 'id');
     }
+
+    public function coin(){
+
+        return $this->belongsTo(Coin::class);
+
+    }
 }

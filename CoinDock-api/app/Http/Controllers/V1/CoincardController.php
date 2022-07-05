@@ -11,61 +11,29 @@ use Illuminate\Support\Facades\DB;
 
 class CoincardController extends Controller
 {
-    //Number of coins
-    public function numberOfCoins(User $user){
-        $count = new Coin();
-        return $count->countCoins($user);
-        
-    }
-
-    //Coin BTC
-    public function coinBtc(User $user){
-        $change = new Coin();
-        return $change->coinBtc($user);
-
-
-    }
-
-    //Get default value of primarycurrency
-    public function getPrimaryCurrency(User $user){
-        $price= new Coin();
-        return $price->getPrimaryCurrency($user);
-    }
-
-    //Primary Currency
-    public function primaryCurrency(Request $request, User $user){
-        $change = new Coin();
-        return $change->exChange($request , $user);
-     }
-
-     //getSecondarCurrency
-     public function getSecondaryCurrency(User $user){
-        $price= new Coin();
-        return $price->getSecondaryCurrency($user);
-     }
-
-
-     //SecondaryCurrency
-    public function secondaryCurrency(Request $request, User $user){
-        $change = new Coin();
-        return $change->secondayCurrencyexChange($request , $user);
-     }
-
-
-
      public function coinCard(Request $request, User $user){
         $data = new Coin();
+        $Logo = $data->logo($user);
         $NumberOfCoins=$data->countCoins($user);
-        $coinBTC=$data->coinBtc($user);
+        $coinBTC=$data->coinDefault($user);
         $PrimaryCurrency = $data->getPrimaryCurrency($user);
         $SecondaryCurrency = $data->getSecondaryCurrency($user);
-        return response([
-            'CoinBTC' =>$coinBTC,
-            'Number of coins' =>$NumberOfCoins,
-            'Primary Currency' =>$PrimaryCurrency,
-            'Secondary Currency' =>$SecondaryCurrency,
-        ], 200); 
+        $coins = Coin::all();
+        foreach ($coins as $coin) {
+            if ($coin->is_default == 1) {
+                return response([
+                    'message' => 'success',
+                    'result' => [
+                        'Logo' => $Logo,
+                        'Coin-' . $coin->coin_id => $coinBTC,
+                        'Number of coins' =>$NumberOfCoins,
+                        'Primary Currency' =>$PrimaryCurrency,
+                        'Secondary Currency' =>$SecondaryCurrency,
+
+                    ]
+                ], 200);
      }
 
 }
-
+}
+}
