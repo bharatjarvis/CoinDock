@@ -120,7 +120,8 @@ class User extends Authenticatable
         return response([
             'message' => 'success',
             'result' => [
-                'total-' . $coin->coin_id => $totalValue,
+                'heading' => 'Total ' . $coin->coin_id,
+                'balance' => $totalValue,
                 'coin_id' => $coin->coin_id,
                 'coin_name' => $coin->name,
                 'img_url' => $coin->img_path
@@ -164,10 +165,10 @@ class User extends Authenticatable
             return response([
                 'message' => 'success',
                 'result' => [
-                    'total-' . $primaryCurrency => [
-                        'priamary Currency' => $totalBalanceInPrimaryCurrency,
+                    'heading' => 'Primary Currecny',
+                    'coin-name'=> $primaryCurrency,
+                    'balance' => $totalBalanceInPrimaryCurrency,
 
-                    ]
                 ]
             ], 200);
         }
@@ -208,12 +209,12 @@ class User extends Authenticatable
             return response([
                 'message' => 'Success',
                 'result' => [
-                    'Top-Performer' => [
-                        'coin_id' => $shortName,
-                        'name' => $coinName,
-                        'balance' => $topPerformerBal
-                    ]
+                    'heading' => 'Top Performer ',
+                    'balance' => $topPerformerBal,
+                    'coin_name' => $coinName,
+                    'coin_id' => $shortName
                 ]
+
             ], 200);
         }
     }
@@ -254,11 +255,10 @@ class User extends Authenticatable
             return response([
                 'message' => 'Success',
                 'result' => [
-                    'Low-Performer' => [
-                        'coin_id' => $shortName,
-                        'name' => $coinName,
-                        'balance' => $lowPerformerBal
-                    ]
+                    'heading' => 'Low Performer ',
+                    'balance' => $lowPerformerBal,
+                    'coin_name' => $coinName,
+                    'coin_id' => $shortName
                 ]
             ], 200);
         }
