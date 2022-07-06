@@ -1,8 +1,10 @@
 .cd-line-chart {
-  width: 700px; 
-  padding: 40px;
+  padding: 8px;
+
   border: 1px solid #09bbff;
 }
-/* .cd-select-coins {
-  margin-left: 400px;
-} */
+@media only screen and (min-width: 360px) and (max-width: 768px) {
+  .cd-line-chart {
+    max-width: 600px;
+  }
+}

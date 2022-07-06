@@ -5,16 +5,15 @@ import Checkbox from "Shared/Form/CheckBox/CheckBox";
 import "Shared/common-styles/common.css";
 import DownloadRecoverykeys from "Shared/Form/DownloadRecoverykeys";
 import "Shared/common-styles/button.css";
-import { useGetRecoveryCodesQuery } from "App/Api/recoveryCodes";
+import { usePostRecoveryCodesQuery } from "App/Api/recoveryCodes";
 import { useNavigate } from "react-router-dom";
-
 
 function RecoveryCodeBoxStepAccount() {
   const [checked, setChecked] = useState(false);
 
   const navigate = useNavigate();
 
-  const { data = [] } = useGetRecoveryCodesQuery();
+  const { data = [] } = usePostRecoveryCodesQuery();
 
   const handleOnSubmit = () => {
     navigate("/recovery-test-account");
@@ -44,7 +43,7 @@ function RecoveryCodeBoxStepAccount() {
               <div className="p-3" />
               <div className="cd-recover-table">
                 {Boolean(recoveryCodes) &&
-                 recoveryCodes.map((value, number) => {
+                  recoveryCodes.map((value, number) => {
                     return (
                       <RecoveryBoxs
                         key={number}

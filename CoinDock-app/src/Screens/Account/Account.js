@@ -1,7 +1,7 @@
-import React  from 'react';
-import Accordion from './Accordian';
+import React from "react";
+import Accordion from "./Accordian";
 import "./Account.css";
-import {useAccount} from "App/Api/accapi";
+import { useAccount } from "App/Api/accapi";
 import { useNavigate } from "react-router-dom";
 import "Shared/common-styles/button.css";
 import { useLogout } from "App/Api/auth";

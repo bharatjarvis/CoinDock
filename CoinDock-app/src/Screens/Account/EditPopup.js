@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import Popup from 'Shared/Popup/Popup';
+import React, { useEffect, useState } from "react";
+import Popup from "Shared/Popup/Popup";
 import { RiCloseLine } from "react-icons/ri";
 import Email from 'Shared/Form/Email';
 import Password from 'Shared/Password/Password';
@@ -53,7 +53,6 @@ const handleValidation =(values) =>{
     minlength: 12,
     maxlength: 45,
   }) }
-  console.log(Object.values(errors));
   const isValid = !Object.values(errors).some(Boolean)
   setformErrors(errors);
   setValid(isValid);
@@ -71,8 +70,8 @@ const resetInputField = () => {
   setformValues(initialValues);
 };
 
-const handleSubmit = () => {
-  const { errors, isValid } = handleValidation(formValues);
+  const handleSubmit = () => {
+    const { errors, isValid } = handleValidation(formValues);
     if (!isValid) {
       setformErrors(errors);
     } else {
@@ -92,15 +91,15 @@ const handleSubmit = () => {
   
 };
 
-const handleSetTrigger = () => {
-dispatch(closeDialogue());
-};
+  const handleSetTrigger = () => {
+    dispatch(closeDialogue());
+  };
 
-useEffect (()=>{
-  if(!open){
-    resetInputField()
-  }
-},[open])
+  useEffect(() => {
+    if (!open) {
+      resetInputField();
+    }
+  }, [open]);
 
 return(
 <div>

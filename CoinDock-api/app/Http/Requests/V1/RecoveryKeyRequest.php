@@ -2,8 +2,7 @@
 
 namespace App\Http\Requests\V1;
 
-
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\FormRequest;
 
 class RecoveryKeyRequest extends FormRequest
 {
@@ -27,7 +26,6 @@ class RecoveryKeyRequest extends FormRequest
         return  [
             'key_response' => 'required|array',
             'key_response.*' => 'required|string|max:6|min:4',
-    
         ];
     }
 }

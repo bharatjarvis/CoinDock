@@ -3,10 +3,10 @@ import baseApi from "./api";
 
 export const recoveryCodes = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    getRecoveryCodes: build.query({
+    postRecoveryCodes: build.query({
       query: () => ({
         url: `/v1/users/${getUserId()}/recovery-codes`,
-        method: "get",
+        method: "post",
       }),
       transformResponse: (response) => {
         return response;
@@ -51,7 +51,7 @@ export const recoveryCodes = baseApi.injectEndpoints({
 
     getRandomRecoveryCodes: build.query({
       query: () => ({
-        url: `/v1/random`,
+        url: `/v1/users/${getUserId()}/recovery-codes/random`,
         method: "get",
       }),
       transformResponse: (response) => {
@@ -63,7 +63,7 @@ export const recoveryCodes = baseApi.injectEndpoints({
 
 export const {
   usePutRecoveryCodesMutation,
-  useGetRecoveryCodesQuery,
+  usePostRecoveryCodesQuery,
   useGetRandomRecoveryCodesQuery,
   useGetRecoveryCodesDownloadMutation,
 } = recoveryCodes;

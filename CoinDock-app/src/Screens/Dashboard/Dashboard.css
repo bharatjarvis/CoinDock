@@ -1,6 +1,7 @@
 .cd-performance-wrap {
   display: flex;
-  padding: 14px;
+  padding: 24px;
+
   flex-direction: row;
   justify-content: space-between;
 }
@@ -10,4 +11,10 @@
 }
 .cd-pie-chartjs {
   padding: 20px;
+}
+
+@media screen {
+  .cd_performance_wrap {
+    max-width: 400px;
+  }
 }

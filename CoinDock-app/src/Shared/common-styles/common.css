@@ -88,18 +88,6 @@
   margin: 2%;
 }
 
-.cd-recover-test-table {
-  display: flex;
-  gap: 1em;
-  margin-top: 40;
-  padding-left: 10;
-  margin-top: 40;
-  flex-flow: wrap;
-  height: auto;
-  list-style: none;
-  gap: 100px;
-  margin: 2%;
-}
 .cd-lable-signup {
   font-family: "Lora";
   font-style: normal;

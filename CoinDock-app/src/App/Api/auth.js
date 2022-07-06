@@ -24,7 +24,7 @@ const auth = baseApi.injectEndpoints({
         return response;
       },
     }),
-    
+
 
     refresh: build.mutation({
       query: () => ({

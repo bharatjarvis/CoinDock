@@ -63,20 +63,18 @@ function RecoveryCodeTestStep() {
 
                 <div className="p-3" />
 
-                <div className="cd-recover-test-table">
+                <div className="cd-recover-table">
                   {Boolean(recoveryCodes) &&
-                    [...Array(recoveryCodes.length).keys()].map(
-                      (number, index) => {
-                        return (
-                          <RecoveryBoxs
-                            key={index}
-                            index={recoveryCodes[number]}
-                            submitEvent={true}
-                            input={true}
-                          />
-                        );
-                      }
-                    )}
+                    recoveryCodes.map((number, index) => {
+                      return (
+                        <RecoveryBoxs
+                          key={index}
+                          index={number}
+                          submitEvent={true}
+                          input={true}
+                        />
+                      );
+                    })}
                 </div>
                 <div className="p-3" />
                 <div className="row cd-row-space-between">
