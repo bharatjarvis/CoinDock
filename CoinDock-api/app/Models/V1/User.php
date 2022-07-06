@@ -14,7 +14,6 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Support\Facades\Http;
 use App\Models\V1\Wallet;
 use App\Models\V1\Setting;
-//use App\Models\V1\Coin;
 
 class User extends Authenticatable
 {
@@ -112,9 +111,9 @@ class User extends Authenticatable
             $balanceTotal += $userWalletsDetail->balance_USD;
         }
 
-        $baseUrl = config('coin.coin.apiurl');
-        $exchangeURL = $baseUrl . config('coin.coin.usdToBtc');
-        $usdToBtC = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.apikey')])->get($exchangeURL);
+        $baseUrl = config('coin.coin.api_url');
+        $exchangeURL = $baseUrl . config('coin.coin.usd_to_Btc');
+        $usdToBtC = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($exchangeURL);
         $totalValue = $usdToBtC['rate'] * $balanceTotal;
         $coin = Coin::whereIsDefault(1)->first();
 
@@ -139,11 +138,11 @@ class User extends Authenticatable
 
 
         $primaryCurrency = $userSetting->primary_currency;
-        $baseUrl = config('coin.coin.apiurl');
-        $currencyURL = $baseUrl . config('coin.coin.primaryCurrency');
+        $baseUrl = config('coin.coin.api_url');
+        $currencyURL = $baseUrl . config('coin.coin.primary_currency');
         $currency = str_replace('{id}', $primaryCurrency, $currencyURL);
 
-        $primaryBalancePath = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.apikey')])->get($currency);
+        $primaryBalancePath = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
         $balanceInUsd = Wallet::select('balance')
             ->whereUserId($user->id)
             ->get()
@@ -191,15 +190,15 @@ class User extends Authenticatable
                 array_push($userCoins, $coin);
             }
 
-            $baseUrl = config('coin.coin.apiurl');
-            $currencyURL = $baseUrl . config('coin.coin.topPerformer');
+            $baseUrl = config('coin.coin.api_url');
+            $currencyURL = $baseUrl . config('coin.coin.top_performer');
 
             $topPerformerBal = PHP_INT_MIN;
             $coinName = Null;
             $shortName = Null;
             foreach ($userCoins as $coin) {
                 $currency = str_replace('{id}', $coin->coin_id, $currencyURL);
-                $primaryBalancePath = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.apikey')])->get($currency);
+                $primaryBalancePath = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
                 if ($primaryBalancePath['rate'] > $topPerformerBal) {
                     $topPerformerBal = $primaryBalancePath['rate'];
                     $shortName = $primaryBalancePath['asset_id_base'];
@@ -237,15 +236,15 @@ class User extends Authenticatable
                 array_push($userCoins, $coin);
             }
 
-            $baseUrl = config('coin.coin.apiurl');
-            $currencyURL = $baseUrl . config('coin.coin.topPerformer');
+            $baseUrl = config('coin.coin.api_url');
+            $currencyURL = $baseUrl . config('coin.coin.top_performer');
 
             $lowPerformerBal = PHP_INT_MAX;
             $coinName = Null;
             $shortName = Null;
             foreach ($userCoins as $coin) {
                 $currency = str_replace('{id}', $coin->coin_id, $currencyURL);
-                $primaryBalancePath = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.apikey')])->get($currency);
+                $primaryBalancePath = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
                 if ($primaryBalancePath['rate'] < $lowPerformerBal) {
                     $lowPerformerBal = $primaryBalancePath['rate'];
                     $shortName = $primaryBalancePath['asset_id_base'];

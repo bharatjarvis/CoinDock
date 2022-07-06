@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Models\V1;
-
-use App\Http\Controllers\V1\CoinsController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

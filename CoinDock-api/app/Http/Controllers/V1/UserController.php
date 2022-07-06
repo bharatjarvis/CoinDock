@@ -10,57 +10,52 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends AccessTokenController
 {
-    use BuildPassportTokens;
+  use BuildPassportTokens;
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(CreateUserRequest $request)
-    {
-        $user = new User();
-        $user->store($request);
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function create(CreateUserRequest $request)
+  {
+    $user = new User();
+    $user->store($request);
 
-        $response = $this->requestPasswordGrant($request);
+    $response = $this->requestPasswordGrant($request);
 
-        return response(
-            ['status' => 'success', 'message' => 'Success! User registered.',
-            'token' => $response['access_token']
-                
-        ],
-            Response::HTTP_OK,
-            [
-                'Access-Token' => $response['access_token'],
-                'Refresh-Token' => $response['refresh_token'],
-                'Expires-In' => $response['expires_in'],
-            ],
-        );
-    }
+    return response(
+      [
+        'status' => 'success', 'message' => 'Success! User registered.',
+        'token' => $response['access_token']
 
-    public function totalBtc(User $user)
-    {
-      $wallet = new User();
-      return $wallet->totalDefault($user);
-    }
-    public function primaryCurrency(User $user)
-    {
-      $wallet = new User();
-      return $wallet->totalPrimaryCurrency($user);
-    }
-  
-    public function topPerformer(User $user)
-    {
-      $wallet = new User();
-      return $wallet->topPerformer($user);
-    }
-    public function lowPerformer(User $user)
-    {
-      $wallet = new User();
-      return $wallet->lowPerformer($user);
-    }
-  
+      ],
+      Response::HTTP_OK,
+      [
+        'Access-Token' => $response['access_token'],
+        'Refresh-Token' => $response['refresh_token'],
+        'Expires-In' => $response['expires_in'],
+      ],
+    );
+  }
 
+  public function totalBtc(User $user)
+  {
+    return $user->totalDefault($user);
+  }
+  public function primaryCurrency(User $user)
+  {
 
+    return $user->totalPrimaryCurrency($user);
+  }
 
+  public function topPerformer(User $user)
+  {
+
+    return $user->topPerformer($user);
+  }
+  public function lowPerformer(User $user)
+  {
+    return $user->lowPerformer($user);
+  }
 }
