@@ -13,7 +13,7 @@ const signup = baseApi.injectEndpoints({
         reenterpassword,
         ...data
       }) => ({
-        url: "/v1/signup",
+        url: "/v1/users",
         method: "post",
         data: {
           first_name: firstname,

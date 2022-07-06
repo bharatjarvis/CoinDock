@@ -9,9 +9,13 @@ import { closePopup } from "Screens/AddWallet/AddWalletSlice";
 import { walletnameValidation } from "Shared/Form/WalletFields/WalletName";
 import WalletName from "Shared/Form/WalletFields/WalletName";
 import { countryValidation } from "Shared/Form/Select/Select";
+import { useGetWalletMutation } from "App/Api/walletapi";
+import { useNavigate } from "react-router-dom";
 
 function AddWallet() {
   const open = useSelector((state) => state.addwallet.open);
+  const navigate = useNavigate();
+  const [wallet] = useGetWalletMutation();
   const dispatch = useDispatch();
   const initialValues = {
     wallet: "",
@@ -58,10 +62,14 @@ function AddWallet() {
 
     if (!isValid) {
       setformErrors(errors);
-    }
-    if (!Object.values(formValues).includes("")) {
-      formValues.id = formValues.id === undefined ? Date.now() : formValues.id;
-      setformValues({ ...formValues });
+    } else {
+      try {
+        await wallet({ ...formValues })
+          .unwrap()
+          .then(() => {
+            navigate("/dashboard");
+          });
+      } catch (errorResponse) {}
     }
   };
 
