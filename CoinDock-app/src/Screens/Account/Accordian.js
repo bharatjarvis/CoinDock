@@ -11,7 +11,7 @@ const Accordion = ({label,field,value}) => {
     const handleRecoveryButton = () => {
     navigate("/recovery-codes-account");
      };
-     
+
   const [isActive, setIsActive] = useState(false);
   const dispatch =useDispatch();
   return (
@@ -21,13 +21,23 @@ const Accordion = ({label,field,value}) => {
             <div>{isActive ? '-' : '>'}</div>
           </div>
           {isActive && field.map((i,id)=> (
-            <div className="cd-accordion-content d-flex justify-content-between" key={id}>{i.label}:{i.fieldKey=='name' ? value.first_name+' '+value.last_name: i.fieldKey == 'dateofbirth' ? value.date_of_birth :i.fieldKey=='country'?value.country :i.fieldKey=='email'?value.email:''} 
-              {i.type === 'edit' ? <button className='cd-button cd-button-3 cd-edit-button' onClick={() => dispatch(openDialogue({type :i.fieldKey,value}))}>Edit</button> :i.navigate ?<button className='cd-button cd-button-3 cd-edit-button' onClick={()=>{handleRecoveryButton()}}>Edit</button>:''}
-            </div> 
+            <div className="cd-accordion-content d-flex justify-content-between" key={id}>
+              {i.label}:
+              {i.fieldKey=='name' ? value.first_name+' '+value.last_name:
+               i.fieldKey == 'dateofbirth' ? value.date_of_birth :
+               i.fieldKey=='country'?value.country :
+               i.fieldKey=='email'?value.email: null
+              }
+              {i.type === 'edit' ?
+              <button className='cd-button cd-button-3 cd-edit-button'
+                      onClick={() => dispatch(openDialogue({type :i.fieldKey,value}))}>Edit</button>:
+               i.navigate ?
+                <button className='cd-button cd-button-3 cd-edit-button'
+                        onClick={()=>{handleRecoveryButton()}}>Edit</button> : null }
+            </div>
              ))}
-      <EditPopup/> 
-      </div>
-  
-    )}
+      <EditPopup/>
+    </div>
+)}
 
 export default Accordion;

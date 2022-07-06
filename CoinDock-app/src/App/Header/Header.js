@@ -19,9 +19,9 @@ function Header() {
   const handleLogoutClick = async () => {
     try {
       await logout().unwrap();
-      navigate("/login");
+      navigate("/");
     } catch (e) {
-      navigate("/login");
+      navigate("/");
     }
   };
   const handleAccountClick = () => {

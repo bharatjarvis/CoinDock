@@ -7,6 +7,8 @@ import RecoveryCodeTestStep from "Screens/SignUp/RecoveryCodeTestStep";
 import RecoveryCodeBoxStep from "Screens/SignUp/RecoveryStep/RecoveryStep";
 import RecoveryCodeBoxStepAccount from "Screens/SignUp/RecoveryStep/RecoveryStepAccount";
 import RecoveryCodeTestStepAccount from "Screens/SignUp/RecoveryCodeTestStep/RecoveryCodeTestStepAccount";
+import SignUp from "Screens/SignUp";
+import Login from "Screens/Login/Login";
 const AuthRoutes = (props) => {
   const isAuthenticated = useIsAuthenticated();
   if (!isAuthenticated) {
@@ -14,7 +16,7 @@ const AuthRoutes = (props) => {
   }
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
+      <Route path="/" element={<Login/>} />
       <Route path="/account" element={<Account/>}/>
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/recovery-codes" element={<RecoveryCodeBoxStep />} />

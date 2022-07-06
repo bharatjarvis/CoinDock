@@ -13,24 +13,32 @@ import Name from 'Shared/Form/Name/Name';
 import { nameValidation } from 'Shared/Form/Name/Name';
 import Select, { countryValidation } from 'Shared/Form/Select/Select';
 import DatePick ,{ dateValidation } from 'Shared/Date/DatePick';
-
 const EditPopup =() =>{
-const {open,type,value} = useSelector(state => state.account)
-const dispatch = useDispatch();
-const initialValues = {
-  firstname: value.first_name,
-  lastname: value.last_name,
-  date: value.date_of_birth,
-  email: value.email,
-  country: value.country,
-  password: "",
-};
+  const {open,type,value} = useSelector(state => state.account)
+  const initialValues = {
+    firstname: value.first_name,
+    lastname: value.last_name,
+    date: value.date_of_birth,
+    email: value.email,
+    country: value.country,
+    password: "",
+  };
 
 const [formValues, setformValues] = useState(initialValues);
-const [getData ]= useData();
 const [formErrors, setformErrors] = useState({});
 const [isValid, setValid] = useState(false);
+const dispatch = useDispatch();
+const [getData ]= useData();
 
+
+const handleChanges = (e) => {
+  const { name, value } = e.target;
+  setformValues({ ...formValues, [name]: value });
+  handleValidation({ ...formValues, [name]: value });
+};
+const resetInputField = () => {
+  setformValues(initialValues);
+};
 const handleValidation =(values) =>{
   const errors = {};
   if(type == 'email'){
@@ -61,25 +69,16 @@ const handleValidation =(values) =>{
     errors,
   };
 }
-const handleChanges = (e) => {
-  const { name, value } = e.target;
-  setformValues({ ...formValues, [name]: value });
-  handleValidation({ ...formValues, [name]: value });
-};
-const resetInputField = () => {
-  setformValues(initialValues);
-};
 
-  const handleSubmit = () => {
-    const { errors, isValid } = handleValidation(formValues);
+const handleSubmit = () => {
+  const { errors, isValid } = handleValidation(formValues);
     if (!isValid) {
       setformErrors(errors);
     } else {
       getData({
         ...formValues,
-      }) 
+      })
         .catch((e) => {
-          console.log(e);
           const {
             date_of_birth,
           } = e?.data?.errors ?? {};
@@ -87,14 +86,11 @@ const resetInputField = () => {
             date: date_of_birth,
           });
         });
-    }
-  
+  }
 };
-
-  const handleSetTrigger = () => {
+ const handleSetTrigger = () => {
     dispatch(closeDialogue());
   };
-
   useEffect(() => {
     if (!open) {
       resetInputField();
@@ -119,24 +115,23 @@ return(
         onClick={() => handleSetTrigger(false)}
       />
     </div>
-    { type === 'email' ? 
+    { type === 'email' ?
     <Email
       name="email"
       formErrors={formErrors}
       value={formValues.email}
       />:
-     type === 'changePassword' ? 
-    <Password 
+     type === 'changePassword' ?
+    <Password
       name="password"
       formErrors={formErrors}
       placeholder="Enter your password"
       label="Password"
     /> :
-    type == 'dateofbirth' ? 
+    type == 'dateofbirth' ?
     <DatePick
        name="date"
        value={formValues.date}
-       onChange={handleChanges}
        formErrors={formErrors}
     />:
     type == 'country' ?
@@ -160,7 +155,7 @@ return(
       label="First Name"
       value={formValues.firstname}
       formErrors={formErrors}
-      /> 
+      />
     <Name
       name="lastname"
       placeholder="Enter Last Name"
@@ -168,13 +163,11 @@ return(
       value={formValues.lastname}
       formErrors={formErrors}
       />
-    </div>:''
-                 
-}
+    </div> : null
+
+  }
    </Popup>
  </form>
- 
  </div>
-
 )}
 export default EditPopup;
