@@ -5,7 +5,7 @@ const accapi = baseApi.injectEndpoints({
     account: build.query({
       query: () => ({
         url: `/v1/users/${getUserId()}/recovery-codes`,
-        method: "get",
+        method: "post",
        }),
        transformResponse: (response) => ({
         "message": "Profile Updated Succesfully",
