@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Models\V1;
-use Illuminate\Support\Arr;
 use Carbon\Carbon;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +9,6 @@ use App\Models\V1\{ User, Coin, Setting};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
-use function PHPUnit\Framework\isJson;
 
 class Wallet extends Model
 {
@@ -34,7 +32,7 @@ class Wallet extends Model
 
     ///////////////////////////////////////////////////////////////////////////////////////
 
-    public function showPiechartData(User $user, Request $request)
+    public function showPieChartData(User $user, Request $request)
     {
         // getting the filter by condition from user
         $filterByCondition = $request->filterby;
@@ -48,8 +46,7 @@ class Wallet extends Model
             })
             ->map(function ($e) {
                 return $e->sum();
-            })
-            ->toArray();
+            })->toArray();
         // selecting the coin information 
         $coinDataAll = Coin::all();
 
@@ -140,15 +137,14 @@ class Wallet extends Model
             array_push($coinList,$coinName);
         }
     
-        return response()->json([
-            'user_name' => $user->first_name,
-            'success' => TRUE,
-            'message' => $message ?? 'Data Fetched Successfully',
-            'exception' => $exception ?? Null,
-            'error_code' => $error_code ?? Null,
-            'result' => $coinList
+        return response([
+            'message'=>'success',
+            'result'=>[
+                'data'=>$coinList
+            ]
             
-        ], 200);
+        ],200);
+
 
         
         
@@ -277,6 +273,7 @@ class Wallet extends Model
                 }
                 break;
             }
+            
             return $result;
         }
         if($range=="year"){
@@ -433,6 +430,9 @@ class Wallet extends Model
     // relationship
     public function coin(){
         return $this->belongsTo(Coin::class);
+    }
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 
 

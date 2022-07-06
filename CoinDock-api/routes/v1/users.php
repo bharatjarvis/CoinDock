@@ -57,7 +57,7 @@ Route::middleware('auth:api')
             });
 
             Route::prefix('graph')->group(function () {
-                Route::get('/piechartdata', [WalletCoinController::class, 'showPiechartData'])->missing(
+                Route::get('/piechartdata', [WalletCoinController::class, 'showPieChartData'])->missing(
                     fn () => response(
                         [
                             'error' => ['message' => 'User record not found'],
@@ -65,10 +65,11 @@ Route::middleware('auth:api')
                         404,
                     ),
                 );
-                Route::get('/real-time-graph/display/', [WalletCoinController::class, 'displaySingleCoinHistoricalData']);
-                Route::get('/real-time-graph/coins', [WalletCoinController::class, 'displayUserAllCoinHistoricalData']);
-                Route::get('/real-time-graph/filter', [WalletCoinController::class, 'realtimeCoinHistoricalDataFilter']);
-
+                // Route::get('/real-time-graph/display/', [WalletCoinController::class, 'displaySingleCoinHistoricalData']);
+                // Route::get('/real-time-graph/coins', [WalletCoinController::class, 'displayUserAllCoinHistoricalData']);
+                Route::get('/real-time-graph/display/', [WalletCoinController::class, 'index']);
+                Route::get('/real-time-graph/filter', [WalletCoinController::class, 'realTimeGraphFilter']);
+                Route::get('/real-time-graph/pie/filter', [WalletCoinController::class, 'pieChartFilter']);
             });
         });
     });

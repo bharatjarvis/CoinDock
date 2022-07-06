@@ -21,6 +21,7 @@ class UserController extends AccessTokenController
     {
         $user = new User();
         $user->store($request);
+        
 
         $response = $this->requestPasswordGrant($request);
 
