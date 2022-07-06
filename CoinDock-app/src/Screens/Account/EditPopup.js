@@ -84,7 +84,6 @@ const handleSubmit = () => {
           const {
             date_of_birth,
           } = e?.data?.errors ?? {};
-          // console.log(e?.data?.errors ?? {});
           setformErrors({
             date: date_of_birth,
           });

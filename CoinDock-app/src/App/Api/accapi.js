@@ -49,8 +49,9 @@ const accapi = baseApi.injectEndpoints({
       }),
        getData: build.mutation({
         query: ({
-          date,...data}) => ({
-          url:  "/v1/signup",
+          date,
+          ...data}) => ({
+          url:  "/v1/email",
           method: "post",
           data: {
             date_of_birth: date,
