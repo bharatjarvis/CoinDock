@@ -9,6 +9,7 @@ use App\Models\V1\User;
 use Composer\Config;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class Coin extends Model
 {
@@ -22,23 +23,21 @@ class Coin extends Model
 
     }
 
-    public function coin(){
-
-        return $this->hasMany(Coin::class);
-
-    }
-
     public function logo(User $user){
-        $wallet = Wallet::whereUserId($user->id)->get();
-        
-        $logo= Coin::select(['coin_id',
-                            'img_path',
-        ])->get();
-       
-        
-        return $logo;
-    }
 
+        $coindata= Wallet::select('coin_id')->whereUserId($user->id)->get();
+        $coinImages = [];
+        $logodata = [];
+        foreach($coindata as $coinId){
+            $coinImageLink = Coin::select('coin_id','img_path')->find($coinId['coin_id']);
+            array_push($coinImages,$coinImageLink);
+        }    
+        foreach($coinImages as $coinImage){
+            $logodata[$coinImage['coin_id']] = $coinImage['img_path'];
+        }
+        return ($logodata);
+
+    }
     //Number of Coins
     public function countCoins(User $user){
         $data= Wallet::select(['coin_id',

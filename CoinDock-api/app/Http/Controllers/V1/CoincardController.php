@@ -9,31 +9,28 @@ use App\Models\V1\User;
 use App\Models\V1\{Wallet,Coin};
 use Illuminate\Support\Facades\DB;
 
+
 class CoincardController extends Controller
 {
      public function coinCard(Request $request, User $user){
         $data = new Coin();
-        $Logo = $data->logo($user);
-        $NumberOfCoins=$data->countCoins($user);
+        $logo = $data->logo($user);
+        $numberOfCoins=$data->countCoins($user);
         $coinBTC=$data->coinDefault($user);
-        $PrimaryCurrency = $data->getPrimaryCurrency($user);
-        $SecondaryCurrency = $data->getSecondaryCurrency($user);
-        $coins = Coin::all();
-        foreach ($coins as $coin) {
-            if ($coin->is_default == 1) {
-                return response([
-                    'message' => 'success',
-                    'result' => [
-                        'Logo' => $Logo,
-                        'Coin-' . $coin->coin_id => $coinBTC,
-                        'Number of coins' =>$NumberOfCoins,
-                        'Primary Currency' =>$PrimaryCurrency,
-                        'Secondary Currency' =>$SecondaryCurrency,
+        $primaryCurrency = $data->getPrimaryCurrency($user);
+        $secondaryCurrency = $data->getSecondaryCurrency($user);
+        $coin = Coin::whereIsDefault(1)->first();
+        return response([
+                'message' => 'success',
+                'result' => [
+                        'logo' => $logo,
+                        'coin-' . $coin->coin_id => $coinBTC,
+                        'number_of_coins' =>$numberOfCoins,
+                        'primary_currency' =>$primaryCurrency,
+                        'secondary_currency' =>$secondaryCurrency,
 
                     ]
                 ], 200);
      }
+}
 
-}
-}
-}
