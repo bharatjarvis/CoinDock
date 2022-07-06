@@ -539,8 +539,6 @@ class User extends Authenticatable
 
             $start_date  = str_replace(' ','T',$start_date);
             $finalBaseURLResponse = json_decode($this->commonDataRealTime($coinNameResult,$range,$start_date,$end_date));
-            // return $finalBaseURLResponse;
-
             $dataIndex = [];
             foreach($finalBaseURLResponse as $response){
                 array_push($dataIndex,Carbon::parse($response->time_period_end)->format('Y-m'));
@@ -554,8 +552,6 @@ class User extends Authenticatable
             foreach($dataIndex as $key=>$value){
                 array_push($dataIndexUnique, $value);
             }
-            //return $dataIndexUnique;
-            //return $realTimeDataDisplay;
             $finalResult = [];
             foreach($dataIndexUnique as $date){
                 $count = 0;
@@ -575,16 +571,6 @@ class User extends Authenticatable
                 'message'=>'success',
                 'result'=>$finalResult
             ],200);
-
-
-            // return response([
-            //     'message'=>'success',
-            //     'result'=>[
-            //         'coin'=>$coinNameFromUser,
-            //         'data'=>$realTimeDataDisplay
-            //     ]
-                
-            // ],200);
         }
     }
 
