@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\V1\CreateCoinRequest;
+use App\Http\Requests\V1\UpdateCoinRequest;
+use App\Http\Resources\V1\CoinResource;
 use App\Models\V1\Coin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -20,7 +23,7 @@ class CoinController extends Controller
         return [
             'message' => 'coins fetched succesfully',
             'result' => [
-                'coins' => $coins
+                'coins' => CoinResource::collection($coins)
             ], 200
         ];
     }
@@ -30,7 +33,7 @@ class CoinController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateCoinRequest $request)
     {
 
         $coin = Coin::create([
@@ -42,10 +45,11 @@ class CoinController extends Controller
         'img_path'=>$request->img_path
         ]);
 
+        $coin->save();
         return response([
             'message'=>'Coin Created Successfully',
             'result'=>[
-                'coin'=>$coin
+                'coin'=>new CoinResource($coin)
             ]
         ],200);
     }
@@ -62,7 +66,7 @@ class CoinController extends Controller
         return response([
             'message'=>'success',
             'result'=>[
-                'coin'=>$coin
+                'coin'=>new CoinResource($coin)
             ]
             ],200);
     }
@@ -74,12 +78,14 @@ class CoinController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Coin $coin)
+    public function update(UpdateCoinRequest $request, Coin $coin)
     {
         $coin->update($request->all());
         return response([
             'message' => 'Coin Updated Successfully',
-            'coin' => $coin
+            'result'=>[
+                'coin' => new CoinResource($coin)
+            ]
         ], 200);
     }
 
