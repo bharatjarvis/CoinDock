@@ -9,7 +9,7 @@ import "Shared/common-styles/common.css";
 
 function Account() {
  const { data: account}= useAccount();
- 
+
  const accountDetails = account?.result?.user || {};
  const [logout] = useLogout();
  const navigate = useNavigate();
@@ -53,7 +53,7 @@ function Account() {
           fieldKey:'recoverycode',
           navigate:true,
          },
-       
+
     ]
    },
      {
@@ -76,7 +76,7 @@ function Account() {
     await logout().unwrap();
     navigate("/login");
   } catch (e) {
-    navigate("/login");
+    navigate("/")
   }
 };
 return (
