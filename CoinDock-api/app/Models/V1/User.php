@@ -184,10 +184,7 @@ class User extends Authenticatable
             $coinName = $coinName->name;
             array_push($coinList,$coinName);
         }
-        return response([
-            'message'=>'success',
-            'data'=>$coinList
-        ],200);        
+        return $coinList;    
     }
 
 
@@ -218,7 +215,7 @@ class User extends Authenticatable
 
 
     public function realTimeGraphFilter(){
-        $filters = ['weekly','monthly','yearly'];
+        $filters = ['DAY','Weekly','Monthly','Yearly'];
         return response([
             'message'=>'success',
             'data'=>$filters
@@ -226,319 +223,193 @@ class User extends Authenticatable
     }
 
 
-
-
-
-    // public function index(User $user, Request $request){
-
-    //     $coinNameFromUser = $request->coin_name;
-    //     //return $coinNameFromUser;
-    //     $range = $request->range;
-
-    //     $coinDataAll = Coin::all();
-    //     foreach($coinDataAll as $coinData){
-    //         if($coinNameFromUser == $coinData->name){
-    //             $coinNameResult = $coinData->coin_id;
-    //         }
-    //     }
-    //     $coinNameResult = $coinNameResult;
-    //     // return $coinNameResult;
-
-    //     $end_date = Carbon::now()->format('Y-m-d');
-    //     $end_date = $end_date."T".Carbon::now()->format('H:i:m');
-        
-    //     $realTimeDataDisplay = [];
-
-    //     if($range=="weekly"){
-    //         $range = '7DAY';
-    //         $start_date = Carbon::now()->subYear(1);
-    //         $start_date  = str_replace(' ','T',$start_date);
-            
-    //         $baseURL = config('cryptohistoricaldata.coin.api_url').config('cryptohistoricaldata.coin.realtime_url');
-
-    //         $baseURLCoin1Replace = str_replace('{coin1}', $coinNameResult, $baseURL);
-    //         $baseURLCoin1Replaced = $baseURLCoin1Replace;
-
-    //         $baseURLRangeReplace = str_replace('{range}', $range, $baseURLCoin1Replaced);
-    //         $baseURLRangeReplaced = $baseURLRangeReplace;
-
-    //         $baseURLStartDateReplace = str_replace('{start_date}', $start_date, $baseURLRangeReplaced);
-    //         $baseURLStartDateReplaced = $baseURLStartDateReplace;
-
-    //         $finalBaseURL = str_replace('{end_date}', $end_date, $baseURLStartDateReplaced);
-
-    //         $finalBaseURLResponse = Http::withHeaders(['X-CoinAPI-Key'=>config('cryptohistoricaldata.coin.api_key')])->get($finalBaseURL);
-            
-    //         $finalBaseURLResponse = json_decode($finalBaseURLResponse);
-    //         // return $finalBaseURLResponse;
-    //         foreach($finalBaseURLResponse as $response){
-    //             array_push($realTimeDataDisplay,[
-    //                 'date'=>$response->time_period_end,
-    //                 'price'=>$response->rate_close
-    //             ]);
-    //         }
-    //         return response([
-    //             'message'=>'success',
-    //             'result'=>[
-    //                 'coin'=>$coinNameFromUser,
-    //                 'data'=>$realTimeDataDisplay
-    //             ]
-                
-    //         ],200);
-
-    //     }
-    //     if($range=='monthly'){
-    //         $range = '10DAY';
-    //         $start_date = Carbon::now()->subYear(1);
-    //         $start_date  = str_replace(' ','T',$start_date);
-            
-    //         $baseURL = config('cryptohistoricaldata.coin.api_url').config('cryptohistoricaldata.coin.realtime_url');
-
-    //         $baseURLCoin1Replace = str_replace('{coin1}', $coinNameResult, $baseURL);
-    //         $baseURLCoin1Replaced = $baseURLCoin1Replace;
-
-    //         $baseURLRangeReplace = str_replace('{range}', $range, $baseURLCoin1Replaced);
-    //         $baseURLRangeReplaced = $baseURLRangeReplace;
-
-    //         $baseURLStartDateReplace = str_replace('{start_date}', $start_date, $baseURLRangeReplaced);
-    //         $baseURLStartDateReplaced = $baseURLStartDateReplace;
-
-    //         $baseURLwithAllIdsReplaced = str_replace('{end_date}', $end_date, $baseURLStartDateReplaced);
-
-    //         $finalURL = Http::withHeaders(['X-CoinAPI-Key'=>config('cryptohistoricaldata.coin.api_key')])->get($baseURLwithAllIdsReplaced);
-            
-    //         $finalURL = json_decode($finalURL);
-
-    //         $priceArrayList = [];
-    //         foreach($finalURL as $response){
-    //             array_push($priceArrayList,$response->rate_close);
-    //         }
-
-    //         $priceArraySum = [];
-    //         $sum = 0;
-    //         $count = 0;
-    //         for($i=1;$i<count($priceArrayList);$i++){
-    //             $count=$i+1;
-    //             $sum = $sum + $priceArrayList[$i];
-    //             if($i%3==0){
-    //                 array_push($priceArraySum,$sum/3);
-    //                 $sum = 0;
-    //             }
-    //         }
-    //         $everyMonth = [];
-    //         $endDate = Carbon::now();
-    //         $startDate = Carbon::now()->subYear(1);
-    //         for($i=0;$i<=count($priceArraySum)-1;$i++){
-    //             $startDate = $startDate->addMonths(1);
-    //             array_push($everyMonth,$startDate->format('Y-m-d'));
-    //         }
-    //         $result = [];
-    //         for($i=0;$i<count($priceArraySum);$i++){
-    //             array_push($result,[
-    //                 'date'=>$everyMonth[$i],
-    //                 'price'=>$priceArraySum[$i]
-    //             ]);    
-    //         }
-    //         return response([
-    //             'message'=>'success',
-    //             'result'=>[
-    //                 'data'=>$result
-    //             ]
-                
-    //         ],200);
-    //     }
-
-
-    //     if($range=='yearly'){
-
-    //         $range = '10DAY';
-
-    //         $start_date = Carbon::now()->format('Y');
-    //         $presentYear = Carbon::now()->format('Y');
-    //         $start_date = Carbon::create($presentYear, 1, 1, 0);
-    //         $start_date = $start_date->toDateTimeString();
-    //         $start_date  = str_replace(' ','T',$start_date);
-    //         return $start_date;
-            
-    //         $baseURL = config('cryptohistoricaldata.coin.api_url').config('cryptohistoricaldata.coin.realtime_url');
-
-    //         $baseURLCoin1Replace = str_replace('{coin1}', $coinNameResult, $baseURL);
-    //         $baseURLCoin1Replaced = $baseURLCoin1Replace;
-
-    //         $baseURLRangeReplace = str_replace('{range}', $range, $baseURLCoin1Replaced);
-    //         $baseURLRangeReplaced = $baseURLRangeReplace;
-
-    //         $baseURLStartDateReplace = str_replace('{start_date}', $start_date, $baseURLRangeReplaced);
-
-    //         $baseURLStartDateReplaced = $baseURLStartDateReplace;
-    //        // return $baseURLStartDateReplaced;
-
-    //         $baseURLwithAllIdsReplaced = str_replace('{end_date}', $end_date, $baseURLStartDateReplaced);
-
-    //         $result = Http::withHeaders(['X-CoinAPI-Key'=>config('cryptohistoricaldata.coin.api_key')])->get($baseURLwithAllIdsReplaced);
-            
-    //         $result = json_decode($result);
-    //         //return $result;
-    //         $priceArrayList = [];
-    //         foreach($result as $response){
-    //             array_push($priceArrayList,$response->rate_close);
-    //         }
-
-    //         $priceArraySum = [];
-    //         $sum = 0;
-    //         $count = 0;
-    //         for($i=1;$i<count($priceArrayList);$i++){
-    //             $count=$i+1;
-    //             $sum = $sum + $priceArrayList[$i];
-    //             if($i%3==0){
-    //                 array_push($priceArraySum,$sum/3);
-    //                 $sum = 0;
-    //             }
-    //         }
-    //         $everyMonth = [];
-    //         $endDate = Carbon::now();
-    //         $startDate = Carbon::now()->subYear(2);
-    //         for($i=0;$i<=count($priceArraySum)-1;$i++){
-    //             $startDate = $startDate->addMonths(1);
-    //             array_push($everyMonth,$startDate->format('Y'));
-    //         }
-    //         $result = [];
-    //         for($i=0;$i<count($priceArraySum);$i++){
-    //             array_push($result,[
-    //                 'date'=>$everyMonth[$i],
-    //                 'price'=>$priceArraySum[$i]
-    //             ]);    
-    //         }
-
-
-    //         return $result;
-    //         // return response([
-    //         //     'message'=>'success',
-    //         //     'result'=>[
-    //         //         'data'=>$result
-    //         //     ]
-                
-    //         // ],200);
-
-
-
-    //     }
-
-    // }
-
     public function commonDataRealTime($coinNameResult,$range,$start_date,$end_date){
         // return $start_date;
         $baseURL = config('cryptohistoricaldata.coin.api_url').config('cryptohistoricaldata.coin.realtime_url');
-
         $baseURLCoin1Replace = str_replace('{coin1}', $coinNameResult, $baseURL);
         $baseURLCoin1Replaced = $baseURLCoin1Replace;
-
         $baseURLRangeReplace = str_replace('{range}', $range, $baseURLCoin1Replaced);
         $baseURLRangeReplaced = $baseURLRangeReplace;
-
         $baseURLStartDateReplace = str_replace('{start_date}', $start_date, $baseURLRangeReplaced);
         $baseURLStartDateReplaced = $baseURLStartDateReplace;
-
         $finalBaseURL = str_replace('{end_date}', $end_date, $baseURLStartDateReplaced);
-
         $finalBaseURLResponse = Http::withHeaders(['X-CoinAPI-Key'=>config('cryptohistoricaldata.coin.api_key')])->get($finalBaseURL);
-
         return $finalBaseURLResponse;
         
     }
 
-
-    public function index(User $user, Request $request){
-
-        $coinNameFromUser = $request->coin_name;
-        //return $coinNameFromUser;
-        $range = $request->range;
-
-        $coinDataAll = Coin::all();
-        foreach($coinDataAll as $coinData){
-            if($coinNameFromUser == $coinData->name){
-                $coinNameResult = $coinData->coin_id;
-            }
+    public function returnCoinId($user){
+        $coinUserData = $this->showUserCoins($user);
+        $coinList=[];
+        foreach ($coinUserData as $coinId){
+            $coinName = Coin::whereName($coinId)->first();
+            $coinName = $coinName->coin_id;
+            array_push($coinList,$coinName);
         }
-        $coinNameResult = $coinNameResult;
-        // return $coinNameResult;
+        return $coinList;
+    }
 
+    public function dayDataForAllCoins($coinList){
+        $realTimeData = [];
         $end_date = Carbon::now()->format('Y-m-d');
         $end_date = $end_date."T".Carbon::now()->format('H:i:m');
+        $range = '1HRS';
+        $start_date = Carbon::now()->subDay(1);
+        $start_date  = str_replace(' ','T',$start_date);
+        if(is_array($coinList)){
+            foreach($coinList as $coin){
+                $realTimeDataArray = [];
+                $finalBaseURLResponse = json_decode($this->commonDataRealTime($coin,$range,$start_date,$end_date));
+                foreach($finalBaseURLResponse as $response){
+                    array_push($realTimeDataArray,[
+                        'date'=>$response->time_period_end,
+                        'price'=>$response->rate_close
+                    ]);         
+                }
+                array_push($realTimeData,[$coin,$realTimeDataArray]);
+            }
+        }else{      
+            $finalBaseURLResponse = json_decode($this->commonDataRealTime($coinList,$range,$start_date,$end_date));
+            foreach($finalBaseURLResponse as $response){
+                array_push($realTimeData,[
+                    'date'=>$response->time_period_end,
+                    'price'=>$response->rate_close
+                ]);
+            }
+        }
+        return response([
+            'message'=>'success',
+            'result'=>[
+                'coin'=>$coinList,
+                'data'=>$realTimeData
+            ]
+        ],200);
+        
+    }
+
+
+
+
+    public function weeklyDataForAllCoins($coinList){
+        $realTimeData = [];
+        $end_date = Carbon::now()->format('Y-m-d');
+        $end_date = $end_date."T".Carbon::now()->format('H:i:m');
+        $range = '1DAY';
+        $start_date = Carbon::now()->subDay(6);
+        $start_date  = str_replace(' ','T',$start_date);
+        if(is_array($coinList)){
+            foreach($coinList as $coin){
+                $realTimeDataArray = [];
+                $finalBaseURLResponse = json_decode($this->commonDataRealTime($coin,$range,$start_date,$end_date));
+                foreach($finalBaseURLResponse as $response){
+                    array_push($realTimeDataArray,[
+                        'date'=>$response->time_period_end,
+                        'price'=>$response->rate_close
+                    ]);         
+                }
+                array_push($realTimeData,[$coin,$realTimeDataArray]);
+            }
+        }else{      
+            $finalBaseURLResponse = json_decode($this->commonDataRealTime($coinList,$range,$start_date,$end_date));
+            foreach($finalBaseURLResponse as $response){
+                array_push($realTimeData,[
+                    'date'=>$response->time_period_end,
+                    'price'=>$response->rate_close
+                ]);
+            }
+        }
+        return response([
+            'message'=>'success',
+            'result'=>[
+                'coin'=>$coinList,
+                'data'=>$realTimeData
+            ]
+        ],200);
+        
+    }
+
+
+
+
+    public function monthlyDataForAllCoins($coinList){
+        $realTimeData = [];
+        $end_date = Carbon::now()->format('Y-m-d');
+        $end_date = $end_date."T".Carbon::now()->format('H:i:m');
+        $range = '7DAY';
+        $start_date = Carbon::now()->subMonth(1);
+        $start_date  = str_replace(' ','T',$start_date);
+        if(is_array($coinList)){
+            foreach($coinList as $coin){
+                $realTimeDataArray = [];
+                $finalBaseURLResponse = json_decode($this->commonDataRealTime($coin,$range,$start_date,$end_date));
+                foreach($finalBaseURLResponse as $response){
+                    array_push($realTimeDataArray,[
+                        'date'=>$response->time_period_end,
+                        'price'=>$response->rate_close
+                    ]);         
+                }
+                array_push($realTimeData,[$coin,$realTimeDataArray]);
+            }
+        }else{
+            $finalBaseURLResponse = json_decode($this->commonDataRealTime($coinList,$range,$start_date,$end_date));
+            foreach($finalBaseURLResponse as $response){
+                array_push($realTimeData,[
+                    'date'=>$response->time_period_end,
+                    'price'=>$response->rate_close
+                ]);
+            }
+        }
+        return response([
+            'message'=>'success',
+            'result'=>[
+                'data'=>$realTimeData
+            ]
+        ],200);
+    }
+
+    public function yearlyDataForAllCoins($coinList){
+        $realTimeData = [];
+        $end_date = Carbon::now()->format('Y-m-d');
+        $end_date = $end_date."T".Carbon::now()->format('H:i:m');
+        $range = '7DAY';
+        $start_date = Carbon::now()->subYear(1);
+        $prevYearMonth = $start_date->format('Y-m');
+        $start_date  = str_replace(' ','T',$start_date);
         $realTimeDataDisplay = [];
-
-
-        if($range=='1DAY'){
-            $range = '1HRS';
-            $start_date = Carbon::now()->subDay(1);
-            $start_date  = str_replace(' ','T',$start_date);        
-            $finalBaseURLResponse = json_decode($this->commonDataRealTime($coinNameResult,$range,$start_date,$end_date));
-            foreach($finalBaseURLResponse as $response){
-                array_push($realTimeDataDisplay,[
-                    'date'=>$response->time_period_end,
-                    'price'=>$response->rate_close
-                ]);
-            }
-            return response([
-                'message'=>'success',
-                'result'=>[
-                    'coin'=>$coinNameFromUser,
-                    'data'=>$realTimeDataDisplay
-                ]
+        if(is_array($coinList)){
+            foreach($coinList as $coin){
+                $finalBaseURLResponse = json_decode($this->commonDataRealTime($coin,$range,$start_date,$end_date));
+                $dataIndex = [];
+                foreach($finalBaseURLResponse as $response){
+                    array_push($dataIndex,Carbon::parse($response->time_period_end)->format('Y-m'));
+                    array_push($realTimeDataDisplay,[
+                        'date'=>Carbon::parse($response->time_period_end)->format('Y-m'),
+                        'price'=>$response->rate_close
+                    ]);
+                }
+                $dataIndex = array_unique($dataIndex);
+                $dataIndexUnique = [];
+                foreach($dataIndex as $key=>$value){
+                    array_push($dataIndexUnique, $value);
+                }
+                $finalResult = [];
+                foreach($dataIndexUnique as $date){
+                    $count = 0;
+                    $sum = 0;
+                    foreach($realTimeDataDisplay as $response){
+                        if($response['date']==$date){
+                            $count++;
+                            $sum+=$response['price'];
+                        }
+                    }
+                    $avg = $sum/$count;
+                    array_push($finalResult,[$date=>$avg]);
+                }
                 
-            ],200);
-        }
-
-
-        if($range=='Week'){
-            $range = '1DAY';
-            $start_date = Carbon::now()->subDay(6);
-            $start_date  = str_replace(' ','T',$start_date);
-            $finalBaseURLResponse = json_decode($this->commonDataRealTime($coinNameResult,$range,$start_date,$end_date));
-            foreach($finalBaseURLResponse as $response){
-                array_push($realTimeDataDisplay,[
-                    'date'=>$response->time_period_end,
-                    'price'=>$response->rate_close
-                ]);
+                array_push($realTimeData,[$coin,$finalResult]);
             }
-            return response([
-                'message'=>'success',
-                'result'=>[
-                    'coin'=>$coinNameFromUser,
-                    'data'=>$realTimeDataDisplay
-                ]
-                
-            ],200);
-        }
-
-        if($range=='Month'){
-            $range = '7DAY';
-            $start_date = Carbon::now()->subMonth(1);
-            $start_date  = str_replace(' ','T',$start_date);
-            $finalBaseURLResponse = json_decode($this->commonDataRealTime($coinNameResult,$range,$start_date,$end_date));
-            foreach($finalBaseURLResponse as $response){
-                array_push($realTimeDataDisplay,[
-                    'date'=>$response->time_period_end,
-                    'price'=>$response->rate_close
-                ]);
-            }
-            return response([
-                'message'=>'success',
-                'result'=>[
-                    'coin'=>$coinNameFromUser,
-                    'data'=>$realTimeDataDisplay
-                ]
-                
-            ],200);
-        }
-        if($range=='Year'){
-            $range = '7DAY';
-            $start_date = Carbon::now()->subYear(1);
-
-            $prevYearMonth = $start_date->format('Y-m');
-
-            $start_date  = str_replace(' ','T',$start_date);
-            $finalBaseURLResponse = json_decode($this->commonDataRealTime($coinNameResult,$range,$start_date,$end_date));
+        }else{
+            $finalBaseURLResponse = json_decode($this->commonDataRealTime($coinList,$range,$start_date,$end_date));
             $dataIndex = [];
             foreach($finalBaseURLResponse as $response){
                 array_push($dataIndex,Carbon::parse($response->time_period_end)->format('Y-m'));
@@ -552,7 +423,7 @@ class User extends Authenticatable
             foreach($dataIndex as $key=>$value){
                 array_push($dataIndexUnique, $value);
             }
-            $finalResult = [];
+            //$finalResult = [];
             foreach($dataIndexUnique as $date){
                 $count = 0;
                 $sum = 0;
@@ -560,42 +431,66 @@ class User extends Authenticatable
                     if($response['date']==$date){
                         $count++;
                         $sum+=$response['price'];
-
                     }
                 }
                 $avg = $sum/$count;
-                array_push($finalResult,[$date=>$avg]);
+                array_push($realTimeData,[$date=>$avg]);
             }
 
-            return response([
-                'message'=>'success',
-                'result'=>$finalResult
-            ],200);
         }
+        return response([
+            'message'=>'success',
+            'result'=>[
+                'coin'=>$coinList,
+                'data'=>$realTimeData
+            ]
+        ],200);
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public function index(User $user, Request $request){
+        $coinNameFromUser = $request->coin_name;
+        $range = $request->range;
+        $end_date = Carbon::now()->format('Y-m-d');
+        $end_date = $end_date."T".Carbon::now()->format('H:i:m');
+        if($coinNameFromUser==NULL){
+            if($range==NULL){
+                $coinIdList = $this->returnCoinId($user);
+                return $this->dayDataForAllCoins($coinIdList);
+            }else{
+                if($range=='DAY'){
+                    $coinIdList = $this->returnCoinId($user);
+                    return $this->dayDataForAllCoins($coinIdList);
+                }else if($range=='Weekly'){
+                    $coinIdList = $this->returnCoinId($user);
+                    return $this->weeklyDataForAllCoins($coinIdList);
+                }else if($range=='Monthly'){
+                    $coinIdList = $this->returnCoinId($user);
+                    return $this->monthlyDataForAllCoins($coinIdList);
+                }else{
+                    $coinIdList = $this->returnCoinId($user);
+                    return $this->yearlyDataForAllCoins($coinIdList);
+                }
+            }
+        }
+        if($coinNameFromUser and $range){
+            $coinIdGet = Coin::select('coin_id')->where('name','=',$coinNameFromUser)->get();
+            $coinNameFinal = "";
+            foreach($coinIdGet as $coin){
+                $coinNameFinal = $coin->coin_id;
+            }
+            if($range=='DAY'){
+                return $this->dayDataForAllCoins($coinNameFinal);
+            }else if($range=='Weekly'){
+                return $this->weeklyDataForAllCoins($coinNameFinal);
+            }else if($range=='Monthly'){
+                return $this->monthlyDataForAllCoins($coinNameFinal);
+            }else{
+                return $this->yearlyDataForAllCoins($coinNameFinal);
+            }
+        }
+    
+    }
 
 
 

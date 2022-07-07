@@ -31,7 +31,11 @@ class WalletCoinController extends Controller
 
 
     public function showUserCoins(User $user){
-        return $user->showUserCoins($user);
+        $result = $user->showUserCoins($user);
+        return response([
+            'message'=>'success',
+            'data'=>$result
+        ],200); 
     }
     public function realTimeGraphFilter(){
         $user = new User();
