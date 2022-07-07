@@ -36,7 +36,7 @@ class handleCoins extends Command
         $assets = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
             ->get($AssetsUrl);
 
-        $assetArray = json_decode($assets);
+        $assetArray = collect(json_decode($assets));
 
 
         // //Inserting Coins That we have fetched from the Api
@@ -50,26 +50,27 @@ class handleCoins extends Command
         }
 
         
-        // //Making Accepted coins status as 1
-        // $acceptedAssets = array_keys(config('assets.accepted_coins'));
+        // // //Making Accepted coins status as 1
+        $acceptedAssets = array_keys(config('assets.accepted_coins'));
 
-        // $coin = Coin::whereIn('name', $acceptedAssets)->update(['status' => 1]);
-
-        // $assetImagesUrl = config('assets.coin_api.base_path') . config('assets.coin_api.asset_images');
-        // $assetImages = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
-        //     ->get($assetImagesUrl);
-        // $assetImagesArray = json_decode($assetImages);
-
-        // foreach ($assetImagesArray as $image){
-        //     foreach ($coins as $coin){
-        //         if($coin->coin_id == $image->asset_id){
-        //             $coin->update(['img_path'=>$image->url]);
-        //         }
-        //     }
-        // }
+        $coin = Coin::whereIn('name', $acceptedAssets)->update(['status' => 1]);
 
 
-        // //Inserting Image paths for every Coin
+        // //Inserting Image paths for Coins
+        $assetImagesUrl = config('assets.coin_api.base_path') . config('assets.coin_api.asset_images');
+        $assetImages = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
+            ->get($assetImagesUrl);
+        $assetImagesArray = json_decode($assetImages);
+
+        foreach ($assetImagesArray as $image){
+            foreach ($coins as $coin){
+                if($coin->coin_id == $image->asset_id){
+                    $coin->update(['img_path'=>$image->url]);
+                }
+            }
+        }
+
+
         $this->info('Coins Updated ');
         return Command::SUCCESS;
     }
