@@ -55,6 +55,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('api')
                 ->prefix('api/v1')
                 ->group( function() {
+                    require base_path('routes/v1/auth.php');
                     require base_path('routes/v1/users.php');
                     require base_path('routes/v1/recovery-keys.php');
                     require base_path('routes/v1/coincard.php');

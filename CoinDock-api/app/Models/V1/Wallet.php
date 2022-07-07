@@ -21,8 +21,9 @@ class Wallet extends Model
 
 
     public function coin(){
-
         return $this->belongsTo(Coin::class);
-
     }
+
+
 }
+
