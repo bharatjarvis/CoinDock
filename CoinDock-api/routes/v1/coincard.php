@@ -17,7 +17,7 @@ use App\Http\Controllers\V1\CoincardController;
 */
 /* ----Dashboard ---*/
 
-Route::prefix('users')->group(
+Route::middleware('auth:api')->prefix('users')->group(
     function(){
         Route::prefix('{user}')->group(
             function(){

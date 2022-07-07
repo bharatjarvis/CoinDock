@@ -4,12 +4,8 @@ namespace App\Models\V1;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use App\Models\V1\User;
-use Composer\Config;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class Coin extends Model
 {
@@ -54,7 +50,7 @@ class Coin extends Model
     }
 
     //Convertion
-    public function priceConversion($from, $to, $grouped, User $user)
+    public function priceConversion($from, $to, $grouped)
     {
         
         $baseUrl = config('coinapi.coin.apiurl');
@@ -87,7 +83,7 @@ class Coin extends Model
         }
         $tabledata = Setting::whereUserId($user->id)->first();
         $to = $tabledata->primary_currency;
-        $data = $this->priceConversion($from,$to ,$grouped, $user);
+        $data = $this->priceConversion($from,$to ,$grouped);
         return $data;
 
     }
@@ -113,7 +109,6 @@ class Coin extends Model
     public function coinDefault(User $user)
     {
         $grouped = $this->getSecondaryCurrency($user);
-        //dd($from);
         $tabledata = Setting::whereUserId($user->id)->first();
         $from = $tabledata->primary_currency;
         $coins = Coin::all();
@@ -122,7 +117,7 @@ class Coin extends Model
                 $to = $coin->coin_id;
             }
         }
-        $data = $this->priceConversion($from,$to ,$grouped, $user);
+        $data = $this->priceConversion($from,$to ,$grouped);
         return $data;   
     }
 

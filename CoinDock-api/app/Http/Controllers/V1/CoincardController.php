@@ -7,12 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\V1\User;
 use App\Models\V1\{Wallet,Coin};
-use Illuminate\Support\Facades\DB;
 
 
 class CoincardController extends Controller
 {
-     public function coinCard(Request $request, User $user){
+     public function coinCard(User $user){
         $data = new Coin();
         $logo = $data->logo($user);
         $numberOfCoins=$data->countCoins($user);

@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\V1\Auth\UserController;
-use App\Http\Controllers\V1\RecoveryKeyController;
 use Illuminate\Support\Facades\Route;
 
  
@@ -20,8 +19,7 @@ Route::post('/login', [UserController::class, 'login']);
 Route::post('/refresh', [UserController::class, 'refresh']);
 Route::middleware('auth:api')->group(function(){
     
-Route::post('logout', [UserController::class, 'logout']);
-    Route::get('logout', [UserController::class, 'logout']);
+Route::get('logout', [UserController::class, 'logout']);
 });
 
 
