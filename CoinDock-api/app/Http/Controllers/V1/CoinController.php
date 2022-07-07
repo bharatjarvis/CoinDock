@@ -7,8 +7,6 @@ use App\Http\Requests\V1\CreateCoinRequest;
 use App\Http\Requests\V1\UpdateCoinRequest;
 use App\Http\Resources\V1\CoinResource;
 use App\Models\V1\Coin;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
 class CoinController extends Controller
 {
