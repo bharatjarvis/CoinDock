@@ -29,31 +29,27 @@ class handleCoins extends Command
      */
     public function handle()
     {
-        $coins = Coin::all();
-
-        //fetching coins and insering the coins if they were not in our database
+        //fetching coins from API
         $AssetsUrl = config('assets.coin_api.base_path') . config('assets.coin_api.assets_path');
         $assets = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
             ->get($AssetsUrl);
-
         $assetArray = collect(json_decode($assets));
 
-
-        // //Inserting Coins That we have fetched from the Api
-        foreach ($assetArray->lazy(100) as $asset) {
-            Coin::updateOrCreate(['coin_id' => $asset->asset_id], [
-
-                'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
-                'is_crypto' => $asset->type_is_crypto
-
-            ]);
-        }
-
-        
-        // // //Making Accepted coins status as 1
+        //Coins that we are accepting
         $acceptedAssets = array_keys(config('assets.accepted_coins'));
 
-        $coin = Coin::whereIn('name', $acceptedAssets)->update(['status' => 1]);
+        // // //Inserting Coins That we have fetched from the Api
+        foreach ($assetArray->lazy(100) as $asset) {
+            Coin::updateOrCreate([
+                'coin_id' => $asset->asset_id], [
+                'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
+                'is_crypto' => $asset->type_is_crypto
+            ]);
+
+            Coin::whereIn('name', $acceptedAssets)->update(['status' => 1]);
+        }
+
+        $coins = Coin::all();
 
 
         // //Inserting Image paths for Coins
@@ -69,8 +65,7 @@ class handleCoins extends Command
                 }
             }
         }
-
-
+        
         $this->info('Coins Updated ');
         return Command::SUCCESS;
     }
