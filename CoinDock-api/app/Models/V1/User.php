@@ -103,168 +103,92 @@ class User extends Authenticatable
         return $this->hasOne(Signup::class);
     }
 
-    public function totalDefault(User $user)
+    public function totalDefault()
     {
-        $userWalletsDetails = $user->wallet;
-        $balanceTotal = 0;
-        foreach ($userWalletsDetails as $userWalletsDetail) {
-            $balanceTotal += $userWalletsDetail->balance_USD;
-        }
-
+        $walletBalanceInUSD = $this->wallets()->sum('balance_USD');
         $baseUrl = config('coin.coin.api_url');
         $exchangeURL = $baseUrl . config('coin.coin.usd_to_Btc');
         $usdToBtC = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($exchangeURL);
-        $totalValue = $usdToBtC['rate'] * $balanceTotal;
-        $coin = Coin::whereIsDefault(1)->first();
-
-        return response([
-            'message' => 'success',
-            'result' => [
-                'heading' => 'Total ' . $coin->coin_id,
-                'balance' => $totalValue,
-                'coin_id' => $coin->coin_id,
-                'coin_name' => $coin->name,
-                'img_url' => $coin->img_path
-
-            ]
-        ], 200);
+        return $usdToBtC['rate'] * $walletBalanceInUSD;
     }
 
 
 
 
-    public function totalPrimaryCurrency(User $user)
+    public function totalPrimaryCurrency(): array
     {
-        $userSetting = $user->settings;
-
-
+        $userSetting = $this->settings;
         $primaryCurrency = $userSetting->primary_currency;
         $baseUrl = config('coin.coin.api_url');
         $currencyURL = $baseUrl . config('coin.coin.primary_currency');
         $currency = str_replace('{id}', $primaryCurrency, $currencyURL);
-
         $primaryBalancePath = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
-        $balanceInUsd = Wallet::select('balance')
-            ->whereUserId($user->id)
-            ->get()
+        $balanceInUsd = $this->wallets
             ->mapToGroups(function ($wallet) {
-
                 return ['balance' => $wallet->balance];
             })
             ->map(function ($e) {
                 return $e->sum();
             });
-        $userWalletsDetails = $user->wallet;
-        if ($userWalletsDetails->isEmpty()) {
-            return ["User Wallet Doesn't Exists"];
-        } else {
-
-            $userBalanceInUsd = $balanceInUsd['balance'];
-            $primaryBalance = $primaryBalancePath['rate'];
-            $totalBalanceInPrimaryCurrency = ($primaryBalance * $userBalanceInUsd);
-            return response([
-                'message' => 'success',
-                'result' => [
-                    'heading' => 'Primary Currecny',
-                    'coin-name'=> $primaryCurrency,
-                    'balance' => $totalBalanceInPrimaryCurrency,
-
-                ]
-            ], 200);
-        }
+        return [
+            'coin_name' => $primaryCurrency,
+            'balance'  => $primaryBalancePath['rate'] * $balanceInUsd['balance']
+        ];
     }
 
 
-    public function topPerformer(User $user)
+    public function topPerformer():array
     {
-
-        $userWalletCoins = $user->wallet;
-
-        if ($userWalletCoins->isEmpty()) {
-            return response([
-                'message' => 'User Wallet Not Found'
-            ]);
-        } else {
-            $userCoins = [];
-            foreach ($userWalletCoins as $userCoin) {
-                $coin = Coin::select(['coin_id', 'name'])->whereId($userCoin->coin_id)->first();
-                array_push($userCoins, $coin);
+        $walletCoinIds = $this->wallets()->pluck('coin_id');
+        $coins = Coin::select(['coin_id', 'name'])->whereIn('id', $walletCoinIds)->get();
+        $baseUrl = config('coin.coin.api_url');
+        $currencyURL = $baseUrl . config('coin.coin.top_performer');
+        $topPerformerBal = PHP_INT_MIN;
+        $coinName = Null;
+        $shortName = Null;
+        foreach ($coins as $coin) {
+            $currency = str_replace('{id}', $coin->coin_id, $currencyURL);
+            $primaryBalancePath = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
+            if ($primaryBalancePath['rate'] > $topPerformerBal) {
+                $topPerformerBal = $primaryBalancePath['rate'];
+                $shortName = $primaryBalancePath['asset_id_base'];
+                $coinName  = Coin::whereCoinId($shortName)->first()?->name;
             }
-
-            $baseUrl = config('coin.coin.api_url');
-            $currencyURL = $baseUrl . config('coin.coin.top_performer');
-
-            $topPerformerBal = PHP_INT_MIN;
-            $coinName = Null;
-            $shortName = Null;
-            foreach ($userCoins as $coin) {
-                $currency = str_replace('{id}', $coin->coin_id, $currencyURL);
-                $primaryBalancePath = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
-                if ($primaryBalancePath['rate'] > $topPerformerBal) {
-                    $topPerformerBal = $primaryBalancePath['rate'];
-                    $shortName = $primaryBalancePath['asset_id_base'];
-                    $coinName  = Coin::whereCoinId($shortName)->first()->name;
-                }
-            }
-            return response([
-                'message' => 'Success',
-                'result' => [
-                    'heading' => 'Top Performer ',
-                    'balance' => $topPerformerBal,
-                    'coin_name' => $coinName,
-                    'coin_id' => $shortName
-                ]
-
-            ], 200);
         }
+            return[
+                'balance' => $topPerformerBal,
+                'coin_name' => $coinName,
+                'coin_id' =>  $shortName
+            ];
     }
 
-
-
-
-    public function lowPerformer(User $user)
+    public function lowPerformer(): array
     {
-        $userWalletCoins = $user->wallet;
-
-        if ($userWalletCoins->isEmpty()) {
-            return response([
-                'message' => 'User Wallet Not Found'
-            ]);
-        } else {
-            $userCoins = [];
-            foreach ($userWalletCoins as $userCoin) {
-                $coin = Coin::select(['coin_id', 'name'])->whereId($userCoin->coin_id)->first();
-                array_push($userCoins, $coin);
-            }
-
+        $walletCoinIds = $this->wallets()->pluck('coin_id');
+        $coins = Coin::select(['coin_id', 'name'])->whereIn('id', $walletCoinIds)->get();
             $baseUrl = config('coin.coin.api_url');
             $currencyURL = $baseUrl . config('coin.coin.top_performer');
-
             $lowPerformerBal = PHP_INT_MAX;
             $coinName = Null;
-            $shortName = Null;
-            foreach ($userCoins as $coin) {
+            $shortName= Null;
+            foreach ($coins as $coin) {
                 $currency = str_replace('{id}', $coin->coin_id, $currencyURL);
                 $primaryBalancePath = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
                 if ($primaryBalancePath['rate'] < $lowPerformerBal) {
                     $lowPerformerBal = $primaryBalancePath['rate'];
-                    $shortName = $primaryBalancePath['asset_id_base'];
-                    $coinName  = Coin::whereCoinId($shortName)->first()->name;
+                    $shortName= $primaryBalancePath['asset_id_base'];
+                    $coinName  = Coin::whereCoinId($shortName)->first()?->name;
                 }
             }
-            return response([
-                'message' => 'Success',
-                'result' => [
-                    'heading' => 'Low Performer ',
-                    'balance' => $lowPerformerBal,
-                    'coin_name' => $coinName,
-                    'coin_id' => $shortName
-                ]
-            ], 200);
-        }
+            return [
+                'balance' => $lowPerformerBal,
+                'coin_name' => $coinName,
+                'coin_id' => $shortName
+            ];
+        
     }
 
-    public function wallet()
+    public function wallets()
     {
         return $this->hasMany(Wallet::class, 'user_id', 'id');
     }
