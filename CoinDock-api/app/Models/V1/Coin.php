@@ -75,12 +75,8 @@ class Coin extends Model
 
         //$from= 'BTC';
         $grouped =$this->countCoins($user);
-        $coins= Coin::all();
-        foreach ($coins as $coin){
-            if($coin->is_default==1){
-                $from = $coin->coin_id;
-            }
-        }
+        $coin = Coin::whereIsDefault(1)->first();
+        $from = $coin->coin_id;
         $tabledata = Setting::whereUserId($user->id)->first();
         $to = $tabledata->primary_currency;
         $data = $this->priceConversion($from,$to ,$grouped);
