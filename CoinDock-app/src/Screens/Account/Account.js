@@ -73,7 +73,7 @@ function Account() {
  const handleLogoutClick = async () => {
   try {
     await logout().unwrap();
-    navigate("/");
+    navigate("/account");
   } catch (e) {
     navigate("/")
   }

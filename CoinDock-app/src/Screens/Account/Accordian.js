@@ -2,16 +2,11 @@ import React, { useState } from 'react';
 import "./Account.css";
 import { openDialogue } from 'App/Auth/reducers/accReducer';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 import EditPopup from './EditPopup';
-import "Shared/common-styles/common.css";
-import { useNavigate } from 'react-router-dom';
 
 const Accordion = ({label,fields,value}) => {
-    const navigate =useNavigate();
-    const handleRecoveryButton = () => {
-    navigate("/recovery-codes-account");
-     };
-
+  const navigate = useNavigate();
   const [isActive, setIsActive] = useState(false);
   const dispatch =useDispatch();
   return (
@@ -35,8 +30,7 @@ const Accordion = ({label,fields,value}) => {
                 :
                field.navigate ?
               <button
-                 className='cd-button cd-button-3 cd-edit-button'
-                 onClick={()=>{handleRecoveryButton()}}>Edit
+                 className='cd-button cd-button-3 cd-edit-button' onClick={()=>{navigate(field.navigate)}}>Edit
                </button> : null }
             </div>
              ))}
