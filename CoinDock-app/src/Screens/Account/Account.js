@@ -9,7 +9,6 @@ import "Shared/common-styles/common.css";
 
 function Account() {
  const { data: account}= useAccount();
-
  const accountDetails = account?.result?.user || {};
  const [logout] = useLogout();
  const navigate = useNavigate();
@@ -17,7 +16,7 @@ function Account() {
  const accordianBasedAccountDetails = [
    {
      label:'Profile Settings',
-     field:[
+     fields:[
        {
        label:'Name',
        fieldKey:'name',
@@ -37,7 +36,7 @@ function Account() {
    },
    {
      label:'Account Settings',
-     field:[
+     fields:[
          {
           label:'Email',
           fieldKey:'email',
@@ -51,14 +50,14 @@ function Account() {
          {
           label:'Recovery Code',
           fieldKey:'recoverycode',
-          navigate:true,
+          navigate: "/recovery-codes-account",
          },
 
     ]
    },
      {
      label:'System Settings',
-     field:[
+     fields:[
        {
          label:'Primary currency',
          fieldKey:'primarycurrency',
@@ -74,7 +73,7 @@ function Account() {
  const handleLogoutClick = async () => {
   try {
     await logout().unwrap();
-    navigate("/login");
+    navigate("/");
   } catch (e) {
     navigate("/")
   }
@@ -84,11 +83,21 @@ return (
          <div className="col-md-4 col py-5 ">
          {accordianBasedAccountDetails && accordianBasedAccountDetails.map((item,id) => (
                <div>
-                  <Accordion key={id} label={item.label} field={item.field} value={accountDetails} />
-                </div>
+                  <Accordion
+                    key={id}
+                    label={item.label}
+                    fields={item.fields}
+                    value={accountDetails}
+                  />
+               </div>
           ))}
-       </div><div className='d-flex justify-content-start'>
-           <button className='cd-button cd-button-2 cd-logout-button' onClick={handleLogoutClick}>Logout</button>
+       </div>
+        <div className='d-flex justify-content-start'>
+           <button
+             className='cd-button cd-button-2 cd-logout-button'
+             onClick={handleLogoutClick}>
+              Logout
+            </button>
          </div>
      </div>
 
