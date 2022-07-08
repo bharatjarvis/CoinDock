@@ -112,9 +112,6 @@ class User extends Authenticatable
         return $usdToBtC['rate'] * $walletBalanceInUSD;
     }
 
-
-
-
     public function totalPrimaryCurrency(): array
     {
         $userSetting = $this->settings;
@@ -136,7 +133,6 @@ class User extends Authenticatable
         ];
     }
 
-
     public function topPerformer():array
     {
         $walletCoinIds = $this->wallets()->pluck('coin_id');
@@ -144,8 +140,8 @@ class User extends Authenticatable
         $baseUrl = config('coin.coin.api_url');
         $currencyURL = $baseUrl . config('coin.coin.top_performer');
         $topPerformerBal = PHP_INT_MIN;
-        $coinName = Null;
-        $shortName = Null;
+        $coinName = null;
+        $shortName = null;
         foreach ($coins as $coin) {
             $currency = str_replace('{id}', $coin->coin_id, $currencyURL);
             $primaryBalancePath = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
@@ -169,8 +165,8 @@ class User extends Authenticatable
             $baseUrl = config('coin.coin.api_url');
             $currencyURL = $baseUrl . config('coin.coin.top_performer');
             $lowPerformerBal = PHP_INT_MAX;
-            $coinName = Null;
-            $shortName= Null;
+            $coinName = null;
+            $shortName= null;
             foreach ($coins as $coin) {
                 $currency = str_replace('{id}', $coin->coin_id, $currencyURL);
                 $primaryBalancePath = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
@@ -193,7 +189,7 @@ class User extends Authenticatable
         return $this->hasMany(Wallet::class, 'user_id', 'id');
     }
 
-    public function settings()
+    public function setting()
     {
         return $this->hasOne(Setting::class, 'user_id', 'id');
     }

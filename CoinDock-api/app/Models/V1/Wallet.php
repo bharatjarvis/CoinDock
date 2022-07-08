@@ -12,7 +12,15 @@ use phpDocumentor\Reflection\Types\Null_;
 class Wallet extends Model
 {
     use HasFactory;
-
+     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'wallet_id',
+        'balance'
+    ];
    
     public function coin()
     {

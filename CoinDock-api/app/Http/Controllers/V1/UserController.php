@@ -52,7 +52,7 @@ class UserController extends AccessTokenController
         'coin_name' => $coin->name,
         'img_url' => $coin->img_path
       ]
-      ], 200);
+    ], 200);
   }
   public function primaryCurrency(User $user)
   {
@@ -72,35 +72,37 @@ class UserController extends AccessTokenController
   }
   public function topPerformer(User $user)
   {
-  if ($user->wallets->isEmpty()) {
+    if ($user->wallets->isEmpty()) {
       return response([
-          'message' => 'User Wallet Not Found'
-      ],404);
-  }
-  $result = ['heading' => 'Top Performer'];
-  $topPerformer = $user->topPerformer();
-  return response([
-    'message' => 'Success',
-    'results' => [
-        array_merge($result,$topPerformer)
-   ]
+        'message' => 'User Wallet Not Found'
+      ], 404);
+    }
+    $result = ['heading' => 'Top Performer'];
+    $topPerformer = $user->topPerformer();
+    return response([
+      'message' => 'Success',
+      'results' => [
+        array_merge($result, $topPerformer)
+      ]
 
-  ], 200);
+    ], 200);
   }
- public function lowPerformer(User $user)
+
+  public function lowPerformer(User $user)
   {
     if ($user->wallets->isEmpty()) {
       return response([
-          'message' => 'User Wallet Not Found'
-      ],404);
-  }
-  $result = ['heading' => 'Low Performer'];
-  $lowPerformer = $user->lowPerformer();
+        'message' => 'User Wallet Not Found'
+      ], 404);
+    }
+    $result = ['heading' => 'Low Performer'];
+    $lowPerformer = $user->lowPerformer();
+
     return response([
-    'message' => 'Success',
-    'results' => [
-        array_merge($result,$lowPerformer)
-    ]
+      'message' => 'Success',
+      'results' => [
+        array_merge($result, $lowPerformer)
+      ]
     ], 200);
   }
 }
