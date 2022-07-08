@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
-use App\Models\V1\{Wallet, User, Coin};
+use App\Http\Requests\V1\ReturnUserCoinHistoricalDataRequest;
+use App\Models\V1\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
-use Svg\Tag\Rect;
 
 class WalletCoinController extends Controller
 {
@@ -26,10 +23,6 @@ class WalletCoinController extends Controller
         return $user->pieChartFilter();
     }
 
-
-
-
-
     public function showUserCoins(User $user){
         $result = $user->showUserCoins($user);
         return response([
@@ -42,7 +35,7 @@ class WalletCoinController extends Controller
         return $user->realTimeGraphFilter();
     }
 
-    public function index(User $user, Request $request){
+    public function index(User $user, ReturnUserCoinHistoricalDataRequest $request){
         return $user->index($user, $request);
     } 
        

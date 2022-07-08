@@ -65,8 +65,6 @@ Route::middleware('auth:api')
                         404,
                     ),
                 );
-                // Route::get('/real-time-graph/display/', [WalletCoinController::class, 'displaySingleCoinHistoricalData']);
-                // Route::get('/real-time-graph/coins', [WalletCoinController::class, 'displayUserAllCoinHistoricalData']);
                 Route::get('/real-time-graph/display/', [WalletCoinController::class, 'index']);
                 Route::get('/real-time-graph/filter', [WalletCoinController::class, 'realTimeGraphFilter']);
                 Route::get('/piechart/filter', [WalletCoinController::class, 'pieChartFilter']);

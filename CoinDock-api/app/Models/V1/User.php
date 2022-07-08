@@ -13,7 +13,6 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
 
 
@@ -96,18 +95,6 @@ class User extends Authenticatable
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
     public function showPieChartData(User $user, Request $request){
         $filterByCondition = $request->filterBy;
         $wallets = Wallet::select(['coin_id', 'balance'])
@@ -157,20 +144,6 @@ class User extends Authenticatable
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public function showUserCoins(User $user){
         $coinNames = Wallet::whereUserId($user->id)->get();
         $coinIds = [];
@@ -187,17 +160,6 @@ class User extends Authenticatable
         return $coinList;    
     }
 
-
-
-
-
-
-
-
-
-
-
-
     public function pieChartFilter(){
         $filters = ['coins','currency'];
         return response([
@@ -206,14 +168,6 @@ class User extends Authenticatable
         ],200); 
     }
 
-
-
-
-
-
-
-
-
     public function realTimeGraphFilter(){
         $filters = ['DAY','Weekly','Monthly','Yearly'];
         return response([
@@ -221,7 +175,6 @@ class User extends Authenticatable
             'data'=>$filters
         ],200); 
     }
-
 
     public function commonDataRealTime($coinNameResult,$range,$start_date,$end_date){
         // return $start_date;
@@ -287,9 +240,6 @@ class User extends Authenticatable
         
     }
 
-
-
-
     public function weeklyDataForAllCoins($coinList){
         $realTimeData = [];
         $end_date = Carbon::now()->format('Y-m-d');
@@ -327,9 +277,6 @@ class User extends Authenticatable
         ],200);
         
     }
-
-
-
 
     public function monthlyDataForAllCoins($coinList){
         $realTimeData = [];
@@ -447,7 +394,6 @@ class User extends Authenticatable
         ],200);
     }
 
-
     public function index(User $user, Request $request){
         $coinNameFromUser = $request->coin_name;
         $range = $request->range;
@@ -491,10 +437,6 @@ class User extends Authenticatable
         }
     
     }
-
-
-
-
 
     public function recoveryKeys()
     {
