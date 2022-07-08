@@ -35,8 +35,11 @@ class WalletCoinController extends Controller
         return $user->realTimeGraphFilter();
     }
 
-    public function index(User $user, ReturnUserCoinHistoricalDataRequest $request){
-        return $user->index($user, $request);
+    // public function index(User $user, ReturnUserCoinHistoricalDataRequest $request){
+    //     return $user->index($user, $request);
+    // } 
+    public function index(User $user, Request $request){
+            return $user->index($user, $request);
     } 
        
 

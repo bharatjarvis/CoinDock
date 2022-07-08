@@ -419,23 +419,26 @@ class User extends Authenticatable
                 }
             }
         }
-        if($coinNameFromUser and $range){
+        if($coinNameFromUser){
             $coinIdGet = Coin::select('coin_id')->where('name','=',$coinNameFromUser)->get();
             $coinNameFinal = "";
             foreach($coinIdGet as $coin){
                 $coinNameFinal = $coin->coin_id;
             }
-            if($range=='DAY'){
-                return $this->dayDataForAllCoins($coinNameFinal);
-            }else if($range=='Weekly'){
-                return $this->weeklyDataForAllCoins($coinNameFinal);
-            }else if($range=='Monthly'){
-                return $this->monthlyDataForAllCoins($coinNameFinal);
+            if($range){
+                if($range=='DAY'){
+                    return $this->dayDataForAllCoins($coinNameFinal);
+                }else if($range=='Weekly'){
+                    return $this->weeklyDataForAllCoins($coinNameFinal);
+                }else if($range=='Monthly'){
+                    return $this->monthlyDataForAllCoins($coinNameFinal);
+                }else{
+                    return $this->yearlyDataForAllCoins($coinNameFinal);
+                }
             }else{
-                return $this->yearlyDataForAllCoins($coinNameFinal);
+                return $this->dayDataForAllCoins($coinNameFinal);
             }
         }
-    
     }
 
     public function recoveryKeys()
