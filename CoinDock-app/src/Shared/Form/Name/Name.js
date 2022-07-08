@@ -19,7 +19,7 @@ const Name = ({
   placeholder,
   formErrors,
   onInput,
-  currentFieldValue,
+  value,
 }) => {
   const [fieldsTouched, setFieldsTouched] = useState(false);
 
@@ -40,7 +40,7 @@ const Name = ({
           className="form-control cd-mt-8"
           name={name}
           placeholder={placeholder}
-          defaultValue={currentFieldValue}
+          defaultValue={value}
           onBlur={handleFocus}
           onInput={handleInput}
         />
