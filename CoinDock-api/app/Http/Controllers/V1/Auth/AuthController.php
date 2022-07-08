@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Log;
 
 class AuthController extends AccessTokenController
 {
@@ -29,7 +28,6 @@ class AuthController extends AccessTokenController
         $response = $this->requestPasswordGrant($request);
 
         $user = User::whereEmail($request->email)->first();
-        Log::info($response['access_token']);
         return response(
             [
                 'message' => 'Login Successfull.',
