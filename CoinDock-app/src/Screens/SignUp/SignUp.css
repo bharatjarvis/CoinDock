@@ -14,12 +14,11 @@
 .form-control {
   outline: none;
   box-shadow: none;
-  border: 1px solid rgba(233, 139, 16, 0.8);
 }
 .form-control:focus {
   outline: none;
   box-shadow: none;
-  border: 1px solid;
+  border: 1px solid #0b5ed7;
 }
 
 .container > form {
@@ -61,14 +60,11 @@
   left: 22px;
   top: 32px;
 
-
-
   font-family: "Lora";
   font-style: normal;
   font-weight: 400;
   font-size: 18px;
   line-height: 160%;
-
 
   color: #000000;
 }

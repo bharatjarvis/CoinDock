@@ -14,16 +14,9 @@ export const emailValidation = (value) => {
   return error;
 };
 
-const Email = ({ name,formErrors,onInput,value}) => {
-  const initialValues = {
-    email: "",
-  };
-  const [formValues, setformValues] = useState(initialValues);
+const Email = ({ name, formErrors, onInput, email }) => {
   const [fieldsTouched, setFieldsTouched] = useState(false);
-  const handleChanges = (e) => {
-    const { name, value } = e.target;
-    setformValues({ ...formValues, [name]: value });
-  };
+
   const handleFocus = (e) => {
     setFieldsTouched(true);
   };
@@ -31,8 +24,8 @@ const Email = ({ name,formErrors,onInput,value}) => {
     setFieldsTouched(true);
     onInput?.(e);
   };
- 
- return (
+
+  return (
     <>
       <div className="form-group">
         <div>
@@ -42,21 +35,26 @@ const Email = ({ name,formErrors,onInput,value}) => {
             className="form-control cd-mt-8"
             name={name}
             placeholder="Enter your Email address"
-            onChange={handleChanges}
-            defaultValue={value}
+            defaultValue={email}
             onBlur={handleFocus}
             onInput={handleInput}
           />
-          {fieldsTouched && <p className="text-danger">{formErrors[name]}</p>}
+          {fieldsTouched && formErrors && (
+            <p className="text-danger">{formErrors[name]}</p>
+          )}
         </div>
       </div>
     </>
   );
 };
-Email.defaultProps ={
-  formErrors : {}
+Email.defaultProps = {
+  formErrors: {},
 };
 Email.propTypes = {
   label: propTypes.string,
+  onInput: propTypes.func,
+  formErrors: propTypes.object,
+  name: propTypes.string,
+  email: propTypes.string,
 };
 export default Email;

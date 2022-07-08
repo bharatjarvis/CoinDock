@@ -14,17 +14,16 @@ const auth = baseApi.injectEndpoints({
     logout: build.mutation({
       query: () => ({
         url: "/v1/logout",
-        method: "post",
+        method: "get",
       }),
       transformResponse: (response) => {
         localStorage.clear();
         store.dispatch({
-          type: "RESET"
-        })
+          type: "RESET",
+        });
         return response;
       },
     }),
-
 
     refresh: build.mutation({
       query: () => ({

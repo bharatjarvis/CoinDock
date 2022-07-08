@@ -13,18 +13,16 @@ export const nameValidation = (value, label = "Name", length = 0) => {
   return error;
 };
 
-const Name = ({ label, name, placeholder, formErrors, onInput, value }) => {
-  const initialValues = {
-    firstname: "",
-    lastname: "",
-  };
-  const [formValues, setformValues] = useState(initialValues);
+const Name = ({
+  label,
+  name,
+  placeholder,
+  formErrors,
+  onInput,
+  currentFieldValue,
+}) => {
   const [fieldsTouched, setFieldsTouched] = useState(false);
 
-  const handleChanges = (e) => {
-    const { name, value } = e.target;
-    setformValues({ ...formValues, [name]: value });
-  };
   const handleFocus = (e) => {
     setFieldsTouched(true);
   };
@@ -42,13 +40,12 @@ const Name = ({ label, name, placeholder, formErrors, onInput, value }) => {
           className="form-control cd-mt-8"
           name={name}
           placeholder={placeholder}
-          onChange={handleChanges}
-          defaultValue={value}
+          defaultValue={currentFieldValue}
           onBlur={handleFocus}
           onInput={handleInput}
         />
       </div>
-     
+
       {formErrors && fieldsTouched && (
         <p className="text-danger">{formErrors[name]}</p>
       )}
@@ -58,5 +55,11 @@ const Name = ({ label, name, placeholder, formErrors, onInput, value }) => {
 
 Name.propTypes = {
   label: propTypes.string,
+
+  name: propTypes.string,
+  placeholder: propTypes.string,
+  formErrors: propTypes.object,
+  onInput: propTypes.func,
+  currentFieldValue: propTypes.string,
 };
 export default Name;

@@ -101,7 +101,7 @@ export function LineChart() {
         </div>
       </div>
       <Line
-      className="p-14"
+        className="p-14"
         id="chart"
         options={options}
         data={{

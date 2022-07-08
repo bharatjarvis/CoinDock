@@ -19,17 +19,8 @@ const WalletName = ({
   onInput,
   currentFieldValue,
 }) => {
-  const initialValues = {
-    walletname: "",
-    walletaddress: "",
-  };
-  const [formValues, setformValues] = useState(initialValues);
   const [fieldsTouched, setFieldsTouched] = useState(false);
 
-  const handleChanges = (e) => {
-    const { name, value } = e.target;
-    setformValues({ ...formValues, [name]: value });
-  };
   const handleFocus = (e) => {
     setFieldsTouched(true);
   };
@@ -47,11 +38,10 @@ const WalletName = ({
           className="form-control cd-mt-8"
           name={name}
           placeholder={placeholder}
-          onChange={handleChanges}
           defaultValue={currentFieldValue}
           onBlur={handleFocus}
           onInput={handleInput}
-        /> 
+        />
       </div>
       {formErrors && fieldsTouched && (
         <p className="text-danger">{formErrors[name]}</p>

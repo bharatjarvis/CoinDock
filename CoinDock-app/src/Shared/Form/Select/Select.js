@@ -4,10 +4,10 @@ import propTypes from "prop-types";
 import "Shared/common-styles/space.css";
 import "Shared/common-styles/common.css";
 
-export const countryValidation = (value) => {
+export const countryValidation = (value, label) => {
   let error = null;
   if (!value) {
-    error = "Country is required";
+    error = `${label} is required`;
   }
   return error;
 };
@@ -23,16 +23,8 @@ const Select = ({
 
   ...props
 }) => {
-  const initialValues = {
-    country: "",
-  };
-  
-  const [formValues, setformValues] = useState(initialValues);
   const [fieldsTouched, setFieldsTouched] = useState(false);
-  const handleChanges = (e) => {
-    const { name, value } = e.target;
-    setformValues({ ...formValues, [name]: value });
-  };
+
   const handleFocus = (e) => {
     setFieldsTouched(true);
   };
@@ -40,7 +32,7 @@ const Select = ({
     setFieldsTouched(true);
     onInput?.(e);
   };
-  
+
   return (
     <>
       <label className="cd-mt-12 cd-lable-signup">{label}</label>
@@ -53,12 +45,7 @@ const Select = ({
         {emptyPlaceHolder && <option />}
         {options.map(({value,label}, index) => {
           return (
-            <option
-              value={value}
-              key={index}
-              onClick={handleChanges}
-              onInput={handleInput}
-            >
+            <option value={value} key={index} onInput={handleInput}>
               {label}
             </option>
           );
@@ -75,5 +62,10 @@ Select.defaultProps ={
 };
 Select.propTypes = {
   label: propTypes.string,
+  options: propTypes.array,
+  emptyPlaceHolder: propTypes.bool,
+  name: propTypes.string,
+  formErrors: propTypes.object,
+  onInput: propTypes.func,
 };
 export default Select;
