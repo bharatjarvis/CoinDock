@@ -21,7 +21,7 @@ class CoinController extends Controller
         $coins = Coin::all();
         return response([
             'message' => 'coins fetched succesfully',
-            'result' => [
+            'results' => [
                 'coins' => CoinResource::collection($coins)
             ]
        ],Response::HTTP_OK);
@@ -47,7 +47,7 @@ class CoinController extends Controller
         $coin->save();
         return response([
             'message'=>'Coin Created Successfully',
-            'result'=>[
+            'results'=>[
                 'coin'=>new CoinResource($coin)
             ]
         ],Response::HTTP_OK);
@@ -64,7 +64,7 @@ class CoinController extends Controller
     {
         return response([
             'message'=>'success',
-            'result'=>[
+            'results'=>[
                 'coin'=>new CoinResource($coin)
             ]
             ],200);
@@ -82,7 +82,7 @@ class CoinController extends Controller
         $coin->update($request->all());
         return response([
             'message' => 'Coin Updated Successfully',
-            'result'=>[
+            'results'=>[
                 'coin' => new CoinResource($coin)
             ]
         ], Response::HTTP_OK);

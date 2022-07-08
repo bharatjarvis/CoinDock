@@ -17,7 +17,7 @@ class Coin extends Model
         'img_path'
     ];
 
-    public function wallet(){
+    public function wallets(){
         return $this->hasMany(Wallet::class);
     }
 

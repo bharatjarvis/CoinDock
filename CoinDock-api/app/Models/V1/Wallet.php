@@ -2,9 +2,6 @@
 
 namespace App\Models\V1;
 
-use App\Http\Requests\V1\AddWalletRequest;
-use App\Http\Requests\V1\WalletRequest;
-use Symfony\Component\HttpFoundation\Response;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -28,7 +25,7 @@ class Wallet extends Model
     //wallet creation
     public function WalletCreate($userId, $walletId, $userCoinId, $coins, $balanceInUsd)
     {
-        Wallet::create([
+     $this->create([
             'user_id' => $userId,
             'wallet_id' => $walletId,
             'coin_id' => $userCoinId,
@@ -67,7 +64,7 @@ class Wallet extends Model
     //getting basePath for for checking Wallet Balance
     public function basePath($userCoinId, $walletId)
     {
-        $userCoinName = Coin::whereId($userCoinId)->first()->name;
+        $userCoinName = Coin::whereId($userCoinId)->first()?->name; 
 
         $coinList = config('assets.accepted_coins');
         $coinKeys =  array_keys($coinList);
@@ -99,7 +96,7 @@ class Wallet extends Model
     }
 
     //Fetching number of coins through the Response
-    public function coins($response, $coin)
+    public function totalCoins($response, $coin)
     {
         $responseArray = json_decode($response, true);
         $responseArrayKeys = array_keys($responseArray);
@@ -126,28 +123,25 @@ class Wallet extends Model
     public function addWallet(User $user,Request $request)
     {
         $walletId = $request->wallet_id;
-        $walletCheck = Wallet::whereWalletId($walletId)->first();
-
-        if ($walletCheck) {
-            return response([
-                'message' => 'Wallet Already Added'
-            ], Response::HTTP_CONFLICT);
-        }
 
         $userCoin = $request->coin;
         $balanceInUsd = $this->cryptoToUsd($userCoin);
 
-        $userCoinId = Coin::whereName($userCoin)->first()->id;
+        $userCoinId = Coin::whereName($userCoin)->first()?->id;
 
         $basePath = $this->basePath($userCoinId, $walletId);
         $response = Http::get($basePath);
 
         if ($this->isJson($response)) {
-            $coins = $this->coins($response, $userCoin);
+            $coins = $this->totalCoins($response, $userCoin);
             if (is_numeric($coins)) {
                 return $this->WalletCreate($user->id, $walletId, $userCoinId, $coins, $balanceInUsd);
             }
         }
         return false;
+    }
+
+    public function coin(){
+        return $this->hasOne('App\Models\V1\Coin','coin_id','id');
     }
 }
