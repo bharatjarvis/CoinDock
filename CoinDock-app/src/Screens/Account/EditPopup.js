@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Popup from "Shared/Popup/Popup";
 import { RiCloseLine } from "react-icons/ri";
+import { useCurrency } from "App/Api/accapi";
 import Email from 'Shared/Form/Email';
 import Password from 'Shared/Password/Password';
 import { useSelector } from 'react-redux';
@@ -13,6 +14,8 @@ import Name from 'Shared/Form/Name/Name';
 import { nameValidation } from 'Shared/Form/Name/Name';
 import Select, { countryValidation } from 'Shared/Form/Select/Select';
 import DatePick ,{ dateValidation } from 'Shared/Date/DatePick';
+import "Shared/common-styles/space.css";
+import "Shared/common-styles/common.css";
 const EditPopup =() =>{
   const {open,type,value} = useSelector(state => state.account)
   const initialValues = {
@@ -21,16 +24,16 @@ const EditPopup =() =>{
     date: value.date_of_birth,
     email: value.email,
     country: value.country,
+    coin:value.coin_name,
     password: "",
   };
-
+const {data: currencyfilter} = useCurrency();
 const [formValues, setformValues] = useState(initialValues);
 const [formErrors, setformErrors] = useState({});
 const [isValid, setValid] = useState(false);
 const dispatch = useDispatch();
 const [getData ]= useData();
-
-
+const [filter,setFilter] =useState({})
 const handleChanges = (e) => {
   const { name, value } = e.target;
   setformValues({ ...formValues, [name]: value });
@@ -96,7 +99,9 @@ const handleSubmit = () => {
       resetInputField();
     }
   }, [open]);
-
+  const handleChange = (e) => {
+     setFilter(e.target.value);
+     };
 return(
 <div>
 <form  onInput ={handleChanges} >
@@ -147,21 +152,47 @@ return(
        ]}
        formErrors={formErrors}
       />:
+      type == 'primarycurrency' ?
+      <select
+          className="form-control cd-select cd-mt-8"
+          name="primarycurrency"
+          onChange={handleChange}
+          label="Primary Currency">
+           {currencyfilter?.data?.map((value) => {
+             return (
+               <option value={value} key={value}>
+                {value}
+               </option>)
+           })}
+       </select>:
+        type == 'secondrycurrency' ?
+        <select
+          className="form-control cd-select cd-mt-8"
+          name="secondrycurrency"
+          onChange={handleChange}
+          label="Secondry Currency">
+            {currencyfilter?.data?.map((value) => {
+               return (
+                <option value={value} key={value}>
+                  {value}
+                </option>)
+             })}
+         </select>:
     type == 'name'?
-    <div>
-   <Name
-      name="firstname"
-      placeholder="Enter First Name"
-      label="First Name"
-      value={formValues.firstname}
-      formErrors={formErrors}
+     <div>
+      <Name
+       name="firstname"
+       placeholder="Enter First Name"
+       label="First Name"
+       value={formValues.firstname}
+       formErrors={formErrors}
       />
-    <Name
-      name="lastname"
-      placeholder="Enter Last Name"
-      label="Last Name"
-      value={formValues.lastname}
-      formErrors={formErrors}
+     <Name
+       name="lastname"
+       placeholder="Enter Last Name"
+       label="Last Name"
+       value={formValues.lastname}
+       formErrors={formErrors}
       />
     </div> : null
 

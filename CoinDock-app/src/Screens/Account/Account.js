@@ -6,9 +6,12 @@ import { useNavigate } from "react-router-dom";
 import "Shared/common-styles/button.css";
 import { useLogout } from "App/Api/auth";
 import "Shared/common-styles/common.css";
+import {useCurrencyValue} from "App/Api/accapi";
 
 function Account() {
  const { data: account}= useAccount();
+ const { data: currency}= useCurrencyValue();
+ const currencyValues = currency?.results[0] || {};
  const accountDetails = account?.result?.user || {};
  const [logout] = useLogout();
  const navigate = useNavigate();
@@ -61,10 +64,12 @@ function Account() {
        {
          label:'Primary currency',
          fieldKey:'primarycurrency',
+         type:'edit'
        },
        {
         label:'Secondry currency',
         fieldKey:'secondrycurrency',
+        type:'edit'
       }
      ]
      }
@@ -88,6 +93,7 @@ return (
                     label={item.label}
                     fields={item.fields}
                     value={accountDetails}
+                    coins ={currencyValues}
                   />
                </div>
           ))}

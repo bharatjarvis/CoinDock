@@ -29,7 +29,7 @@ function RecoveryCodeTestStep() {
     try {
       await recoveryTestCodes({ userId: 1, ...formValues }).unwrap();
 
-      navigate("/logout");
+      navigate("/dashboard");
     } catch (error) {
       if (error.status === 400) {
         setButtonPopup(true);

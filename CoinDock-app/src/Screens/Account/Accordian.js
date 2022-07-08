@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import EditPopup from './EditPopup';
 
-const Accordion = ({label,fields,value}) => {
+const Accordion = ({label,fields,value,coins}) => {
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState(false);
   const dispatch =useDispatch();
@@ -17,12 +17,14 @@ const Accordion = ({label,fields,value}) => {
           </div>
           {isActive && fields.map((field,id)=> (
             <div className="cd-accordion-content d-flex justify-content-between" key={id}>
-              {field.label}:
-              {field.fieldKey=='name' ? value.first_name+' '+value.last_name:
+              {field.label} :
+               {field.fieldKey=='name' ? value.first_name+' '+value.last_name:
                field.fieldKey == 'dateofbirth' ? value.date_of_birth :
                field.fieldKey=='country'?value.country :
-               field.fieldKey=='email'?value.email: null
-              }
+               field.fieldKey=='email'?value.email:
+               field.fieldKey=='primarycurrency'?coins.primary_currency:
+               field.fieldKey=='secondrycurrency'?coins.secondary_currency:null
+               }
               {field.type === 'edit' ?
               <button
                 className='cd-button cd-button-3 cd-edit-button'
