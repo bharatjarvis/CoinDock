@@ -14,11 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::table('coins', function (Blueprint $table) {
-            $table->string('coin_id');
-            $table->integer('is_crypto');
-            $table->integer('status')->default(0);
-            $table->string('img_path')->default('');
-            $table->integer('is_default')->default(0);
+            $table->string('coin_id')->after('id');
+            $table->integer('is_crypto')->after('name');
+            $table->integer('status')->default(0)->after('is_crypto');
+            $table->string('img_path')->nullable()->after('status');
+            $table->integer('is_default')->default(0)->after('img_path');
 
         });
     }

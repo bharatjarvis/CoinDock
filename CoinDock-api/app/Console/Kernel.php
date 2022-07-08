@@ -11,8 +11,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('passport:purge')->hourly();
-        $schedule->command('wallet:handle_balance')->everyFiveMinutes();
-        $schedule->command('coins:handle')->monthly();
+
+        $schedule->command('wallet:handle_balance')->everyFiveMinutes()->runInBackground()->withoutOverlapping();
+
+        $schedule->command('coins:handle')->monthly()->runInBackground()->withoutOverlapping();
     }
 
     /**

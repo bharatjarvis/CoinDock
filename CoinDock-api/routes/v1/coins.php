@@ -65,4 +65,13 @@ Route::group(['prefix' => 'coins', 'middleware' => 'auth:api'], function () {
     */
     Route::delete('/{coin}',[CoinController::class , 'delete']);
 
+
+    /*
+    For        : Get accepted Coins
+    RouteName  : /accepted-coins
+    Method     : DELETE
+    Access     : Private
+    */
+    Route::get('/accepted-assets', [CoinController::class , 'acceptedAssets']);
+
 });

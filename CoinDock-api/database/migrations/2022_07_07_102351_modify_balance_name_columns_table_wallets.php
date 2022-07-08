@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::table('wallets', function (Blueprint $table) {
             $table->string('name')->nullable()->change();
+            $table->double('coins',10)->after('wallet_id');
+
             
 
         });

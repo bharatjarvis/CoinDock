@@ -7,6 +7,7 @@ use App\Http\Requests\V1\CreateCoinRequest;
 use App\Http\Requests\V1\UpdateCoinRequest;
 use App\Http\Resources\V1\CoinResource;
 use App\Models\V1\Coin;
+use Symfony\Component\HttpFoundation\Response;
 
 class CoinController extends Controller
 {
@@ -18,12 +19,12 @@ class CoinController extends Controller
     public function index()
     {
         $coins = Coin::all();
-        return [
+        return response([
             'message' => 'coins fetched succesfully',
             'result' => [
                 'coins' => CoinResource::collection($coins)
-            ], 200
-        ];
+            ]
+       ],Response::HTTP_OK);
     }
 
     /**
@@ -49,7 +50,7 @@ class CoinController extends Controller
             'result'=>[
                 'coin'=>new CoinResource($coin)
             ]
-        ],200);
+        ],Response::HTTP_OK);
     }
 
 
@@ -84,7 +85,7 @@ class CoinController extends Controller
             'result'=>[
                 'coin' => new CoinResource($coin)
             ]
-        ], 200);
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -98,6 +99,11 @@ class CoinController extends Controller
         $coin->delete();
         return response([
             'message' => 'Coin Deleted Successfully',
-        ], 200);
+        ], Response::HTTP_OK);
+    }
+
+    public function acceptedAssets(){
+        $acceptedAssets = Coin::whereStatus(1)->get();
+        return $acceptedAssets;
     }
 }
