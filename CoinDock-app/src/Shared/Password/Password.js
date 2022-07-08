@@ -45,18 +45,9 @@ export const reenterpasswordValidation = (
 };
 
 const Password = ({ name, placeholder, label, formErrors, onInput }) => {
-  const initialValues = {
-    password: "",
-    reenterpassword: "",
-  };
-  const [formValues, setformValues] = useState(initialValues);
   const [fieldsTouched, setFieldsTouched] = useState(false);
   const [isShow, setIsShow] = useState(false);
 
-  const handleChanges = (e) => {
-    const { name, value } = e.target;
-    setformValues({ ...formValues, [name]: value });
-  };
   const handleFocus = (e) => {
     setFieldsTouched(true);
   };
@@ -78,8 +69,6 @@ const Password = ({ name, placeholder, label, formErrors, onInput }) => {
             className="form-control cd-mt-8"
             name={name}
             placeholder={placeholder}
-            onChange={handleChanges}
-            defaultValue={formValues.name}
             onBlur={handleFocus}
             data-toggle="password"
             onInput={handleInput}
@@ -90,13 +79,15 @@ const Password = ({ name, placeholder, label, formErrors, onInput }) => {
           </span>
         </div>
 
-        {fieldsTouched && <p className="text-danger">{formErrors[name]}</p>}
+        {fieldsTouched && formErrors && (
+          <p className="text-danger">{formErrors[name]}</p>
+        )}
       </div>
     </>
   );
 };
-Password.defaultProps ={
-  formErrors : {}
+Password.defaultProps = {
+  formErrors: {},
 };
 Password.propTypes = {
   label: propTypes.string,

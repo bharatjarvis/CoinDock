@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import propTypes from "prop-types";
+
 import "./Login.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
+
+import { emailValidation } from "Shared/Form/Email/Email.js";
+import Password from "Shared/Password/Password";
 import "Shared/common-styles/button.css";
 import { useLogin } from "App/Api/auth";
 import "Shared/Password/Password.css";
+import { requiredValidation } from "Shared/Validation/requiredValidation";
 
+import { Card } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import Email from "Shared/Form/Email";
 function Login() {
   let navigate = useNavigate();
   const [login, loginOptions] = useLogin();
@@ -15,7 +21,7 @@ function Login() {
   const [formValues, setformValues] = useState(initialValues);
   const [formErrors, setformErrors] = useState({});
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
-  const [isShow, setIsShow] = useState(false);
+
   const [isValid, setValid] = useState(false);
 
   const handleChanges = (e) => {
@@ -35,7 +41,7 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-   
+
     const { errors, isValid } = handleValidation(formValues);
     if (!isValid) {
       setformErrors(errors);
@@ -59,15 +65,13 @@ function Login() {
 
   const handleValidation = (values) => {
     const errors = {};
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-    if (!values.email) {
-      errors.email = "Email is required!";
-    } else if (!regex.test(values.email)) {
-      errors.email = "This is not a valid email format!";
-    }
-    if (!values.password) {
-      errors.password = "Password is required";
-    }
+
+    let isValid = true;
+    errors.email = emailValidation(values.email);
+    errors.password = requiredValidation({
+      value: values.password,
+      label: "Password ",
+    });
     setValid(!Object.values(errors).some(Boolean));
     return {
       isValid,
@@ -77,13 +81,17 @@ function Login() {
   const handleOnFocus = () => {
     if (displayErrorMessage) setDisplayErrorMessage(false);
   };
-  const togglePassword = () => {
-    setIsShow(isShow ? false : true);
-  };
+
   return (
     <div className="row content d-flex justify-content-center align-items-center">
       <div className="col-md-3">
-        <h3 className="nm-4 text-center fs-1 m-4">Login</h3>
+        <h2 className="text-center fs-4 m-4">Login</h2>
+
+        <span>
+          Don’t have an account?
+          <Link to="/signup">Signup here!</Link>
+        </span>
+
         {Boolean(loginOptions?.isError) && displayErrorMessage && (
           <p className="cd-login-error">{loginOptions?.error?.data?.message}</p>
         )}
@@ -95,33 +103,17 @@ function Login() {
           onInput={handleChanges}
         >
           <div className="form-group mb-3">
-            <label>Email</label>
-            <input
-              type="email"
-              name="email"
-              className="form-control mt-1 py-8"
-              placeholder="Enter your email address"
-              value={formValues.email}
-              id="email"
-              onChange={handleChanges}
-            />
+            <Email name="email" value={formValues.email} />
           </div>
           <p className="text-danger">{formErrors.email}</p>
           <div className="form-group mb-3">
-            <label>Password</label>
-            <div className="cd-password-container">
-              <input
-                type={isShow ? "text" : "password"}
+            <div>
+              <Password
                 name="password"
-                className="form-control mt-1 py-8"
-                placeholder="Enter your password"
+                placeholder="Password"
+                label="Password"
                 value={formValues.password}
-                id="password"
-                onChange={handleChanges}
               />
-              <span onClick={() => togglePassword()} className="cd-eye">
-                {isShow ? <RiEyeLine /> : <RiEyeOffLine />}
-              </span>
             </div>
             <p className="text-danger">{formErrors.password}</p>
           </div>
@@ -140,8 +132,5 @@ function Login() {
     </div>
   );
 }
-Login.propTypes = {
-  email: propTypes.string,
-  password: propTypes.string,
-};
+
 export default Login;

@@ -21,17 +21,8 @@ const Name = ({
   onInput,
   currentFieldValue,
 }) => {
-  const initialValues = {
-    firstname: "",
-    lastname: "",
-  };
-  const [formValues, setformValues] = useState(initialValues);
   const [fieldsTouched, setFieldsTouched] = useState(false);
 
-  const handleChanges = (e) => {
-    const { name, value } = e.target;
-    setformValues({ ...formValues, [name]: value });
-  };
   const handleFocus = (e) => {
     setFieldsTouched(true);
   };
@@ -49,7 +40,6 @@ const Name = ({
           className="form-control cd-mt-8"
           name={name}
           placeholder={placeholder}
-          onChange={handleChanges}
           defaultValue={currentFieldValue}
           onBlur={handleFocus}
           onInput={handleInput}
@@ -64,5 +54,11 @@ const Name = ({
 
 Name.propTypes = {
   label: propTypes.string,
+
+  name: propTypes.string,
+  placeholder: propTypes.string,
+  formErrors: propTypes.object,
+  onInput: propTypes.func,
+  currentFieldValue: propTypes.string,
 };
 export default Name;

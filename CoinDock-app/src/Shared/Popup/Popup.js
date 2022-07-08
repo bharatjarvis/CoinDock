@@ -1,12 +1,13 @@
 import React from "react";
+import { propTypes } from "react-bootstrap/esm/Image";
 import "./Popup.css";
 
 function Popup(props) {
-  const handleClick =() =>{
-    props.buttonOnclick?.()
-    props.setTrigger(false)
-  }
- 
+  const handleClick = () => {
+    props.buttonOnclick?.();
+    props.setTrigger(false);
+  };
+
   return props.trigger ? (
     <div className="cd-popup">
       <div className="cd-popup-inner">
@@ -23,8 +24,14 @@ function Popup(props) {
       </div>
     </div>
   ) : (
-    <React.Fragment/>
+    <React.Fragment />
   );
 }
+Popup.propTypes = {
+  trigger: propTypes.function,
+  buttonLable: propTypes.string,
+  disabled: propTypes.boolean,
+  children: propTypes.element,
+};
 
 export default Popup;

@@ -66,7 +66,6 @@ function SignUP(props) {
             setButtonPopup(true);
           });
       } catch (errorResponse) {
-        console.log(errorResponse);
         const {
           first_name,
           last_name,
@@ -84,11 +83,6 @@ function SignUP(props) {
           password,
         });
       }
-    }
-
-    if (!Object.values(formValues).includes("")) {
-      formValues.id = formValues.id === undefined ? Date.now() : formValues.id;
-      setformValues({ ...formValues });
     }
   };
 
@@ -112,7 +106,7 @@ function SignUP(props) {
       values.password
     );
     errors.date = dateValidation(values.date);
-    errors.country = countryValidation(values.country);
+    errors.country = countryValidation(values.country, "Country");
 
     setValid(!Object.values(errors).some(Boolean));
     return {

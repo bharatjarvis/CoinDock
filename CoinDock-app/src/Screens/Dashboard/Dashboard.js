@@ -16,34 +16,30 @@ function Dashboard() {
   const { data: primary } = usePrimaryCurrency();
   const { data: top } = useTopperformer();
   const { data: low } = useLowperformer();
+  console.log(top);
 
   return (
     <React.Fragment>
       <div className="cd-performance-wrap justify-content-space-between p-14">
         {total && (
           <Cards
-            name={total?.result?.["total-BTC"]?.name}
-            value={total?.result?.["total-BTC"]?.total}
+            name={total?.result?.heading}
+            value={total?.result?.balance}
+            //  img={total?.result?.img_url}
           />
         )}
 
         {primary && (
           <Cards
-            name={primary?.result?.["total-INR"]?.name}
-            value={primary?.result?.["total-INR"]?.primaryCurrency}
+            name={primary?.result?.heading}
+            value={primary?.result?.balance}
           />
         )}
         {top && (
-          <Cards
-            name={top?.result?.["Top-Performer"]?.name}
-            value={top?.result?.["Top-Performer"]?.balance}
-          />
+          <Cards name={top?.result?.heading} value={top?.result?.coin_name} />
         )}
         {low && (
-          <Cards
-            name={low?.result?.["Low-Performer"]?.name}
-            value={low?.result?.["Low-Performer"]?.balance}
-          />
+          <Cards name={low?.result?.heading} value={low?.result?.coin_name} />
         )}
       </div>
       <div className="container justify-content-center">

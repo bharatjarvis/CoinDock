@@ -9,13 +9,15 @@ import { closePopup } from "Screens/AddWallet/AddWalletSlice";
 import { walletnameValidation } from "Shared/Form/WalletFields/WalletName";
 import WalletName from "Shared/Form/WalletFields/WalletName";
 import { countryValidation } from "Shared/Form/Select/Select";
-import { useGetWalletMutation } from "App/Api/walletapi";
+import { useAddWalletMutation } from "App/Api/walletapi";
 import { useNavigate } from "react-router-dom";
 
 function AddWallet() {
   const open = useSelector((state) => state.addwallet.open);
+  // const {} =
+
   const navigate = useNavigate();
-  const [wallet] = useGetWalletMutation();
+  const [wallet] = useAddWalletMutation();
   const dispatch = useDispatch();
   const initialValues = {
     wallet: "",
@@ -49,26 +51,23 @@ function AddWallet() {
       values.walletaddress,
       "Wallet address"
     );
-    errors.country = countryValidation(values.country);
+    errors.country = countryValidation(values.country, "Coin");
     setValid(!Object.values(errors).some(Boolean));
     return {
       isValid,
       errors,
     };
   };
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    // e.preventDefault();
     const { errors, isValid } = handleValidation(formValues);
+    console.log(formValues);
 
     if (!isValid) {
       setformErrors(errors);
     } else {
       try {
-        await wallet({ ...formValues })
-          .unwrap()
-          .then(() => {
-            navigate("/dashboard");
-          });
+        await wallet({ ...formValues }).unwrap();
       } catch (errorResponse) {}
     }
   };
@@ -82,7 +81,7 @@ function AddWallet() {
       <form onSubmit={handleSubmit} onInput={handleChanges}>
         <Popup
           trigger={open}
-          // buttonOnclick={handleSubmit}
+          buttonOnclick={handleSubmit}
           setTrigger={handleSetTrigger}
           disabled={!isValid}
           buttonLable="Done"
@@ -99,7 +98,7 @@ function AddWallet() {
           <Select
             name="country"
             className="form-control"
-            label="Coin"
+            label="Coin*"
             value={formValues.country}
             options={[
               { label: "" },
@@ -112,7 +111,7 @@ function AddWallet() {
           <WalletName
             name="walletaddress"
             placeholder="Wallet Address "
-            label="Wallet Address"
+            label="Wallet Address*"
             value={formValues.walletaddress}
             formErrors={formErrors}
           />

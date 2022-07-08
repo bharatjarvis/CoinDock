@@ -1,4 +1,4 @@
-.stepper-step {
+.cd-stepper-step {
   width: 32px;
   height: 32px;
 
@@ -6,7 +6,7 @@
   background: #c4c4c4;
   margin-top: 30px;
 }
-.stepper {
+.cd-stepper {
   display: flex;
   flex-direction: row;
   width: 100%;

@@ -1,5 +1,6 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import auth from "App/Api/auth";
+import { store } from "App/Reducers";
 import { authToken, getUserId } from "../helper";
 
 const reducer = createSlice({

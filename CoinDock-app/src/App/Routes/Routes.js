@@ -5,7 +5,7 @@ import AuthRoutes from "./AuthRoutes";
 import PublicRoutes from "./PublicRoutes";
 import RouteLoader from "./RouteLoader";
 
-const Direction = () => {
+const Routes = () => {
   return (
     <BrowserRouter>
       <Header />
@@ -18,4 +18,4 @@ const Direction = () => {
     </BrowserRouter>
   );
 };
-export default Direction;
+export default Routes;
