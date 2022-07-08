@@ -105,7 +105,7 @@ class User extends Authenticatable
 
     public function totalDefault()
     {
-        $walletBalanceInUSD = $this->wallets()->sum('balance_USD');
+        $walletBalanceInUSD = $this->wallets()->sum('balance');
         $baseUrl = config('coin.coin.api_url');
         $exchangeURL = $baseUrl . config('coin.coin.usd_to_Btc');
         $usdToBtC = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($exchangeURL);
