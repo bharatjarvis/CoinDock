@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('coins', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->timestamps();
+        Schema::table('wallets', function (Blueprint $table) {
+            $table->double('coins', 10)->after('balance');
+            $table->string('name')->nullable()->change()->after('wallet_id');
         });
     }
 
@@ -27,6 +26,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('coins');
+        Schema::table('wallets', function (Blueprint $table) {
+            $table->dropColumn(['coins', 'name']);
+        });
     }
 };

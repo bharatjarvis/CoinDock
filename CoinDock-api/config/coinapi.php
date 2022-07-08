@@ -1,11 +1,11 @@
 <?php
- 
-return[
- 
-    'coin' =>[
-        'apiurl' => env('COINAPI_URL'),
-        'apikey'=> env('COINAPI_KEY'),
-        'exchangeURL'=>'/exchangerate/{from}/{to}/',
+
+return [
+
+    'coin' => [
+        'api_url' => env('COINAPI_URL'),
+        'api_key' => env('COINAPI_KEY'),
+        'exchange_url' => '/exchangerate/{from}/{to}/',
     ],
- 
+
 ];

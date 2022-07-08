@@ -5,6 +5,7 @@ use App\Http\Controllers\V1\{
     WalletCoinController,
     RecoveryKeyController,
     SignupController,
+    CoincardController,
 };
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,7 @@ Route::middleware('auth:api')
     ->prefix('users')
     ->group(function () {
         Route::prefix('{user}')->group(function () {
+            Route::get('/coinCard', [CoincardController::class, 'coinCard']);
             Route::prefix('recovery-codes')->group(function () {
                 Route::post('/', [RecoveryKeyController::class, 'create']);
 
@@ -59,7 +61,6 @@ Route::middleware('auth:api')
                         404,
                     ),
                 );
-
             });
         });
     });

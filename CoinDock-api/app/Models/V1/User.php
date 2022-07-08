@@ -100,4 +100,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Signup::class);
     }
+    public function wallets(){
+
+        return $this->hasMany(Wallet::class);
+
+    }
 }

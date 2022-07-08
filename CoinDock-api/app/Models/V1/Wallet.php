@@ -15,7 +15,7 @@ class Wallet extends Model
         'user_id',
         'wallet_id',
         'balance',
-        'bUSD',
+        'coins',
         'name'
     ];
 
@@ -23,6 +23,11 @@ class Wallet extends Model
     public function coin(){
         return $this->belongsTo(Coin::class);
     }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
 
 
 }

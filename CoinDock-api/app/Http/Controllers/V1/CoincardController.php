@@ -7,29 +7,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\V1\User;
 use App\Models\V1\{Wallet,Coin};
+use App\Http\Resources\V1\coinCardResource;
 
 
 class CoincardController extends Controller
 {
-     public function coinCard(User $user){
-        $data = new Coin();
-        $logo = $data->logo($user);
-        $numberOfCoins=$data->countCoins($user);
-        $coinBTC=$data->coinDefault($user);
-        $primaryCurrency = $data->getPrimaryCurrency($user);
-        $secondaryCurrency = $data->getSecondaryCurrency($user);
-        $coin = Coin::whereIsDefault(1)->first();
-        return response([
+     public function coinCard(User $user)
+     {
+        $coins=$user->wallets->map(function($wallet){return $wallet->coin;});
+        if($coins->isEmpty()){
+            return response(['message' => 'User have empty data'],400);
+        } else{
+             return response([
                 'message' => 'success',
-                'result' => [
-                        'logo' => $logo,
-                        'coin-' . $coin->coin_id => $coinBTC,
-                        'number_of_coins' =>$numberOfCoins,
-                        'primary_currency' =>$primaryCurrency,
-                        'secondary_currency' =>$secondaryCurrency,
-
-                    ]
+                'results' => coinCardResource::collection($coins)->resolve(),
+                
                 ], 200);
+            }
      }
 }
 
