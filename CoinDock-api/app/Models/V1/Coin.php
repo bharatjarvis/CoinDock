@@ -58,7 +58,7 @@ class Coin extends Model
         $user = Auth::user();
         return $this->wallets()->whereUserId($user->id)
             ->whereCoinId($this->id)
-            ->sum('balance');
+            ->sum('USD_balance');
     }
 
     //Coin Default Value

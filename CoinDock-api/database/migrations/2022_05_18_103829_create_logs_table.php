@@ -20,9 +20,9 @@ return new class extends Migration
             // uncommet the below line to have the refrence of the logs that an user has
             // $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users'); 
+            $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('wallet_id');
-            $table->foreign('wallet_id')->references('id')->on('wallets'); 
+            $table->foreign('wallet_id')->references('id')->on('wallets');
             $table->timestamps();
         });
     }
@@ -34,8 +34,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropForeign('logs_user_id_foreign');
-        Schema::dropForeign('logs_wallet_id_foreign');
-        Schema::dropIfExists('logs');
+        Schema::table('logs', function (Blueprint $table) {
+            $table->dropForeign('logs_user_id_foreign');
+            $table->dropForeign('logs_wallet_id_foreign');
+        });
     }
 };

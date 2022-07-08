@@ -14,7 +14,7 @@ class Wallet extends Model
         'coin_id',
         'user_id',
         'wallet_id',
-        'balance',
+        'USD_balance',
         'coins',
         'name'
     ];
