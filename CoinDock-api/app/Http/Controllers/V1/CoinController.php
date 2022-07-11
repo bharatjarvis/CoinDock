@@ -100,4 +100,17 @@ class CoinController extends Controller
             ]
         ],Response::HTTP_OK);
     }
+
+
+    //Conversions that we are accepting
+    public function acceptedConversions(){
+        $acceptedAssets = Coin::whereStatus(1)->whereIsCrypto(0)->get();
+        return response([
+            'message'=>'Success',
+            'results'=>[
+                'coins'=>$acceptedAssets
+            ]
+        ],Response::HTTP_OK);
+    }
+
 }

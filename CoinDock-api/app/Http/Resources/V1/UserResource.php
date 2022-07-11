@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\V1;
 
+use App\Models\V1\Coin;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -24,8 +25,8 @@ class UserResource extends JsonResource
             'type'=>$this->type,
             'date_of_birth'=>$this->date_of_birth,
             'status'=>$this->status,
-            'primary_currency'=>$this->settings->primary_currency,
-            'secondary_currency'=>$this->settings->secondary_currency
+            'primary_currency'=>$this->settings->primary_currency,//Coin::whereName($this->settings->primary_currency)->first()->name,
+            'secondary_currency'=>$this->settings->secondary_currency//Coin::whereName($this->settings->secondary_currency)->first()->name
 
         ];
     }

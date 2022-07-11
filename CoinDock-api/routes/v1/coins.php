@@ -39,11 +39,20 @@ Route::group(['prefix' => 'coins', 'middleware' => 'auth:api'], function () {
 
     /*
     For        : Listing all the coins
-    RouteName  : /coins/
+    RouteName  : /coins/accepted-assets
     Method     : GET
     Access     : Private
     */
     Route::get('/accepted-assets', [CoinController::class , 'acceptedAssets']);
+
+
+    /*
+    For        : Listing all the coins
+    RouteName  : /coins/accepted-assets
+    Method     : GET
+    Access     : Private
+    */
+    Route::get('/accepted-conversions', [CoinController::class , 'acceptedConversions']);
 
 
     
