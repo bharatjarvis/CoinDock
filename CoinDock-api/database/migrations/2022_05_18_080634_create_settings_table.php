@@ -30,8 +30,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('settings', function (Blueprint $table) {
-            $table->dropColumn('settings_user_id_foriegn');
-        });
+        Schema::dropForeign('settings_user_id_foriegn');
+        Schema::dropIfExists('settings');
     }
 };

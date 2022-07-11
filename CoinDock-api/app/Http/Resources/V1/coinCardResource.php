@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 
-class coinCardResource extends JsonResource
+class CoinCardResource extends JsonResource
 {
     public $preserveKeys = true;
 

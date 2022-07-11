@@ -22,7 +22,7 @@ class CoincardController extends Controller
         } else {
             return response([
                 'message' => 'success',
-                'results' => coinCardResource::collection($coins)->resolve(),
+                'results' => CoinCardResource::collection($coins)->resolve(),
 
             ], 200);
         }
