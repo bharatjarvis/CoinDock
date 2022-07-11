@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\CoinResource;
 use App\Models\V1\Coin;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,8 +21,8 @@ class CoinController extends Controller
         return [
             'message' => 'coins fetched succesfully',
             'result' => [
-                'coins' => $coins
-            ], 200
+                'coins' => CoinResource::collection($coins)
+            ], Response::HTTP_OK
         ];
     }
 
@@ -38,8 +39,10 @@ class CoinController extends Controller
 
         return response([
                 'message'=>'Coin Updated Successfully',
-                'coin'=>$coin
-            ],200);
+                'results'=>[
+                    'coin'=>new CoinResource($coin)
+                ]
+            ],Response::HTTP_OK);
     }
 
 
@@ -52,8 +55,12 @@ class CoinController extends Controller
     public function show($id)
     {
         $coin = Coin::findOrFail($id)->first();
-        return response(
-          ['result'=>$coin],200
+        return response([
+            'message'=>'success',
+            'results'=>[
+                'coin'=>new CoinResource($coin)
+            ]
+        ],Response::HTTP_OK
         );
 
     }
@@ -70,8 +77,8 @@ class CoinController extends Controller
         $coin = Coin::whereId($id)->update(['name'=>$request->name]);
         return response([
             'message'=>'Coin Updated Successfully',
-            'coin'=>$coin
-        ],200);
+            'coin'=>new CoinResource($coin)
+        ],Response::HTTP_OK);
     }
 
     /**
@@ -85,30 +92,41 @@ class CoinController extends Controller
         Coin::whereId($id)->delete();
         return response([
             'message'=>'Coin Deleted Successfully',
-        ],200);
+        ],Response::HTTP_OK);
     }
 
 
     //Returning the Coins that we are accepting
     public function acceptedAssets(){
         
-        $acceptedAssets = Coin::whereStatus(1)->get();
+        $coin = new Coin();
         return response([
             'message'=>'Success',
             'results'=>[
-                'coins'=>$acceptedAssets
+                'coins'=>CoinResource::collection($coin->acceptedAssets())
             ]
         ],Response::HTTP_OK);
     }
 
 
     //Conversions that we are accepting
-    public function acceptedConversions(){
-        $acceptedAssets = Coin::whereStatus(1)->whereIsCrypto(0)->get();
+    public function currencyConversions(){
+        $coin = new Coin();
         return response([
             'message'=>'Success',
             'results'=>[
-                'coins'=>$acceptedAssets
+                'coins'=>CoinResource::collection($$coin->currencyConversions())
+            ]
+        ],Response::HTTP_OK);
+    }
+
+
+    public function acceptedCryptoCoins(){
+        $coin = new Coin();
+        return response([
+            'message'=>'Success',
+            'results'=>[
+                'coins'=>CoinResource::collection($coin->acceptedCryptoCoins())
             ]
         ],Response::HTTP_OK);
     }

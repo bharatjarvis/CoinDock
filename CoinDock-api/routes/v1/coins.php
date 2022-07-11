@@ -46,13 +46,23 @@ Route::group(['prefix' => 'coins', 'middleware' => 'auth:api'], function () {
     Route::get('/accepted-assets', [CoinController::class , 'acceptedAssets']);
 
 
+
     /*
-    For        : Listing all the coins
+    For        : Listing all allowed Crypto Coins
+    RouteName  : /coins/accepted-crypto
+    Method     : GET
+    Access     : Private
+    */
+    Route::get('/accepted-crypto-coins', [CoinController::class , 'acceptedCryptoCoins']);
+
+
+    /*
+    For        : Listing all the currency Conversions
     RouteName  : /coins/accepted-assets
     Method     : GET
     Access     : Private
     */
-    Route::get('/accepted-conversions', [CoinController::class , 'acceptedConversions']);
+    Route::get('/currency-conversions', [CoinController::class , 'currencyConversions']);
 
 
     
