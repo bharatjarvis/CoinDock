@@ -83,9 +83,9 @@ class User extends Authenticatable
             'status' => UserStatus::Active,
         ]);
         // REGISTRATION STATUS UPDATION -  STEP:1
-        $signup = $this->signUp;
-        if ($signup) {
-            $signup->step_count += 1;
+        $signup = $this->signup;
+        if($signup){
+            $signup->step_count+=1;
             $signup->save();
         }
 
