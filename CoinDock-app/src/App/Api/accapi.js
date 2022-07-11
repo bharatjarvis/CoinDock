@@ -21,6 +21,8 @@ const accapi = baseApi.injectEndpoints({
                 country: "Mauritania",
                 email: "crunolfsdottir@example.com",
                 status: 0,
+                primary_currency: "IND",
+                secondary_currency: "CAN",
                 created_at: "2022-06-20T06:11:31.000000Z",
                 updated_at: "2022-06-22T10:25:20.000000Z",
                 deleted_at: null

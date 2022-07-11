@@ -5,11 +5,13 @@ import { useAccount } from "App/Api/accapi";
 import { useNavigate } from "react-router-dom";
 import "Shared/common-styles/button.css";
 import { useLogout } from "App/Api/auth";
+import { useState } from "react";
 import "Shared/common-styles/common.css";
 
 
 function Account() {
  const { data: account}= useAccount();
+ const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
  const accountDetails = account?.result?.user || {};
  const [logout] = useLogout();
  const navigate = useNavigate();
@@ -77,8 +79,8 @@ function Account() {
   try {
     await logout().unwrap();
     navigate("/account");
-  } catch (e) {
-    navigate("/")
+  } catch {
+    setDisplayErrorMessage(true);
   }
 };
 return (

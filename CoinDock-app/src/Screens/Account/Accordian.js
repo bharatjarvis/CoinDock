@@ -21,7 +21,9 @@ const Accordion = ({label,fields,value}) => {
                {field.fieldKey=='name' ? value.first_name+' '+value.last_name:
                field.fieldKey == 'dateofbirth' ? value.date_of_birth :
                field.fieldKey=='country'?value.country :
-               field.fieldKey=='email'?value.email:null
+               field.fieldKey=='email'?value.email:
+               field.fieldKey=='primarycurrency'?value.primary_currency:
+               field.fieldKey=='secondrycurrency'?value.secondary_currency:null
                }
               {field.type === 'edit' ?
               <button
