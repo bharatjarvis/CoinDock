@@ -49,7 +49,7 @@ class Wallet extends Model
     //converting Sathosis into Corresponding crypto coins
     public function satoshiToCrypt($coin, $sathosis)
     {
-        $satsToCoins = array_keys(config('assets.accepted_coins'));
+        $satsToCoins = config('assets.accepted_coins');
 
         return ($satsToCoins[$coin]['sats_to_crypt'] * $sathosis);
     }

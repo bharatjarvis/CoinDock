@@ -14,18 +14,18 @@ class WalletController extends Controller
         $wallet = new Wallet();
 
         $walletId = $request->wallet_id;
-        $walletCheck = Wallet::whereWalletId($walletId)->first();
+        $walletCheck = $wallet->whereWalletId($walletId)->first();
 
         if ($walletCheck) {
             return response([
                 'message' => 'Wallet Already Added'
-            ], Response::HTTP_CONFLICT);
+            ], Response::HTTP_BAD_REQUEST);
         }
         
         else if(!$wallet->addWallet($user ,$request)){
             return response([
                 'message'=>'Wallet Cannot be added '
-            ],Response::HTTP_CONFLICT);
+            ],Response::HTTP_BAD_REQUEST);
         }
 
         return response([
