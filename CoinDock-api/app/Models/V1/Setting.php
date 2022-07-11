@@ -18,13 +18,14 @@ class Setting extends Model
 
 
     public function edit(User $user , Request $request){
-        $userSettings = Setting::whereUserId($user->id)->first();
+
+        $userSettings = $user->settings();
         $settings = $request->all();
 
         $userSettings->update($settings);
 
         return response([
-            'message'=>'Settings Updated Successfully',
+            'message'=>'Settings Updated Successfully'
         ],200);
     }
 }

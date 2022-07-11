@@ -5,7 +5,7 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use App\Models\V1\Coin;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Test\Constraint\ResponseFormatSame;
+use Symfony\Component\HttpFoundation\Response;
 
 class CoinController extends Controller
 {
@@ -86,5 +86,18 @@ class CoinController extends Controller
         return response([
             'message'=>'Coin Deleted Successfully',
         ],200);
+    }
+
+
+    //Returning the Coins that we are accepting
+    public function acceptedAssets(){
+        
+        $acceptedAssets = Coin::whereStatus(1)->get();
+        return response([
+            'message'=>'Success',
+            'results'=>[
+                'coins'=>$acceptedAssets
+            ]
+        ],Response::HTTP_OK);
     }
 }

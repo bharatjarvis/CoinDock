@@ -9,8 +9,8 @@ use App\Http\Resources\V1\RecoveryCodeResource;
 use App\Models\V1\{User, RecoveryKey};
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
+use Symfony\Component\HttpFoundation\Response;
 
 class RecoveryKeyController extends Controller
 {
@@ -23,7 +23,7 @@ class RecoveryKeyController extends Controller
                     config('random_keys.recovery.test_block_length'),
                 ),
             ],
-            200,
+            Response::HTTP_OK
         );
     }
     /**
@@ -44,7 +44,7 @@ class RecoveryKeyController extends Controller
                     'completed' => 3,
                 ],
             ],
-            200,
+            Response::HTTP_OK
         );
     }
 
@@ -58,13 +58,13 @@ class RecoveryKeyController extends Controller
 
         return response(
             [
-                'message' => 'Recovery codes Re-generated successfully',
+                'message' => 'Recovery codes re-generated successfully',
                 'results' => [
                     'recovery_code' => new RecoveryCodeResource($recoveryKeys),
                     'completed' => 3,
                 ],
             ],
-            200,
+            Response::HTTP_OK
         );
         
 
@@ -95,7 +95,7 @@ class RecoveryKeyController extends Controller
                 [
                     'message' => 'Recovery codes missing',
                 ],
-                400,
+                Response::HTTP_BAD_REQUEST
             );
         }
 

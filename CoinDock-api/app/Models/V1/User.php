@@ -8,11 +8,13 @@ use App\Models\V1\{Coin, Signup};
 use App\Http\Requests\V1\CreateUserRequest;
 use App\Http\Requests\V1\updatePasswordRequest;
 use App\Http\Requests\V1\updateProfileRequest;
+use App\Http\Resources\V1\UserResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
+use Symfony\Component\HttpFoundation\Response;
 
 class User extends Authenticatable
 {
@@ -106,18 +108,25 @@ class User extends Authenticatable
     {
         $updatedUser = $request->all();
         $user->update($updatedUser);
-
         return response([
             'message' => 'Profile updated succesfully',
-        ], 200);
+            'results'=>[
+                'user'=>new UserResource($user)
+            ]
+        ],Response::HTTP_OK );
     }
 
     public function changePassword(updatePasswordRequest $request, User $user)
     {
         $updatedPassword = $request->password;
+        
         User::whereId($user->id)->update(['password' => bcrypt($updatedPassword)]);
         return response([
             'message' => 'Password has been updated successfully',
-        ], 200);
+        ],Response::HTTP_OK );
+    }
+
+    public function settings(){
+        return $this->hasOne('App\Models\V1\Setting');
     }
 }
