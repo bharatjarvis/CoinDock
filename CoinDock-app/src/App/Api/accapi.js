@@ -1,4 +1,5 @@
 import { getUserId } from "App/Auth/helper";
+
 import baseApi from "./api";
 const accapi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -29,35 +30,7 @@ const accapi = baseApi.injectEndpoints({
 
      provideTags :['account']
   }),
-  currency: build.query({
-    query: () => ({
-      url: `/v1/users/${getUserId()}/recovery-codes`,
-      method: "post",
-     }),
-     transformResponse: (response) => ({
-      message: "success",
-      results: [
-          {
-              coin_name: "BTC",
-              logo: " \"https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/4caf2b16a0174e26a3482cea69c34cba.png\"",
-              BTC_coin: 0.14843041966604087,
-              number_of_coins: 25,
-              primary_currency: 43174935.65017325,
-              secondary_currency: 256341
-          },
-          {
-              coin_name: "RVN",
-              logo: "https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/604ae4533d9f4ad09a489905cce617c2.png%22",
-              BTC_coin: 0.003275020347329241,
-              number_of_coins: 2,
-              primary_currency: 3454024.3419326744,
-              secondary_currency: 5656
-          }
-      ]
-  }),
 
-   provideTags :['account']
-}),
       currencyfilter: build.query({
         query: () => ({
         url: `/v1/users/${getUserId()}/recovery-codes`,
@@ -87,7 +60,6 @@ const accapi = baseApi.injectEndpoints({
 export default accapi;
 export const {
   useAccountQuery: useAccount,
-  useCurrencyQuery: useCurrencyValue,
   useGetDataMutation: useData ,
   useCurrencyfilterQuery: useCurrency
 } = accapi;

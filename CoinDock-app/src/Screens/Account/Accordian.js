@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import EditPopup from './EditPopup';
 
-const Accordion = ({label,fields,value,coins}) => {
+const Accordion = ({label,fields,value}) => {
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState(false);
   const dispatch =useDispatch();
@@ -22,8 +22,8 @@ const Accordion = ({label,fields,value,coins}) => {
                field.fieldKey == 'dateofbirth' ? value.date_of_birth :
                field.fieldKey=='country'?value.country :
                field.fieldKey=='email'?value.email:
-               field.fieldKey=='primarycurrency'?coins.primary_currency:
-               field.fieldKey=='secondrycurrency'?coins.secondary_currency:null
+               field.fieldKey=='primarycurrency'?value.primary_currency:
+               field.fieldKey=='secondrycurrency'?value.secondary_currency:null
                }
               {field.type === 'edit' ?
               <button
