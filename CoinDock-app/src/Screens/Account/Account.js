@@ -16,7 +16,7 @@ function Account() {
 
  const accordianBasedAccountDetails = [
    {
-     label:'Profile Settings',
+     label:'Profile settings',
      fields:[
        {
        label:'Name',
@@ -36,7 +36,7 @@ function Account() {
     ]
    },
    {
-     label:'Account Settings',
+     label:'Account settings',
      fields:[
          {
           label:'Email',
@@ -57,7 +57,7 @@ function Account() {
     ]
    },
      {
-     label:'System Settings',
+     label:'System settings',
      fields:[
        {
          label:'Primary currency',
@@ -65,8 +65,8 @@ function Account() {
          type:'edit'
        },
        {
-        label:'Secondry currency',
-        fieldKey:'secondrycurrency',
+        label:'Secondary currency',
+        fieldKey:'secondarycurrency',
         type:'edit'
       }
      ]
@@ -78,7 +78,6 @@ function Account() {
     await logout().unwrap();
     navigate("/");
   } catch (e) {
-    navigate("/account")
   }
 };
 return (
