@@ -72,7 +72,7 @@ class User extends Authenticatable
 
     public function store(CreateUserRequest $request): self
     {
-        $user = User::create([
+        $user = $this::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'type' => UserType::User,
@@ -94,10 +94,6 @@ class User extends Authenticatable
         return $user;
     }
 
-    public function recoveryKeys()
-    {
-        return $this->hasMany(RecoveryKey::class, 'user_id', 'id');
-    }
 
     public function signUp()
     {
@@ -120,7 +116,7 @@ class User extends Authenticatable
     {
         $updatedPassword = $request->password;
         
-        User::whereId($user->id)->update(['password' => bcrypt($updatedPassword)]);
+        $this::whereId($user->id)->update(['password' => bcrypt($updatedPassword)]);
         return response([
             'message' => 'Password has been updated successfully',
         ],Response::HTTP_OK );

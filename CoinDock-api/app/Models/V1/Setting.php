@@ -5,6 +5,7 @@ namespace App\Models\V1;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\HttpFoundation\Response;
 
 class Setting extends Model
 {
@@ -26,6 +27,6 @@ class Setting extends Model
 
         return response([
             'message'=>'Settings Updated Successfully'
-        ],200);
+        ],Response::HTTP_OK);
     }
 }

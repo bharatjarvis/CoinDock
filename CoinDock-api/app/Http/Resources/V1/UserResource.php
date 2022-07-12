@@ -4,7 +4,7 @@ namespace App\Http\Resources\V1;
 
 use App\Models\V1\Coin;
 use Illuminate\Http\Resources\Json\JsonResource;
-
+use Currency\Util\CurrencySymbolUtil;
 class UserResource extends JsonResource
 {
     /**
@@ -25,8 +25,10 @@ class UserResource extends JsonResource
             'type'=>$this->type,
             'date_of_birth'=>$this->date_of_birth,
             'status'=>$this->status,
-            'primary_currency'=>$this->settings->primary_currency,//Coin::whereName($this->settings->primary_currency)->first()->name,
-            'secondary_currency'=>$this->settings->secondary_currency//Coin::whereName($this->settings->secondary_currency)->first()->name
+            'primary_currency'=>$this->settings->primary_currency,
+            'primary_currency_symbol'=>CurrencySymbolUtil::getSymbol($this->settings->primary_currency),
+            'secondary_currency'=>$this->settings->secondary_currency,
+            'secondary_currency_symbol'=>CurrencySymbolUtil::getSymbol($this->settings->secondary_currency),
 
         ];
     }
