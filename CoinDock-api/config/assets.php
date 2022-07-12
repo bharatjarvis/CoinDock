@@ -95,9 +95,31 @@ return [
             'img_path' => '',
             'sats_to_crypt'=>0.000000000000000000999999998343
         ],
-        'US Dollar' => [],
-        'Indian Rupee' => [],
-        'Canadian Dollar' => [],
+        'US Dollar' => [
+            'coin_id' => 'USD',
+            'bal_path' => '',
+            'img_path' => ''
+        ],
+        'Indian Rupee' => [
+            'coin_id' => 'INR',
+            'bal_path' => '',
+            'img_path' => ''
+        ],
+        'Canadian Dollar' => [
+            'coin_id' => 'CAD',
+            'bal_path' => '',
+            'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/2ba6caaf33b9496e8a39dd96a1b1bbe1.png'
+        ],
+        'UK'=>[
+            'coin_id' => 'UK',
+            'bal_path' => '',
+            'img_path' => ''
+        ],
+        'Yen'=>[
+            'coin_id' => 'JPY',
+            'bal_path' => '',
+            'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/0d8862c9f9b34380b3715ced8a869e01.png'
+        ]
     ],
 
     'coin_api' => [
