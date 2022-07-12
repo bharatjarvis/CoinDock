@@ -39,11 +39,11 @@ Route::group(['prefix' => 'coins', 'middleware' => 'auth:api'], function () {
 
     /*
     For        : Listing all the coins
-    RouteName  : /coins/accepted-assets
+    RouteName  : /coins/accepted
     Method     : GET
     Access     : Private
     */
-    Route::get('/accepted-assets', [CoinController::class , 'acceptedAssets']);
+    Route::get('/accepted', [CoinController::class , 'acceptedAssets']);
 
 
 
@@ -53,12 +53,13 @@ Route::group(['prefix' => 'coins', 'middleware' => 'auth:api'], function () {
     Method     : GET
     Access     : Private
     */
-    Route::get('/accepted-crypto-coins', [CoinController::class , 'acceptedCryptoCoins']);
+    Route::get('/accepted-crypto', [CoinController::class , 'acceptedCryptoCoins']);
 
 
+    
     /*
     For        : Listing all the currency Conversions
-    RouteName  : /coins/accepted-assets
+    RouteName  : /coins/currency-convresions
     Method     : GET
     Access     : Private
     */

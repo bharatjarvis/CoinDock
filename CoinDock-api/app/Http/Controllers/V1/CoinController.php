@@ -115,12 +115,13 @@ class CoinController extends Controller
         return response([
             'message'=>'Success',
             'results'=>[
-                'coins'=>CoinResource::collection($$coin->currencyConversions())
+                'coins'=>CoinResource::collection($coin->currencyConversions())
             ]
         ],Response::HTTP_OK);
     }
 
 
+    //Crypto coins that we are accepting
     public function acceptedCryptoCoins(){
         $coin = new Coin();
         return response([
