@@ -39,7 +39,7 @@ class Wallet extends Model
     public function coinCheck($coin, $coins)
     {
         $coinsString = (string)$coins;
-        if (!Str::contains($coinsString, 'E') && Str::contains($coinsString, '.')) {
+        if (!Str::contains($coinsString, 'E') && Str::contains($coinsString, '.') || $coins == 0) {
             return $coins;
         } else {
             return $this->satoshiToCrypt($coin, $coinsString);
@@ -125,9 +125,9 @@ class Wallet extends Model
         $walletId = $request->wallet_id;
 
         $userCoin = $request->coin;
-        $balanceInUsd = $this->cryptoToUsd($userCoin);
-
         $userCoinId = Coin::whereName($userCoin)->first()?->id;
+
+        $balanceInUsd = $this->cryptoToUsd($userCoin);
 
         $basePath = $this->basePath($userCoinId, $walletId);
         $response = Http::get($basePath);

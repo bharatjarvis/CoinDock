@@ -16,6 +16,7 @@ class WalletController extends Controller
         $walletId = $request->wallet_id;
         $walletCheck = $wallet->whereWalletId($walletId)->first();
 
+        // return $wallet->addWallet($user,$request);
         if ($walletCheck) {
             return response([
                 'message' => 'Wallet Already Added'
