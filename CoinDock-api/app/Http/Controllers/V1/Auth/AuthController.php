@@ -27,9 +27,7 @@ class AuthController extends AccessTokenController
         }
 
         $response = $this->requestPasswordGrant($request);
-
         $user = User::whereEmail($request->email)->first();
-
         return response(
             [
                 'message' => 'Login Successfull.',
@@ -63,7 +61,7 @@ class AuthController extends AccessTokenController
     public function refresh(Request $request)
     {
         $response = $this->requestRefreshGrant($request);
-
+       
         return response(['message' => 'Refreshed token successfully'], Response::HTTP_OK, [
             'Access-Token' => $response['access_token'],
             'Refresh-Token' => $response['refresh_token'],

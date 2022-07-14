@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('log_type');
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users'); 
+            $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('wallet_id');
-            $table->foreign('wallet_id')->references('id')->on('wallets'); 
+            $table->foreign('wallet_id')->references('id')->on('wallets');
             $table->timestamps();
         });
     }

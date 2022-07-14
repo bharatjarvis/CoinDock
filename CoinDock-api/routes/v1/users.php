@@ -7,6 +7,7 @@ use App\Http\Controllers\V1\{
     RecoveryKeyController,
     SignupController,
     CoinsController,
+    CoinCardController,
     WalletController,
 };
 
@@ -30,7 +31,9 @@ Route::middleware('auth:api')
     ->group(function () {
 
         Route::prefix('{user}')->group(function () {
-
+            Route::prefix('coin-cards')->group(function(){
+                Route::get('/', [CoinCardController::class, 'index']);
+            });
             Route::prefix('recovery-codes')->group(function () {
 
 
@@ -87,6 +90,16 @@ Route::middleware('auth:api')
                 );
             });
 
+            Route::prefix('graph')->group(function () {
+                Route::get('/', [WalletCoinController::class, 'index'])->missing(
+                    fn () => response(
+                        [
+                            'error' => ['message' => 'User record not found'],
+                        ],
+                        404,
+                    ),
+                );
+            });
 
 
             Route::prefix('add-wallet')->group(
