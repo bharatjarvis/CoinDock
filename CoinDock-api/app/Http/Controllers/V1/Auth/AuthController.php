@@ -32,6 +32,7 @@ class AuthController extends AccessTokenController
                 'message' => 'Login Successfull.',
                 'results' => [
                     'user' => UserResource::make($user)->resolve(),
+                    info($response['access_token'])
                 ]
             ],
             Response::HTTP_OK,
@@ -53,7 +54,7 @@ class AuthController extends AccessTokenController
             ->user()
             ->tokens->map(fn($token) => $token->delete());
 
-        return response(['message' => 'Successfully logged out'], 200);
+        return response(['message' => 'Successfully logged out'], Response::HTTP_OK);
     }
 
     public function refresh(Request $request)

@@ -1,14 +1,15 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\{
     UserController,
     WalletCoinController,
     RecoveryKeyController,
     SignupController,
+    CoinsController,
     CoinCardController,
     WalletController,
 };
-use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,5 +114,11 @@ Route::middleware('auth:api')
                     Route::post('/', [WalletController::class, 'create']);
                 }
             );
+
+            Route::get('/total-default', [UserController::class, 'totalBTC']);
+            Route::get('/primary-currency',[UserController::class, 'primaryCurrency']);
+            Route::get('/top-performer', [UserController::class, 'topPerformer']);
+            Route::get('/low-performer', [UserController::class, 'lowPerformer']);
+    
         });
     });
