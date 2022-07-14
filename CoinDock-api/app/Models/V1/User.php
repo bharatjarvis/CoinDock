@@ -89,7 +89,7 @@ class User extends Authenticatable
         //Adding default Currency settings for user
         Setting::create([
             'user_id'=>$user->id,
-            'primary_currency'=>'IND',
+            'primary_currency'=>config('countries.default_country.currency'),
             'secondary_currency'=>'USD'
         ]);
         

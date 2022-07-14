@@ -11,7 +11,7 @@ use App\Enums\BaseEnum;
  */
 final class UserStatus extends BaseEnum
 {
-    const Active = 1;
     const Inactive = 0;
+    const Active = 1;
     const Locked = 2;
 }

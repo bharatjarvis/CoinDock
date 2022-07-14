@@ -11,7 +11,7 @@ use App\Enums\BaseEnum;
  */
 final class RecoveryKeyStatus extends BaseEnum
 {
-    const Active = 1;
     const Inactive = 0;
+    const Active = 1;
     const Used = 2;
 }

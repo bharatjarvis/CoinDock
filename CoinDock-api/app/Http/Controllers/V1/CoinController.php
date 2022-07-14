@@ -105,18 +105,6 @@ class CoinController extends Controller
     }
 
 
-    //Returning the Coins that we are accepting
-    public function acceptedAssets(){
-        
-        $coin = new Coin();
-        return response([
-            'message'=>'Success',
-            'results'=>[
-                'coins'=>CoinResource::collection($coin->acceptedAssets())
-            ]
-        ],Response::HTTP_OK);
-    }
-
 
     //Conversions that we are accepting
     public function currencyConversions(){
