@@ -13,7 +13,7 @@ function Header() {
   const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location);
+
   const notDisplayAuthenticatedOptions = ["/recovery-codes", "/recovery-test"];
 
   const [logout] = useLogout();
@@ -32,61 +32,63 @@ function Header() {
   };
   return (
     <React.Fragment>
-      <div className="cd-header-dimensions"></div>
-      <Navbar variant="dark" className="cd-app-header cd-header-dimensions">
-        <Navbar.Brand>
-          <img className="cd-logo-image" src={Logo2} alt="Lock Images" />
-        </Navbar.Brand>
-        {isAuthenticated &&
-          !notDisplayAuthenticatedOptions.includes(location.pathname) && (
-            <>
-              <Search />
+      <div className="cd-header-dimensions">
+        <Navbar variant="dark" className="cd-app-header cd-header-dimensions">
+          <Navbar.Brand>
+            <img className="cd-logo-image" src={Logo2} alt="Lock Images" />{" "}
+            <span> &nbsp; CoinDock </span>
+          </Navbar.Brand>
+          {isAuthenticated &&
+            !notDisplayAuthenticatedOptions.includes(location.pathname) && (
+              <>
+                <Search />
 
-              <Nav.Link>
-                <p
-                  className="cd-addwallet-button cd-mt-19 cd-mb-25 cd-ml-8"
-                  onClick={() => dispatch(openPopup())}
-                >
-                  AddWallet
-                </p>
-              </Nav.Link>
-              <Nav>
-                <NavDropdown
-                  style={{
-                    zIndex: 1000,
-                  }}
-                  title={
-                    <div className="pull-left">
-                      <img
-                        src="https://i.stack.imgur.com/34AD2.jpg"
-                        width="50"
-                        height="50"
-                        alt="profile_icon"
-                        className="nav-link dropdown-toggle rounded-circle cd-ml-12 cd-mt-17 cd-mb-23 cd-mr-8"
-                        style={{ cursor: "pointer" }}
-                        data-bs-toggle="dropdown"
-                      ></img>
-                    </div>
-                  }
-                >
-                  <NavDropdown.Item
-                    onClick={handleAccountClick}
-                    className="cd-account"
+                <Nav.Link>
+                  <p
+                    className="cd-addwallet-button cd-mt-19 cd-mb-25 cd-ml-8"
+                    onClick={() => dispatch(openPopup())}
                   >
-                    Account
-                  </NavDropdown.Item>
-                  <NavDropdown.Item
-                    onClick={handleLogoutClick}
-                    className="cd-logout"
+                    Add&nbsp;Wallet
+                  </p>
+                </Nav.Link>
+                <Nav>
+                  <NavDropdown
+                    style={{
+                      zIndex: 1000,
+                    }}
+                    title={
+                      <div className="pull-left">
+                        <img
+                          src="https://i.stack.imgur.com/34AD2.jpg"
+                          width="50"
+                          height="50"
+                          alt="profile_icon"
+                          className="nav-link dropdown-toggle rounded-circle cd-ml-12 cd-mt-17 cd-mb-23 cd-mr-8"
+                          style={{ cursor: "pointer" }}
+                          data-bs-toggle="dropdown"
+                        ></img>
+                      </div>
+                    }
                   >
-                    Logout
-                  </NavDropdown.Item>
-                </NavDropdown>
-              </Nav>
-            </>
-          )}
-      </Navbar>
-      <AddWallet />
+                    <NavDropdown.Item
+                      onClick={handleAccountClick}
+                      className="cd-account"
+                    >
+                      Account
+                    </NavDropdown.Item>
+                    <NavDropdown.Item
+                      onClick={handleLogoutClick}
+                      className="cd-logout"
+                    >
+                      Logout
+                    </NavDropdown.Item>
+                  </NavDropdown>
+                </Nav>
+              </>
+            )}
+        </Navbar>
+        <AddWallet />
+      </div>
     </React.Fragment>
   );
 }

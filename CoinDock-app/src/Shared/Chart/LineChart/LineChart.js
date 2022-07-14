@@ -1,4 +1,5 @@
-import { React, useRef } from "react";
+import { React, useEffect, useState } from "react";
+import moment from "moment";
 
 import "./LineChart.css";
 import {
@@ -12,6 +13,12 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import {
+  useCoinFilter,
+  useLineChart,
+  useLineFilter,
+} from "App/Api/linechartapi";
+import { sortBy, uniq } from "lodash";
 
 ChartJS.register(
   CategoryScale,
@@ -22,6 +29,14 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+const generateRandomColor = () => {
+  const letters = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "a", "b", "c", "d", "e", "f"];
+  var color = "#";
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
 
 export const options = {
   responsive: true,
@@ -36,67 +51,101 @@ export const options = {
   },
 };
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-
-const cryptos = ["BTC", "ETH"];
-const allData = [
-  {
-    label: cryptos[0],
-
-    data: [35, 5, 80, 31, 26, 15, 4],
-    borderColor: "rgb(255, 99, 132)",
-    backgroundColor: "rgba(255, 99, 132, 0.5)",
-  },
-  {
-    label: cryptos[1],
-
-    data: [65, 59, 80, 81, 56, 55, 40],
-    borderColor: "rgb(53, 162, 235)",
-    backgroundColor: "rgba(53, 162, 235, 0.5)",
-  },
-];
-
 export function LineChart() {
-  const refContainer = useRef();
+  const [coinid, setCoinid] = useState("Coins");
+  const [range, setRange] = useState("Day");
+  const { data: line } = useLineChart({ coinid, range });
+  const { data: filter } = useLineFilter();
+  const { data: coinfilter } = useCoinFilter();
 
-  const onOptionClick = (e) => {
-    const chart = ChartJS.getChart("chart");
-    if (e.target.value === "all") {
-      chart.update("show");
-    } else {
-      chart.update((ctx) => {
-        return ctx.datasetIndex.toString() === e.target.value.toString()
-          ? "show"
-          : "hide";
+  const linedata = Object.entries(line?.results ?? {});
+  const labels = sortBy(
+    uniq(
+      linedata?.reduce((prev, current, array) => {
+        const label = Object.keys(current?.[1] ?? {}).map((value) => {
+          return moment(value).format("DD MM YYYY, hh");
+        });
+
+        return [...prev, ...label];
+      }, [])
+    )
+  );
+
+  const allDatas =
+    linedata?.map((data, index) => {
+      const prices = Object.values(data?.[1])?.map((value) => {
+        return value;
       });
-    }
+      return {
+        label: data?.[0],
+        data: prices,
+        backgroundColor: [...Array(line)]?.map(() => {
+          return generateRandomColor();
+        }),
+        borderColor: [...Array(line)]?.map(() => {
+          return generateRandomColor();
+        }),
+      };
+    }) ?? [];
+
+  // const onOptionClick = (e) => {
+  //   const chart = ChartJS.getChart("chart");
+  //   if (e.target.value === "Coins") {
+  //     chart.update("show");
+  //   } else if (e.target.value) {
+  //     chart.update((ctx) => {
+  //       return coinfilter?.data?.[ctx.datasetIndex].toString() ===
+  //         e.target.value.toString()
+  //         ? "show"
+  //         : "hide";
+  //     });
+  //   }
+  // };
+
+  const handleChange = (e) => {
+    setCoinid(e.target.value);
+  };
+  const handleRangeChange = (e) => {
+    setRange(e.target.value);
   };
 
+  const rangefilter = Object.values(filter?.results ?? {}).map((value) => {
+    return value;
+  });
+
   return (
-    // <div className="container">
     <div className="cd-line-chart">
       <div className="row">
-        <div className="col cd-select-coins">
-          <select name="coins" ref={refContainer} onChange={onOptionClick}>
-            <option value="all">Coins</option>
-
-            <option value={0}>BTC</option>
-
-            <option value={1}>ETH</option>
-          </select>
-        </div>
-        <div className="col">
+        <div className="col cd-filter">
           <select
-            name="range"
-            onChange={(e) => {
-              console.log(e);
-            }}
+            className="cd-line-filter"
+            name="coins"
+            // onChange={onOptionClick}
+            onChange={handleChange}
           >
-            <option>Range</option>
-
-            <option value="one Week">One Week</option>
-            <option value="One month">One Month</option>
-            <option value="One year">One Year</option>
+            {coinfilter?.results?.map((value) => {
+              return (
+                <option value={value} key={value}>
+                  {value}
+                </option>
+              );
+            })}
+          </select>
+          &nbsp;
+          <select
+            className="cd-line-filter"
+            name="range"
+            onChange={handleRangeChange}
+          >
+            {rangefilter.map((value, index) => {
+              console.log(rangefilter);
+              console.log(value);
+              return (
+                <option value={value.key} key={value.key}>
+                  {value.description}
+                </option>
+              );
+            })}
           </select>
         </div>
       </div>
@@ -107,10 +156,9 @@ export function LineChart() {
         data={{
           labels,
 
-          datasets: allData,
+          datasets: allDatas,
         }}
       />
     </div>
-    // </div>
   );
 }

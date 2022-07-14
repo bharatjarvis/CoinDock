@@ -10,11 +10,6 @@ const piechartapi = baseApi.injectEndpoints({
       }),
       transformResponse: (response) => {
         return {
-          user_name: "Mr. Bernardo Gorczany II",
-          success: true,
-          message: "Data Fetched Successfully",
-          exception: null,
-          error_code: null,
           result: {
             Bitcoin: 9,
             Ethereum: 14,

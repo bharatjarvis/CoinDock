@@ -3,33 +3,34 @@ import baseApi from "./api";
 const coincardapi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     coincard: build.query({
-      query: (filter) => ({
+      query: () => ({
         url: `/v1/users/${getUserId()}/recovery-codes`,
-        params: { filter },
+
         method: "post",
       }),
-      transformResponse: (response) => {
-        return  {
-          message: "success",
-          result: {
-            logo: {
-              RVN: "https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/604ae4533d9f4ad09a489905cce617c2.png%22",
-            },
-            "coin-BTC": {
-              RVN: 0.02158215991909854,
-            },
-            number_of_coins: {
-              RVN: 34,
-            },
-            primary_currency: {
-              RVN: 54109550.01278717,
-            },
-            secondary_currency: {
-              RVN: 34343,
-            },
-          },
-        };
-      },
+      // transformResponse: (response) => {
+      //   return {
+      //     message: "success",
+      //     results: [
+      //       {
+      //         coin_name: "BTC",
+      //         logo: "https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/4caf2b16a0174e26a3482cea69c34cba.png",
+      //         BTC_coin: 0.2030081012544335,
+      //         number_of_coins: 25,
+      //         primary_currency: 42541334.03996144,
+      //         secondary_currency: 345454,
+      //       },
+      //       {
+      //         coin_name: "RVN",
+      //         logo: "https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/0a4185f21a034a7cb866ba7076d8c73b.png",
+      //         BTC_coin: 0.00020156378650572031,
+      //         number_of_coins: 5,
+      //         primary_currency: 8508472.825059421,
+      //         secondary_currency: 343,
+      //       },
+      //     ],
+      //   };
+      // },
       provideTags: ["coincard"],
     }),
 

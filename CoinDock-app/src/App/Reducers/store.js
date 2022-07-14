@@ -6,7 +6,7 @@ import { logger } from "redux-logger";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import auth from "App/Api/auth";
 import { authReducer } from "App/Auth/reducers";
-import accReducer  from "App/Auth/reducers/accReducer"
+import accReducer from "App/Auth/reducers/accReducer";
 import { popupReducer } from "Screens/AddWallet/AddWalletSlice";
 
 const reducer = combineReducers({
@@ -27,9 +27,10 @@ const store = configureStore({
   initialState: {},
   reducer: rootReducer,
 
-  middleware: (getDefaultMiddleWare) => getDefaultMiddleWare({
-    serializableCheck: false
-  }).concat([thunk, baseApi.middleware, logger, auth.middleware]),
+  middleware: (getDefaultMiddleWare) =>
+    getDefaultMiddleWare({
+      serializableCheck: false,
+    }).concat([thunk, baseApi.middleware, auth.middleware]),
 });
 
 setupListeners(store.dispatch);

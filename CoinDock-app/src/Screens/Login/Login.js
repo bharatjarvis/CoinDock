@@ -83,12 +83,12 @@ function Login() {
   };
 
   return (
-    <div className="row content d-flex justify-content-center align-items-center">
+    <div className="row content d-flex justify-content-center ">
       <div className="col-md-3">
         <h2 className="text-center fs-4 m-4">Login</h2>
 
         <span>
-          Don’t have an account?
+          Don’t have an account?&nbsp;&nbsp;
           <Link to="/signup">Signup here!</Link>
         </span>
 

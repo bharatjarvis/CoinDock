@@ -1,10 +1,13 @@
 .cd-pie-chart {
-  padding: 8px;
-  border: 1px solid #09bbff;
+  padding: 12px;
+  /* border: 0.1rem solid #09bbff; */
 }
 @media screen {
   .cd-pie-chart {
-    max-width: 345px;
+    max-width: 95%;
+  }
+  .cd-pie-chart .filter {
+    float: right;
   }
   @media (min-width: 360px) and (max-width: 768px) {
     .cd-pie-chart {

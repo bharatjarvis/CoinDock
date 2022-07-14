@@ -31,10 +31,10 @@ export const options = {
 
 export function PieChart() {
   const [filter, setFilter] = useState("coins");
-  const { data: pie } = usePieChart(filter);
+  const { data: pie } = usePieChart(filter); 
   const { data: piefilter } = usePieFilter();
 
-  
+
   const labels = Object.keys(pie?.result ?? {});
   const piedata = Object.values(pie?.result ?? {});
   const data = {
@@ -57,8 +57,8 @@ export function PieChart() {
   };
 
   return (
-    <div className="cd-pie-chart ">
-      <select name="coins" onChange={handleChange}>
+    <div className="cd-pie-chart">
+      <select className="filter" name="coins" onChange={handleChange}>
         {piefilter?.data?.map((value) => {
           return (
             <option value={value} key={value}>

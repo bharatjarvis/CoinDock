@@ -13,11 +13,11 @@ const coinperformanceapi = baseApi.injectEndpoints({
           message: "success",
           result: {
             heading: "Total BTC",
-            balance: 0.00115508471,
+            balance: 0.0011822782,
             coin_id: "BTC",
             coin_name: "Bitcoin",
             img_url:
-              '"https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/4caf2b16a0174e26a3482cea69c34cba.png"',
+              "https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/4caf2b16a0174e26a3482cea69c34cba.png",
           },
         };
       },
@@ -34,7 +34,7 @@ const coinperformanceapi = baseApi.injectEndpoints({
           message: "success",
           result: {
             heading: "Primary Currency",
-            "coin-name": "INR",
+            coin_name: "INR",
             balance: 79371.2342079689,
           },
         };

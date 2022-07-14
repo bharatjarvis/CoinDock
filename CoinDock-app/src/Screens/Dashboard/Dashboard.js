@@ -16,43 +16,46 @@ function Dashboard() {
   const { data: primary } = usePrimaryCurrency();
   const { data: top } = useTopperformer();
   const { data: low } = useLowperformer();
-  console.log(top);
 
   return (
     <React.Fragment>
-      <div className="cd-performance-wrap justify-content-space-between p-14">
-        {total && (
-          <Cards
-            name={total?.result?.heading}
-            value={total?.result?.balance}
-            //  img={total?.result?.img_url}
-          />
-        )}
+      <div className="container p-20">
+        <div className="cd-performance-wrap justify-content-space-between">
+          {total && (
+            <Cards
+              name={total?.result?.heading}
+              value={total?.result?.balance}
+              logo={total?.result?.img_url}
+            />
+          )}
 
-        {primary && (
-          <Cards
-            name={primary?.result?.heading}
-            value={primary?.result?.balance}
-          />
-        )}
-        {top && (
-          <Cards name={top?.result?.heading} value={top?.result?.coin_name} />
-        )}
-        {low && (
-          <Cards name={low?.result?.heading} value={low?.result?.coin_name} />
-        )}
-      </div>
-      <div className="container justify-content-center">
-        <div className="row">
-          <div className="col">
-            <LineChart />
-          </div>
-          <div className="col cd-pie-margin">
-            <PieChart />
+          {primary && (
+            <Cards
+              name={primary?.result?.heading}
+              value={primary?.result?.balance}
+            />
+          )}
+          {top && (
+            <Cards name={top?.result?.heading} value={top?.result?.coin_name} />
+          )}
+          {low && (
+            <Cards name={low?.result?.heading} value={low?.result?.coin_name} />
+          )}
+        </div>
+        <div className="container justify-content-center">
+          <div class="row">
+            <div class="col-md-7">
+              {" "}
+              <LineChart />
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-4">
+              <PieChart />
+            </div>
           </div>
         </div>
+        <Wallet />
       </div>
-      <Wallet />
     </React.Fragment>
   );
 }
