@@ -10,7 +10,11 @@ use Illuminate\Support\Str;
 class Wallet extends Model
 {
     use HasFactory;
-
+     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'coin_id',
         'user_id',
