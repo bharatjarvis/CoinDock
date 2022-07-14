@@ -25,12 +25,12 @@ class Wallet extends Model
     //wallet creation
     public function WalletCreate($userId, $walletId, $userCoinId, $coins, $balanceInUsd)
     {
-     $this->create([
+        $this->create([
             'user_id' => $userId,
             'wallet_id' => $walletId,
             'coin_id' => $userCoinId,
             'coins' => $coins,
-            'balance' => ($balanceInUsd*$coins)
+            'balance' => $balanceInUsd
         ]);
         return true;
     }
@@ -64,7 +64,7 @@ class Wallet extends Model
     //getting basePath for for checking Wallet Balance
     public function basePath($userCoinId, $walletId)
     {
-        $userCoinName = Coin::whereId($userCoinId)->first()?->name; 
+        $userCoinName = Coin::whereId($userCoinId)->first()?->name;
 
         $coinList = config('assets.accepted_coins');
         $coinKeys =  array_keys($coinList);
@@ -75,6 +75,9 @@ class Wallet extends Model
             if ($userCoinName == $coin) {
                 $basePath  = config('assets.accepted_coins');
                 $basePath = $basePath[$coin]['bal_path'];
+                if ($userCoinName == 'Expanse') {
+                    return $basePath;
+                }
             }
         }
 
@@ -101,6 +104,9 @@ class Wallet extends Model
         $responseArray = json_decode($response, true);
         $responseArrayKeys = array_keys($responseArray);
 
+        if ($coin == 'Expanse') {
+            return $response['balance'];
+        }
         foreach ($responseArrayKeys as $jsonKey) {
             if ($jsonKey == 'balance' || $jsonKey == 'data' || $jsonKey == 'result') {
 
@@ -120,7 +126,7 @@ class Wallet extends Model
     }
 
     //Adding Wallet for Particular User
-    public function addWallet(User $user,Request $request)
+    public function addWallet(User $user, Request $request)
     {
         $walletId = $request->wallet_id;
 
@@ -132,16 +138,24 @@ class Wallet extends Model
         $basePath = $this->basePath($userCoinId, $walletId);
         $response = Http::get($basePath);
 
+        if ($userCoin == 'Expanse') {
+            $response = Http::post($basePath, ['addr' => $walletId, 'options' => ['balance']]);
+        }
+
         if ($this->isJson($response)) {
             $coins = $this->totalCoins($response, $userCoin);
             if (is_numeric($coins)) {
-                return $this->WalletCreate($user->id, $walletId, $userCoinId, $coins, $balanceInUsd);
+                if ($userCoin == 'Expanse') {
+                    return $this->WalletCreate($user->id, $walletId, $userCoinId, $coins, $response['balanceUSD']);
+                }
+                return $this->WalletCreate($user->id, $walletId, $userCoinId, $coins, $balanceInUsd*$coins);
             }
         }
-        return false;
+        return true;
     }
 
-    public function coin(){
-        return $this->hasOne('App\Models\V1\Coin','coin_id','id');
+    public function coin()
+    {
+        return $this->hasOne('App\Models\V1\Coin', 'coin_id', 'id');
     }
 }
