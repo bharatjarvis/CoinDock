@@ -30,7 +30,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropForeign('recovery_keys_user_id_foreign');
-        Schema::dropIfExists('recovery_keys');
+        Schema::table('recovery_keys', function (Blueprint $table) {
+            $table->dropForeign('recovery_keys_user_id_foreign');
+        });
     }
 };

@@ -129,7 +129,12 @@ class User extends Authenticatable
         ],Response::HTTP_OK );
     }
 
-    public function settings(){
-        return $this->hasOne('App\Models\V1\Setting');
+    public function wallets(){
+
+        return $this->hasMany(Wallet::class);
+
+    }
+    public function setting(){
+        return $this->hasOne(Setting::class,'user_id','id');
     }
 }

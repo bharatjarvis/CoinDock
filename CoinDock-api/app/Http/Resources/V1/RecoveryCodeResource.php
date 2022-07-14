@@ -17,11 +17,12 @@ class RecoveryCodeResource extends JsonResource
 
     public function toArray($request)
     {
+
         return [
             'user_id' => $this->user_id,
             'recovery_codes' => explode(' ', $this->recovery_code),
             'status' => $this->status
-
+            
         ];
     }
 }
