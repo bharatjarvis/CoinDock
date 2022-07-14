@@ -14,7 +14,7 @@ export const emailValidation = (value) => {
   return error;
 };
 
-const Email = ({ name, formErrors, onInput, email }) => {
+const Email = ({ name, formErrors, onInput, value }) => {
   const [fieldsTouched, setFieldsTouched] = useState(false);
 
   const handleFocus = (e) => {
@@ -35,7 +35,7 @@ const Email = ({ name, formErrors, onInput, email }) => {
             className="form-control cd-mt-8"
             name={name}
             placeholder="Enter your Email address"
-            defaultValue={email}
+            defaultValue={value}
             onBlur={handleFocus}
             onInput={handleInput}
           />

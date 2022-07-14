@@ -15,10 +15,11 @@ export const dateValidation = (value) => {
   }
   return error;
 };
-function DatePick({ name, onChange, formErrors }) {
-  const [selectedDate, setSelectedDate] = useState("");
-  const [fieldsTouched, setFieldsTouched] = useState(false);
+function DatePick({ name, onChange, formErrors,value}) {
 
+ const [selectedDate, setSelectedDate] = useState("");
+ const [date, setDate] = useState(new Date(value))
+ const [fieldsTouched, setFieldsTouched] = useState(false);
   const handleChanges = (value) => {
     if (onChange) {
       onChange({
@@ -29,8 +30,10 @@ function DatePick({ name, onChange, formErrors }) {
       });
     }
     setSelectedDate(value);
+    setDate(value)
   };
-  const handleFocus = (e) => {
+
+  const handleFocus = () => {
     setFieldsTouched(true);
   };
 
@@ -40,7 +43,7 @@ function DatePick({ name, onChange, formErrors }) {
       <DatePicker
         name={name}
         className="form-control cd-mt-8"
-        selected={selectedDate}
+        selected={value ? date : selectedDate}
         onChange={handleChanges}
         dateFormat="dd-MM-yyyy"
         onBlur={handleFocus}
@@ -51,5 +54,8 @@ function DatePick({ name, onChange, formErrors }) {
 }
 DatePick.propTypes = {
   label: propTypes.number,
+  onChange:propTypes.func,
+  value:propTypes.string,
+  formErrors:propTypes.object,
 };
 export default DatePick;

@@ -2,39 +2,41 @@ import React, { useState } from 'react';
 import "./Account.css";
 import { openDialogue } from 'App/Auth/reducers/accReducer';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom";
 import EditPopup from './EditPopup';
-import "Shared/common-styles/common.css";
-import { useNavigate } from 'react-router-dom';
 
-const Accordion = ({name,items}) => {
-  const navigate =useNavigate();
-  
-    const handleRecoveryButton = () => {
-    navigate("/recovery-codes-account");
-     };
+const Accordion = ({label,fields,value}) => {
+  const navigate = useNavigate();
   const [isActive, setIsActive] = useState(false);
   const dispatch =useDispatch();
   return (
     <div className="cd-accordion">
      <div className="cd-accordion-title" onClick={() => setIsActive(!isActive)}>
-          <div>{name} </div>
+          <div>{label}</div>
             <div>{isActive ? '-' : '>'}</div>
           </div>
-        
-        {isActive && 
-        items.map((subitem,id) =>(
-         subitem.id ?
-         <div className="cd-accordion-content d-flex justify-content-between" key={id}>{subitem.name}:{subitem.value}
-         {subitem.type === 'edit'? <button className='cd-button cd-button-2 cd-edit-button' onClick={() => dispatch(openDialogue({type :subitem.key,currentFieldValue: subitem.value}))}>Edit</button> :''}
-        </div>
-        :
-        <div className="cd-accordion-content d-flex justify-content-between" key={id}> {subitem.name}
-         {subitem.type === 'edit1'? <button className='cd-button cd-button-2 cd-edit-button' onClick={() => dispatch(openDialogue({type :subitem.key,currentFieldValue: subitem.value}))}>Edit</button> :subitem.key==='regenerateRecoveryWords' ?<button className='cd-button cd-button-2 cd-edit-button' onClick={()=>{handleRecoveryButton()}}>Edit</button>:''}
-        </div>))
-       } 
-      <EditPopup/> 
-      </div>
-  
-    )}
+          {isActive && fields.map((field,id)=> (
+            <div className="cd-accordion-content d-flex justify-content-between" key={id}>
+              {field.label} :
+               {field.fieldKey=='name' ? value.first_name+' '+value.last_name:
+               field.fieldKey == 'dateofbirth' ? value.date_of_birth :
+               field.fieldKey=='country'?value.country :
+               field.fieldKey=='email'?value.email:
+               field.fieldKey=='primarycurrency'?value.primary_currency+' '+value.primary_currency_symbol:null
+               }
+              {field.type === 'edit' ?
+              <button
+                className='cd-button cd-button-3 cd-edit-button'
+                onClick={() => dispatch(openDialogue({type :field.fieldKey,value}))}>Edit</button>
+                :
+               field.navigate ?
+              <button
+                 className='cd-button cd-button-3 cd-edit-button' onClick={()=>{navigate(field.navigate)}}>Edit
+               </button> : null }
+            </div>
+             ))}
+      <EditPopup/>
+    </div>
+)}
 
 export default Accordion;

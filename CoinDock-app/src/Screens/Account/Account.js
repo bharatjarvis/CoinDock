@@ -7,38 +7,102 @@ import "Shared/common-styles/button.css";
 import { useLogout } from "App/Api/auth";
 import "Shared/common-styles/common.css";
 
+
 function Account() {
-  const { data: account, isLoading } = useAccount();
-  const [logout] = useLogout();
-  const navigate = useNavigate();
+ const { data: account}= useAccount();
+ const accountDetails = account?.result?.user || {};
+ const [logout] = useLogout();
+ const navigate = useNavigate();
 
-  const handleLogoutClick = async () => {
-    try {
-      await logout().unwrap();
-      navigate("/login");
-    } catch (e) {
-      navigate("/login");
-    }
-  };
+ const accordianBasedAccountDetails = [
+   {
+     label:'Profile settings',
+     fields:[
+       {
+       label:'Name',
+       fieldKey:'name',
+       type:'edit'
+      },
+       {
+        label:'DateofBirth',
+        fieldKey:'dateofbirth',
+        type:'edit'
+       },
+       {
+        label:'Country',
+        fieldKey:'country',
+        type:'edit'
+       },
+    ]
+   },
+   {
+     label:'Account settings',
+     fields:[
+         {
+          label:'Email',
+          fieldKey:'email',
+          type:'edit'
+         },
+         {
+          label:'Change Password',
+          fieldKey:'changePassword',
+          type:'edit'
+         },
+         {
+          label:'Recovery Code',
+          fieldKey:'recoverycode',
+          navigate: "/recovery-codes-account",
+         },
 
-  return (
+    ]
+   },
+     {
+     label:'System settings',
+     fields:[
+       {
+         label:'Primary currency',
+         fieldKey:'primarycurrency',
+         type:'edit'
+       },
+       {
+        label:'Secondary currency',
+        fieldKey:'secondarycurrency',
+        type:'edit'
+      }
+     ]
+     }
+  ]
+
+ const handleLogoutClick = async () => {
+  try {
+    await logout().unwrap();
+    navigate("/");
+  } catch (e) {
+  }
+};
+return (
     <div className="container-1 justify-content-center align-items-center">
-      <div className="col-md-4 col py-5 ">
-        {isLoading ? "...LOADING" : ""}
-        {account &&
-          account.map((accs, id) => {
-            return <Accordion key={id} name={accs.name} items={accs.items} />;
-          })}
-      </div>
-      <div className="d-flex justify-content-start">
-        <button
-          className="cd-button cd-button-2 cd-logout-button"
-          onClick={handleLogoutClick}
-        >
-          Logout
-        </button>
-      </div>
-    </div>
-  );
-}
+         <div className="col-md-4 col py-5 ">
+         {accordianBasedAccountDetails && accordianBasedAccountDetails.map((item,id) => (
+               <div>
+                  <Accordion
+                    key={id}
+                    label={item.label}
+                    fields={item.fields}
+                    value={accountDetails}
+                  />
+               </div>
+          ))}
+       </div>
+        <div className='d-flex justify-content-start'>
+           <button
+             className='cd-button cd-button-2 cd-logout-button'
+             onClick={handleLogoutClick}>
+              Logout
+            </button>
+         </div>
+     </div>
+
+    );
+};
 export default Account;

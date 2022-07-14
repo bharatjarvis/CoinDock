@@ -15,6 +15,13 @@
   background: #4461fc;
   color: #ffffff;
 }
+.cd-button-3 {
+  width: 85px;
+  padding-top: 5px;
+  height: 33px;
+  background: #4461fc;
+  color: #ffffff;
+}
 .cd-button-2:disabled {
   background: #e0e0e0;
   color: black;

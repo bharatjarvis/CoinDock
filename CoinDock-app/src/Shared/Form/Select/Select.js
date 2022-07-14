@@ -16,6 +16,7 @@ const Select = ({
   options,
   label,
   emptyPlaceHolder,
+  value,
   name,
   formErrors,
   onInput,
@@ -38,10 +39,11 @@ const Select = ({
       <select
         className="form-control cd-select cd-mt-8"
         name={name}
+        defaultValue={value}
         onBlur={handleFocus}
       >
         {emptyPlaceHolder && <option />}
-        {options.map(({ value, label }, index) => {
+        {options.map(({value,label}, index) => {
           return (
             <option value={value} key={index} onInput={handleInput}>
               {label}
@@ -54,6 +56,9 @@ const Select = ({
       )}
     </>
   );
+};
+Select.defaultProps ={
+  formErrors : {}
 };
 Select.propTypes = {
   label: propTypes.string,
