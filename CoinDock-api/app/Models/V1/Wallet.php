@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Models\V1;
-
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -34,6 +32,11 @@ class Wallet extends Model
         ]);
         return true;
     }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
 
     //checking wheather the coin is float or int or scientific
     public function coinCheck($coin, $coins)
@@ -156,6 +159,6 @@ class Wallet extends Model
 
     public function coin()
     {
-        return $this->hasOne('App\Models\V1\Coin', 'coin_id', 'id');
+        return $this->belongsTo('App\Models\V1\Coin', 'coin_id', 'id');
     }
 }
