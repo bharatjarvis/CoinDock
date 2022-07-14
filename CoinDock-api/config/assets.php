@@ -37,7 +37,7 @@ return [
 
         ],
         'Ergo' => [
-            'coin_id' => 'ERGO',
+            'coin_id' => 'ERG',
             'bal_path' => 'https://api.ergoplatform.com/api/v1/addresses/{id}/balance/total',
             'img_path' => '',
             'sats_to_crypt'=>0.000000000999996471231868024494
@@ -55,7 +55,7 @@ return [
             'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/7ec2ce6060674da58e39eae2a178369f.png'
         ],
         'Litecoin' => [
-            'coin_id' => 'BTCZ',
+            'coin_id' => 'LTC',
             'bal_path' => 'https://api.blockcypher.com/v1/ltc/main/addrs/{id}/balance',
             'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/a201762f149941ef9b84e0742cd00e48.png'
         ],
@@ -91,14 +91,24 @@ return [
         ],
         'Conflux' => [
             'coin_id' => 'CFX',
-            'bal_path' => 'https://chainz.cryptoid.info/explorer/address.summary2.dws?coin=vtc&id={id}',
+            'bal_path' => 'https://www.confluxscan.io/v1/account/{id}',
             'img_path' => '',
             'sats_to_crypt'=>0.000000000000000000999999998343
+        ],
+        'EtherGem'=>[
+            'coin_id' => 'EGEM',
+            'bal_path' => 'https://api.egem.io/account?addr={id}',
+            'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/74c6c025c0074a13904c131e65966839.png'
+        ],
+        'Garlicoin'=>[
+            'coin_id' => 'GRLC',
+            'bal_path' => 'https://garli.co.in/insight-grlc-api/addr/{id}/?noTxList=1',
+            'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/5dd946607a454b9cb6fd47f97e63de40.png'
         ],
         'US Dollar' => [
             'coin_id' => 'USD',
             'bal_path' => '',
-            'img_path' => ''
+            'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/0a4185f21a034a7cb866ba7076d8c73b.png'
         ],
         'Indian Rupee' => [
             'coin_id' => 'INR',
