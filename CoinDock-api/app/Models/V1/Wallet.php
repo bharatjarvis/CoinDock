@@ -156,6 +156,6 @@ class Wallet extends Model
 
     public function coin()
     {
-        return $this->hasOne('App\Models\V1\Coin', 'coin_id', 'id');
+        return $this->belongsTo('App\Models\V1\Coin', 'coin_id', 'id');
     }
 }
