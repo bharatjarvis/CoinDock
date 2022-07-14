@@ -8,9 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Coin extends Model
 {
     use HasFactory;
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+        'coin_id',
+        'is_crypto',
+        'status',
+        'is_default',
+        'img_path'
+    ];
 
-    public function wallet(){
+    public function wallets(){
         return $this->hasMany(Wallet::class);
     }
 
