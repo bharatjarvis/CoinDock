@@ -16,9 +16,6 @@ return new class extends Migration
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
             $table->string('log_type');
-            // relation has been created for users and logs table as 1:M relationship
-            // uncommet the below line to have the refrence of the logs that an user has
-            // $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('wallet_id');

@@ -10,12 +10,16 @@ use Illuminate\Support\Facades\Http;
 class Coin extends Model
 {
     use HasFactory;
-    protected $fillable = ['coin_id', 'name', 'is_crypto', 'status', 'img_path', 'is_default'];
+    protected $fillable = [
+        'name',
+        'coin_id',
+        'is_crypto',
+        'status',
+        'is_default',
+        'img_path'
+    ];
 
-
-    public function wallets()
-    {
-
+    public function wallets(){
         return $this->hasMany(Wallet::class);
     }
 
