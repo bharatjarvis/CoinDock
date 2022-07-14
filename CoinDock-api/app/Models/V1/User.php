@@ -82,6 +82,14 @@ class User extends Authenticatable
             'password' => $request->password,
             'status' => UserStatus::Active,
         ]);
+
+        //Adding default Currency settings for user
+        Setting::create([
+            'user_id'=>$user->id,
+            'primary_currency'=>'IND',
+            'secondary_currency'=>Null
+        ]);
+        
         // REGISTRATION STATUS UPDATION -  STEP:1
         $signup = $this->signup;
         if($signup){
@@ -93,7 +101,6 @@ class User extends Authenticatable
 
         return $user;
     }
-
 
     public function signUp()
     {

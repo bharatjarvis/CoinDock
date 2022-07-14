@@ -35,10 +35,16 @@ class UserController extends AccessTokenController
         ]);
         
         return response(
+<<<<<<< HEAD
             [
                 'status' => 'success', 'message' => 'Success! User registered.',
 
             ],
+=======
+            ['status' => 'success', 'message' => 'Success! User registered.'
+                
+        ],
+>>>>>>> main
             Response::HTTP_OK,
             [
                 'Access-Token' => $response['access_token'],
