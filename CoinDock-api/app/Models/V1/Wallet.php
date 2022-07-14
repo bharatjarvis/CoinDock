@@ -4,10 +4,6 @@ namespace App\Models\V1;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Http\Controllers\V1\CoinsController;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
-use phpDocumentor\Reflection\Types\Null_;
 
 class Wallet extends Model
 {
@@ -18,6 +14,8 @@ class Wallet extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'coin_id',
+        'user_id',
         'wallet_id',
         'balance'
     ];

@@ -114,7 +114,7 @@ class User extends Authenticatable
 
     public function totalPrimaryCurrency(): array
     {
-        $userSetting = $this->settings;
+        $userSetting = $this->setting;
         $primaryCurrency = $userSetting->primary_currency;
         $baseUrl = config('coin.coin.api_url');
         $currencyURL = $baseUrl . config('coin.coin.primary_currency');
