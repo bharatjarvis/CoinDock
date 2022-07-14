@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1\Auth;
 
 use App\Exceptions\AuthenticationException;
+use App\Http\Requests\V1\CreateUserRequest;
 use App\Http\Requests\V1\LoginRequest;
 use App\Http\Resources\V1\UserResource;
 use App\Models\V1\User;
@@ -14,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 class AuthController extends AccessTokenController
 {
     use BuildPassportTokens;
-
+    
     /**
      * Login
      */
@@ -34,7 +35,7 @@ class AuthController extends AccessTokenController
                 'message' => 'Login Successfull.',
                 'results' => [
                     'user' => UserResource::make($user)->resolve(),
-                ],
+                ]
             ],
             Response::HTTP_OK,
             [

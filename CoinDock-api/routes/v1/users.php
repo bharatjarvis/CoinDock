@@ -7,6 +7,7 @@ use App\Http\Controllers\V1\{
     RecoveryKeyController,
     SignupController,
     CoinsController,
+    WalletController,
 };
 
 /*
@@ -27,19 +28,53 @@ Route::group(['prefix' => 'users'], function () {
 Route::middleware('auth:api')
     ->prefix('users')
     ->group(function () {
+
         Route::prefix('{user}')->group(function () {
 
 
             Route::prefix('recovery-codes')->group(function () {
+
+
+
+                /*
+                    For        : Recovery Codes generation
+                    RouteName  : /users/{user}/recovery-codes/
+                    Method     : POST
+                    Access     : Private
+                */
                 Route::post('/', [RecoveryKeyController::class, 'create']);
 
+
+
+                /*
+                    For        : Downloading Recovery Words
+                    RouteName  : /users/{user}/recovery-codes/download
+                    Method     : GET
+                    Access     : Private
+                */
                 Route::get('/download', [RecoveryKeyController::class, 'download']);
 
+
+
+                /*
+                    For        : Random number generation
+                    RouteName  : /users/{user}/recovery-codes/random/
+                    Method     : GET
+                    Access     : Private
+                */
                 Route::get('/random', [RecoveryKeyController::class, 'random']);
 
-                Route::put('/activate', [RecoveryKeyController::class, 'activate']);
-            });
 
+
+                /*
+                    For        : Activating Recovery Codes
+                    RouteName  : /users/{user}/recovery-codes/activate/
+                    Method     : POST
+                    Access     : Private
+                */
+                Route::put('/activate', [RecoveryKeyController::class, 'activate']);
+
+            });
 
 
             Route::prefix('signup')->group(function () {

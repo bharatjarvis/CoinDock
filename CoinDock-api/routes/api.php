@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\V1\CoinsController;
+use App\Models\V1\RecoveryKey;
+use App\Models\V1\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
  
