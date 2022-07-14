@@ -5,7 +5,7 @@ use App\Http\Controllers\V1\{
     WalletCoinController,
     RecoveryKeyController,
     SignupController,
-    CoincardController,
+    CoinCardController,
 };
 use Illuminate\Support\Facades\Route;
 
@@ -24,13 +24,13 @@ Route::group(['prefix' => 'users'], function () {
     Route::post('/', [UserController::class, 'create'])->name('users.create');
 });
 
-
-
 Route::middleware('auth:api')
     ->prefix('users')
     ->group(function () {
         Route::prefix('{user}')->group(function () {
-            Route::get('/coinCard', [CoincardController::class, 'coinCard']);
+            Route::prefix('coin-cards')->group(function(){
+                Route::get('/', [CoinCardController::class, 'index']);
+            });
             Route::prefix('recovery-codes')->group(function () {
                 Route::post('/', [RecoveryKeyController::class, 'create']);
 

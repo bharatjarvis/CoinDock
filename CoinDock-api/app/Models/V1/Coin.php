@@ -29,40 +29,38 @@ class Coin extends Model
     }
 
     //Convertion
-    public function priceConversion($from, $to, $grouped)
+    public function priceConversion($from, $to, $grouped):float
     {
         $baseUrl = config('coinapi.coin.api_url');
         $currencyURL = $baseUrl . config('coinapi.coin.exchange_url');
         $cryptConversionURL = str_replace(['{from}', '{to}'], [$from, $to], $currencyURL);
         $response = Http::withHeaders(['X-CoinAPI-Key' => config('coinapi.coin.api_key')])->get($cryptConversionURL);
-        $price = $response['rate'];
-        return $grouped * $price;
+        return $response['rate'] * $grouped;
     }
 
     //get the primary currency value
-    public function getPrimaryCurrency()
+    public function getPrimaryCurrency():float
     {
         //$from= 'BTC';
         $user = Auth::user();
         $grouped = $this->countCoins($user);
         $from = Coin::whereIsDefault(1)->first()?->coin_id;
         $to = $user->setting->whereUserId($user->id)->first()?->primary_currency;
-        $data = $this->priceConversion($from, $to, $grouped);
-        return $data;
+        return $this->priceConversion($from, $to, $grouped);
     }
 
 
     //get secondary currency value
-    public function getSecondaryCurrency()
+    public function getSecondaryCurrency():float
     {
         $user = Auth::user();
         return $this->wallets()->whereUserId($user->id)
             ->whereCoinId($this->id)
-            ->sum('USD_balance');
+            ->sum('balance');
     }
 
     //Coin Default Value
-    public function defaultCoin()
+    public function defaultCoin():float
     {
         $user = Auth::user();
         $grouped = $this->getSecondaryCurrency($user);

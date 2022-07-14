@@ -3,28 +3,28 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\V1\User;
-use App\Models\V1\{Wallet, Coin};
-use App\Http\Resources\V1\coinCardResource;
+use App\Http\Resources\V1\CoinCardResource;
+use Symfony\Component\HttpFoundation\Response;
 
 
-class CoincardController extends Controller
+
+
+class CoinCardController extends Controller
 {
-    public function coinCard(User $user)
+    public function index(User $user)
     {
         $coins = $user->wallets->map(function ($wallet) {
             return $wallet->coin;
         });
         if ($coins->isEmpty()) {
-            return response(['message' => 'User have empty data'], 400);
+            return response(['message' => 'User have empty data'], Response::HTTP_BAD_REQUEST);
         } else {
             return response([
                 'message' => 'success',
                 'results' => CoinCardResource::collection($coins)->resolve(),
 
-            ], 200);
+            ], Response::HTTP_OK,);
         }
     }
 }
