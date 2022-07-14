@@ -26,25 +26,11 @@ class UserController extends AccessTokenController
         $userData = $user->store($request);
 
         $response = $this->requestPasswordGrant($request);
-
-        //creating default user settings
-        Setting::create([
-            'user_id'=>$userData->id,
-            'primary_currency'=>'INR',
-            'secondary_currency'=>'USD'
-        ]);
         
         return response(
-<<<<<<< HEAD
-            [
-                'status' => 'success', 'message' => 'Success! User registered.',
-
-            ],
-=======
             ['status' => 'success', 'message' => 'Success! User registered.'
                 
         ],
->>>>>>> main
             Response::HTTP_OK,
             [
                 'Access-Token' => $response['access_token'],

@@ -87,7 +87,8 @@ return [
         'Vertcoin' => [
             'coin_id' => 'VTC',
             'bal_path' => 'https://chainz.cryptoid.info/explorer/address.summary2.dws?coin=vtc&id={id}',
-            'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/0dc872e680f14d068f8e0dca025589f8.png'
+            'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/0dc872e680f14d068f8e0dca025589f8.png',
+            'sats_to_crypt'=>0.00000001
         ],
         'Conflux' => [
             'coin_id' => 'CFX',

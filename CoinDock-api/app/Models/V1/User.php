@@ -87,7 +87,7 @@ class User extends Authenticatable
         Setting::create([
             'user_id'=>$user->id,
             'primary_currency'=>'IND',
-            'secondary_currency'=>Null
+            'secondary_currency'=>'USD'
         ]);
         
         // REGISTRATION STATUS UPDATION -  STEP:1

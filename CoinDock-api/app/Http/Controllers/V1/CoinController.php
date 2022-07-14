@@ -3,16 +3,10 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
-<<<<<<< HEAD
-use App\Http\Resources\V1\CoinResource;
-use App\Models\V1\Coin;
-use Illuminate\Http\Request;
-=======
 use App\Http\Requests\V1\CreateCoinRequest;
 use App\Http\Requests\V1\UpdateCoinRequest;
 use App\Http\Resources\V1\CoinResource;
 use App\Models\V1\Coin;
->>>>>>> main
 use Symfony\Component\HttpFoundation\Response;
 
 class CoinController extends Controller
@@ -27,17 +21,10 @@ class CoinController extends Controller
         $coins = Coin::all();
         return response([
             'message' => 'coins fetched succesfully',
-<<<<<<< HEAD
-            'result' => [
-                'coins' => CoinResource::collection($coins)
-            ], Response::HTTP_OK
-        ];
-=======
             'results' => [
                 'coins' => CoinResource::collection($coins)
             ]
        ],Response::HTTP_OK);
->>>>>>> main
     }
 
     /**
@@ -59,19 +46,11 @@ class CoinController extends Controller
 
         $coin->save();
         return response([
-<<<<<<< HEAD
-                'message'=>'Coin Updated Successfully',
-                'results'=>[
-                    'coin'=>new CoinResource($coin)
-                ]
-            ],Response::HTTP_OK);
-=======
             'message'=>'Coin Created Successfully',
             'results'=>[
                 'coin'=>new CoinResource($coin)
             ]
         ],Response::HTTP_OK);
->>>>>>> main
     }
 
 
@@ -83,22 +62,14 @@ class CoinController extends Controller
      */
     public function show(Coin $coin)
     {
-<<<<<<< HEAD
-        $coin = Coin::findOrFail($id)->first();
-=======
->>>>>>> main
         return response([
             'message'=>'success',
             'results'=>[
                 'coin'=>new CoinResource($coin)
             ]
-<<<<<<< HEAD
         ],Response::HTTP_OK
         );
 
-=======
-            ],200);
->>>>>>> main
     }
 
     /**
@@ -112,17 +83,11 @@ class CoinController extends Controller
     {
         $coin->update($request->all());
         return response([
-<<<<<<< HEAD
-            'message'=>'Coin Updated Successfully',
-            'coin'=>new CoinResource($coin)
-        ],Response::HTTP_OK);
-=======
             'message' => 'Coin Updated Successfully',
             'results'=>[
                 'coin' => new CoinResource($coin)
             ]
         ], Response::HTTP_OK);
->>>>>>> main
     }
 
     /**
@@ -135,18 +100,8 @@ class CoinController extends Controller
     {
         $coin->delete();
         return response([
-<<<<<<< HEAD
-            'message'=>'Coin Deleted Successfully',
-        ],Response::HTTP_OK);
-=======
             'message' => 'Coin Deleted Successfully',
         ], Response::HTTP_OK);
-    }
-
-    public function acceptedAssets(){
-        $acceptedAssets = Coin::whereStatus(1)->get();
-        return $acceptedAssets;
->>>>>>> main
     }
 
 
