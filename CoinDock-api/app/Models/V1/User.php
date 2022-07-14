@@ -68,7 +68,7 @@ class User extends Authenticatable
 
     public function store(CreateUserRequest $request): self
     {
-        $user = User::create([
+        $user = $this::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'type' => UserType::User,
@@ -78,6 +78,14 @@ class User extends Authenticatable
             'password' => $request->password,
             'status' => UserStatus::Active,
         ]);
+
+        //Adding default Currency settings for user
+        Setting::create([
+            'user_id'=>$user->id,
+            'primary_currency'=>'IND',
+            'secondary_currency'=>Null
+        ]);
+
         // REGISTRATION STATUS UPDATION -  STEP:1
         $signup = $this->signup;
         if($signup){
@@ -91,13 +99,16 @@ class User extends Authenticatable
 
     }
 
-    public function recoveryKeys()
-    {
-        return $this->hasMany(RecoveryKey::class, 'user_id', 'id');
-    }
-
     public function signUp()
     {
         return $this->hasOne(Signup::class);
+    }
+    public function wallets(){
+
+        return $this->hasMany(Wallet::class);
+
+    }
+    public function setting(){
+        return $this->hasOne(Setting::class,'user_id','id');
     }
 }

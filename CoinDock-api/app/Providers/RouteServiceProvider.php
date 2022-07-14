@@ -57,7 +57,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group( function() {
                     require base_path('routes/v1/auth.php');
                     require base_path('routes/v1/users.php');
-                    require base_path('routes/v1/recovery-keys.php');
+                    require base_path('routes/v1/coins.php');
                 });
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1\Auth;
 
 use App\Exceptions\AuthenticationException;
+use App\Http\Requests\V1\CreateUserRequest;
 use App\Http\Requests\V1\LoginRequest;
 use App\Http\Resources\V1\UserResource;
 use App\Models\V1\User;
@@ -14,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 class AuthController extends AccessTokenController
 {
     use BuildPassportTokens;
-
+    
     /**
      * Login
      */
@@ -26,15 +27,13 @@ class AuthController extends AccessTokenController
         }
 
         $response = $this->requestPasswordGrant($request);
-
         $user = User::whereEmail($request->email)->first();
-
         return response(
             [
                 'message' => 'Login Successfull.',
                 'results' => [
                     'user' => UserResource::make($user)->resolve(),
-                ],
+                ]
             ],
             Response::HTTP_OK,
             [
@@ -61,7 +60,7 @@ class AuthController extends AccessTokenController
     public function refresh(Request $request)
     {
         $response = $this->requestRefreshGrant($request);
-
+       
         return response(['message' => 'Refreshed token successfully'], Response::HTTP_OK, [
             'Access-Token' => $response['access_token'],
             'Refresh-Token' => $response['refresh_token'],
