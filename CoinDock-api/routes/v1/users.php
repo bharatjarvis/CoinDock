@@ -24,15 +24,16 @@ Route::group(['prefix' => 'users'], function () {
     Route::post('/', [UserController::class, 'create'])->name('users.create');
 });
 
-
+Route::get('/coins/coinshortname',[WalletCoinController::class, 'coinConversion']);
+Route::get('/real-time-graph/filter', [WalletCoinController::class, 'realTimeGraphFilter']);
+Route::get('/piechart/filter', [WalletCoinController::class, 'pieChartFilter']);
+                
 
 Route::middleware('auth:api')
     ->prefix('users')
     ->group(function () {
         Route::prefix('{user}')->group(function () {
-
             Route::get('/coinslist',[WalletCoinController::class,'showUserCoins']);
-
             Route::prefix('recovery-codes')->group(function () {
                 Route::post('/', [RecoveryKeyController::class, 'create']);
 
@@ -66,8 +67,7 @@ Route::middleware('auth:api')
                     ),
                 );
                 Route::get('/real-time-graph/display/', [WalletCoinController::class, 'index']);
-                Route::get('/real-time-graph/filter', [WalletCoinController::class, 'realTimeGraphFilter']);
-                Route::get('/piechart/filter', [WalletCoinController::class, 'pieChartFilter']);
+                
             });
         });
     });

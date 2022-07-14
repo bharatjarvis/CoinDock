@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('historical_data', function (Blueprint $table) {
-            $table->id();
-            $table->integer('coin_id');
-            $table->date('date');
-            $table->double('price',5);
-            $table->timestamps();
+        Schema::table('coins', function (Blueprint $table) {
+            //
+            $table->string('img_path')->after('is_crypto');
         });
     }
 
@@ -29,6 +26,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('historical_data');
+        Schema::table('coins', function (Blueprint $table) {
+            //
+            $table->dropColumn('img_path');
+        });
     }
 };

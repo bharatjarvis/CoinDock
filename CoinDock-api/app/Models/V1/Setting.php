@@ -14,4 +14,10 @@ class Setting extends Model
         'secondary_currency'
         
     ];
+
+    public function user(){
+
+        return $this->belongsTo(User::class);
+    }
+
 }
