@@ -19,7 +19,7 @@ class CoinCardResource extends JsonResource
         $coin = Coin::whereIsDefault(1)->first();
         return [
             'coin_name' => $this->coin_id,
-            'logo' =>  json_decode($this->img_path),
+            'logo' =>  $this->img_path,
             $coin->coin_id . '_coin'  =>  $this->defaultCoin(),
             'number_of_coins' =>  $this->countCoins(),
             'primary_currency' => $this->getPrimaryCurrency(),
