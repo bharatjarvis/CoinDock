@@ -31,7 +31,6 @@ Route::middleware('auth:api')
 
         Route::prefix('{user}')->group(function () {
 
-
             Route::prefix('recovery-codes')->group(function () {
 
 
@@ -90,18 +89,18 @@ Route::middleware('auth:api')
 
 
 
-            Route::prefix('graph')->group(function () {
-                Route::get('/', [WalletCoinController::class, 'index'])->missing(
-                    fn () => response(
-                        [
-                            'error' => ['message' => 'User record not found'],
-                        ],
-                        404,
-                    ),
-                );
+            Route::prefix('add-wallet')->group(
+                function () {
 
-            });
-
+                    /*
+                    For        : Adding an User Wallet
+                    RouteName  : /users/{user}/add-wallet/
+                    Method     : POST
+                    Access     : Private
+                */
+                    Route::post('/', [WalletController::class, 'create']);
+                }
+            );
 
             Route::get('/total-default', [UserController::class, 'totalBTC']);
             Route::get('/primary-currency',[UserController::class, 'primaryCurrency']);
