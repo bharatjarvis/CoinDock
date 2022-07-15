@@ -161,7 +161,7 @@ class User extends Authenticatable
     }
 
 
-    public function getCoinId($coinId)
+    public function getCoinId($coinId):array|object
     {
         if($coinId != 'All') {
             return $this->wallets->map(function($wallet) use($coinId) {
