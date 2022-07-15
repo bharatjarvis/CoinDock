@@ -74,11 +74,15 @@ class UserController extends AccessTokenController
   }
   public function topPerformer(User $user)
   {
-    if ($user->wallets->isEmpty()) {
+    if($user->wallets->count() == 1){
+      return Null;
+    }
+      if($user->wallets->isEmpty()){
       return response([
         'message' => 'User Wallet Not Found'
       ], Response::HTTP_BAD_REQUEST);
     }
+    
     $result = ['heading' => 'Top Performer'];
     $topPerformer = $user->topPerformer();
     return response([
@@ -95,7 +99,10 @@ class UserController extends AccessTokenController
 
   public function lowPerformer(User $user)
   {
-    if ($user->wallets->isEmpty()) {
+    if($user->wallets->count() == 1){
+      return Null;
+    }
+   if ($user->wallets->isEmpty()) {
       return response([
         'message' => 'User Wallet Not Found'
       ], Response::HTTP_BAD_REQUEST);
