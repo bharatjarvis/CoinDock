@@ -4,25 +4,23 @@ namespace App\Http\Resources\V1;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RecoveryCodeResource extends JsonResource
+class CoinResource extends JsonResource
 {
-    public $preserveKeys = true;
-
     /**
      * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-
     public function toArray($request)
     {
-
         return [
-            'user_id' => $this->user_id,
-            'recovery_codes' => explode(' ', $this->recovery_code),
-            'status' => $this->status
-            
+            'id' => $this->id,
+            'coin_id' => $this->coin_id,
+            'name' => $this->name,
+            'status'=>$this->status,
+            'image_path'=>$this->img_path
+
         ];
     }
 }

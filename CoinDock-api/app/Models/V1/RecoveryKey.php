@@ -81,7 +81,7 @@ class RecoveryKey extends Model
     public function recoveryKeys(User $user, RecoveryKeyRequest $request)
     {
         $passArray = explode(" ", $this->recovery_code);
-
+          
         $count = 0;
 
         $keyResponses = $request->key_response;
