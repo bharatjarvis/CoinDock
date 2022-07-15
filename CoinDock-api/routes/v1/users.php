@@ -1,7 +1,11 @@
 <?php
 
+use App\Models\V1\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\{
+    CoinController,
+    GraphController,
+    PieChartController,
     UserController,
     WalletCoinController,
     RecoveryKeyController,
@@ -25,9 +29,13 @@ use App\Http\Controllers\V1\{
 Route::group(['prefix' => 'users'], function () {
     Route::post('/', [UserController::class, 'create'])->name('users.create');
 });
+// route should be placed in CoinController
+
 
 Route::middleware('auth:api')
+
     ->prefix('users')
+
     ->group(function () {
 
         Route::prefix('{user}')->group(function () {
@@ -80,6 +88,7 @@ Route::middleware('auth:api')
 
 
             Route::prefix('signup')->group(function () {
+
                 Route::get('/info', [SignupController::class, 'info'])->missing(
                     fn () => response(
                         [
@@ -90,8 +99,9 @@ Route::middleware('auth:api')
                 );
             });
 
-            Route::prefix('graph')->group(function () {
-                Route::get('/', [WalletCoinController::class, 'index'])->missing(
+            Route::prefix('pie-chart')->group(function () {
+
+                Route::get('/', [PieChartController::class, 'show'])->missing(
                     fn () => response(
                         [
                             'error' => ['message' => 'User record not found'],
@@ -99,6 +109,20 @@ Route::middleware('auth:api')
                         404,
                     ),
                 );
+
+                Route::get('/filter', [PieChartController::class, 'filter']);
+                
+            });
+
+            Route::prefix('graph')->group(function () {
+
+                Route::prefix('coins')->group(function () {
+                    Route::get('/', [GraphController::class,'getCoinIds']);
+                });
+
+                Route::get('/filter', [GraphController::class, 'filter']);
+
+                Route::get('/', [GraphController::class, 'show']);
             });
 
 

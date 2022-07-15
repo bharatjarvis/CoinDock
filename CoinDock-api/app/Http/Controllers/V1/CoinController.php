@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\V1;
-
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\CreateCoinRequest;
 use App\Http\Requests\V1\UpdateCoinRequest;
@@ -26,6 +25,20 @@ class CoinController extends Controller
             ]
        ],Response::HTTP_OK);
     }
+
+    public function coinShortNames()
+    {
+        $coins = Coin::all()
+            ->reduce(fn($carry, $coin) => $carry + [$coin->name=>$coin->coin_id], []);
+        return response(
+            [
+                'message' => 'success',
+                'results' => $coins
+            ],
+            Response::HTTP_OK
+        ); 
+    }
+    
 
     /**
      * Show the form for creating a new resource.

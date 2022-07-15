@@ -26,6 +26,13 @@ Route::group(['prefix' => 'coins', 'middleware' => 'auth:api'], function () {
     Route::post('/',[CoinController::class , 'store']);
 
 
+    /*
+    For        : Get coin and shortname
+    RouteName  : /coins/coin-shortname
+    Method     : GET
+    Access     : Private
+    */
+    Route::get('/coin-shortname',[CoinController::class, 'coinShortNames']);
     
     /*
     For        : Listing all the coins
