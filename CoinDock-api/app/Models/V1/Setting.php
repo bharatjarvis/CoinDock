@@ -29,4 +29,8 @@ class Setting extends Model
             'message'=>'Settings Updated Successfully'
         ],Response::HTTP_OK);
     }
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
 }

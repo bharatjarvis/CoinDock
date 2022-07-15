@@ -74,23 +74,51 @@ Route::middleware('auth:api')
                     Method     : PUT
                     Access     : Private
                 */
-                Route::put('/activate', [RecoveryKeyController::class, 'activate']);
+                Route::put('/activate', [RecoveryKeyController::class, 'activate']);        
+        });
 
 
-            Route::prefix('signup')->group(function () {
-                Route::get('/info', [SignupController::class, 'info'])->missing(
-                    fn () => response(
-                        [
-                            'error' => ['message' => 'User record not found'],
-                        ],
-                        404,
-                    ),
-                );
+        Route::prefix('signup')->group(function () {
+            Route::get('/info', [SignupController::class, 'info'])->missing(
+                fn () => response(
+                    [
+                        'error' => ['message' => 'User record not found'],
+                    ],
+                    404,
+                ),
+            );
+        });
+
+
+        Route::prefix('pie-chart')->group(function () {
+
+            Route::get('/', [PieChartController::class, 'show'])->missing(
+                fn () => response(
+                    [
+                        'error' => ['message' => 'User record not found'],
+                    ],
+                    404,
+                ),
+            );
+
+            Route::get('/filter', [PieChartController::class, 'filter']);
+            
+        });
+
+        Route::prefix('graph')->group(function () {
+
+            Route::prefix('coins')->group(function () {
+                Route::get('/', [GraphController::class,'getCoinIds']);
             });
+
+            Route::get('/filter', [GraphController::class, 'filter']);
+
+            Route::get('/', [GraphController::class, 'show']);
+        });
+
+
+
         
-            });
-
-
             Route::prefix('add-wallet')->group(
                 function () {
 
