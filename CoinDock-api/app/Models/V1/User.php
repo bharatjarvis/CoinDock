@@ -5,9 +5,10 @@ namespace App\Models\V1;
 use App\Enums\V1\TimePeriod;
 use App\Enums\V1\UserStatus;
 use App\Enums\V1\UserType;
-use Illuminate\Http\Request;
-use App\Models\V1\{Coin,Signup,Setting};
+use App\Http\Requests\V1\ChartRequest;
+use App\Models\V1\{Signup,Setting};
 use App\Http\Requests\V1\CreateUserRequest;
+use App\Http\Requests\V1\GraphRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 
 
@@ -97,138 +99,159 @@ class User extends Authenticatable
 
     }
 
-    public function showPieChartData(Request $request){
+    public function chartData(ChartRequest $request):array
+    {
         $filterBy = $request->filterBy;
         $wallets = $this->wallets()->select(['coin_id', 'balance'])
             ->get()
             ->mapToGroups(function ($wallet) {
                 return [$wallet->coin->coin_id => $wallet->balance];
-            })->map(function ($e) {
-                return $e->sum();
+            })->map(function ($coins) {
+                return $coins->sum();
             })->toArray();
 
-        if($filterBy == null || $filterBy == 'coins'){
+        if($filterBy == null || $filterBy == 'coins') {
             return $wallets;
         }
 
         $result = [];
-        if($filterBy == 'currency'){
-            foreach($wallets as $key=>$value){
-                $primaryCurrency = $this->setting()->select('primary_currency')
-                ->get()
-                ->map(function ($e) {
-                    return $e->primary_currency;
-                });
-                $baseURL = config('cryptohistoricaldata.coin.api_url').config('cryptohistoricaldata.coin.exchange_url');
-                $baseURLIdReplaced = str_replace(['{fromCoin}','{toCoin}'],[$key,$primaryCurrency[0]],$baseURL);
-                $response = Http::withHeaders(['X-CoinAPI-Key'=>config('cryptohistoricaldata.coin.api_key')])->get($baseURLIdReplaced);
+
+        if($filterBy == 'currency') {
+
+            foreach($wallets as $key => $value) {
+
+                $primaryCurrency = $this->setting->primary_currency;
+                
+                $baseURL = config('cryptohistoricaldata.coin.api_url'). config('cryptohistoricaldata.coin.exchange_url');
+                
+                $baseURLIdReplaced = str_replace(
+                    ['{fromCoin}', '{toCoin}'],
+                    [$key, $primaryCurrency],
+                    $baseURL
+                );
+                
+                $response = Http::withHeaders([
+                        'X-CoinAPI-Key'=>config('cryptohistoricaldata.coin.api_key')
+                    ])->get($baseURLIdReplaced);
+                
                 $primaryBalance = Arr::get($response, 'rate', null)* $wallets[$key];
+                
                 $result[$key] = $primaryBalance;
-            }
-            return $result; 
+            } 
         }
+
         return $result;
     }
 
-
-    public function commonDataRealTime(string $coinId, string $range,string $startDate,string $endDate){
+    public function historicalData(string $coinId, string $range, string $startDate, string $endDate):array
+    {
         $baseURL = config('cryptohistoricaldata.coin.api_url').config('cryptohistoricaldata.coin.realtime_url');
-        $baseURLIdReplaced = str_replace(['{coin1}','{range}','{start_date}','{end_date}'],[$coinId,$range,$startDate,$endDate],$baseURL);
-        $response = Http::withHeaders(['X-CoinAPI-Key'=>config('cryptohistoricaldata.coin.api_key')])->get($baseURLIdReplaced);
+
+        $baseURLIdReplaced = str_replace(
+            ['{coin1}', '{range}', '{start_date}', '{end_date}'],
+            [$coinId, $range, $startDate, $endDate],
+            $baseURL
+        );
+
+        $response = Http::withHeaders(
+                ['X-CoinAPI-Key' => config('cryptohistoricaldata.coin.api_key')]
+            )->get($baseURLIdReplaced);
+
         return json_decode($response);
     }
 
 
-    public function returnCoinId($coinId){
-        if($coinId) {
+    public function getCoinId($coinId)
+    {
+        if($coinId != 'All') {
             return $this->wallets->map(function($wallet) use($coinId) {
-                return $wallet->coin()->whereCoinId($coinId)->first();    
-            })->unique('coin_id')->pluck('coin_id')->filter();
+                    return $wallet->coin()->whereCoinId($coinId)->first();    
+                })->unique('coin_id')->pluck('coin_id')->filter();
         }
         return $this->uniqueCoins()->pluck('coin_id');
     }
 
-    public function uniqueCoins(){
+    public function uniqueCoins():collection
+    {
         return $this->wallets->map(fn($wallet) => $wallet->coin)->unique('coin_id');
     }
 
     
-    public function dayDataForAllCoins($range, $startDate, $endDate, $coinId)
+    public function graphData(string $range, string $startDate, string $endDate, string $coinId):array
     {
-        $realTimeData = [];
-        $coinIds = $this->returnCoinId($coinId);
-        foreach($coinIds as $coinId){
-            $response = $this->commonDataRealTime($coinId, $range, $startDate, $endDate);
-            $realTimeData[$coinId] = array_column($response, 'rate_close', 'time_period_end'); 
+        $result = [];
+        $coinIds = $this->getCoinId($coinId);
+        foreach($coinIds as $coinId) {
+            $response = $this->historicalData($coinId, $range, $startDate, $endDate);
+            $result[$coinId] = array_column($response, 'rate_close', 'time_period_end'); 
         }
-        return $realTimeData;
+        return $result;
     }
 
-    public function getCoin($coinNameFromUser){
-        $coinIdGet = Coin::select('coin_id')->where('name','=',$coinNameFromUser)->get();
-        $coinNameFinal = "";
-        foreach($coinIdGet as $coin){
-            $coinNameFinal = $coin->coin_id;
-        }
-        return $coinNameFinal;
-    }
-
-
-    public function index( Request $request){
+    public function graph(GraphRequest $request):array
+    {
         $coinId = Arr::get($request, 'coin_id');
+
+        if(is_null($coinId)){
+            $coinId = 'All';
+        }
+
         $timePeriod = $request->range;
         $endDate = str_replace(' ','T', Carbon::now()->toDateTimeString());
-        
-            switch($timePeriod) {
-                case TimePeriod::Day: 
-                    $range = '1HRS';
-                    $startDate = str_replace(' ','T', Carbon::now()->subDay(1)->toDateTimeString());
-                    return $this->dayDataForAllCoins($range, $startDate, $endDate, $coinId);
-                    break;
-                case TimePeriod::Weekly:
-                    $range = '1DAY';
-                    $startDate = str_replace(' ','T', Carbon::now()->subDay(6)->toDateTimeString());
-                    return $this->dayDataForAllCoins($range, $startDate, $endDate, $coinId);
-                    break;
-                case TimePeriod::Monthly:
-                    $range = '7DAY';
-                    $startDate = str_replace(' ','T', Carbon::now()->subMonth(1)->toDateTimeString());
-                    return $this->dayDataForAllCoins($range, $startDate, $endDate, $coinId);
-                    break;
-                case TimePeriod::Yearly:
-                    $range = '7DAY';
-                    $startDate = str_replace(' ','T', Carbon::now()->subYear(1)->toDateTimeString());
-                    $response = $this->dayDataForAllCoins($range, $startDate, $endDate, $coinId);
+        switch($timePeriod) {
+            case TimePeriod::Day:
+                $range = '1HRS';
+                $startDate = str_replace(' ', 'T', Carbon::now()->subDay(1)->toDateTimeString());
+                return $this->graphData($range, $startDate, $endDate, $coinId);
 
-                    $realTimeData = [];
-                    $allDatePriceIndex = [];
-                    foreach($response as $coinId => $coinData){
-                        foreach($coinData as $date=>$price){
-                            array_push($allDatePriceIndex,[
-                                'date'=>Carbon::parse($date)->format('Y-m'),
-                                'price'=>$price
-                            ]);
-                        }
-                        $dataIndex = array_unique(array_column($allDatePriceIndex,'date'));
+            case TimePeriod::Weekly:
+                $range = '1DAY';
+                $startDate = str_replace(' ', 'T', Carbon::now()->subDay(6)->toDateTimeString());
+                return $this->graphData($range, $startDate, $endDate, $coinId);
 
-                        $finalResult = [];
-                        foreach($dataIndex as $date){
-                            $count = 0;
-                            $sum = 0;
-                            foreach($allDatePriceIndex as $response){
-                                if($response['date']==$date){
-                                    $count++;
-                                    $sum+=$response['price'];
-                                }
-                            }
-                            $avg = $sum/$count;
-                            $finalResult[$date] = $avg;
-                        }
-                        $realTimeData[$coinId] = $finalResult;
+            case TimePeriod::Monthly:
+                $range = '7DAY';
+                $startDate = str_replace(' ', 'T', Carbon::now()->subMonth(1)->toDateTimeString());
+                return $this->graphData($range, $startDate, $endDate, $coinId);
+
+            case TimePeriod::Yearly:
+                $range = '7DAY';
+                $startDate = str_replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString());
+                $response = $this->graphData($range, $startDate, $endDate, $coinId);
+                $result = [];
+                $newCoinData = [];
+
+                foreach($response as $coinId => $coinData) {
+                    foreach($coinData as $date => $price) {
+                        array_push($newCoinData,[
+                            'date'=>Carbon::parse($date)->format('Y-m'),
+                            'price'=>$price
+                        ]);
                     }
-                return $realTimeData;
-            }
+                    $dates = array_unique(array_column($newCoinData,'date'));
+
+                    $finalResult = [];
+                    foreach($dates as $date) {
+                        $count = 0;
+                        $sum = 0;
+                        foreach($newCoinData as $response){
+                            if($response['date'] == $date){
+                                $count++;
+                                $sum+=$response['price'];
+                            }
+                        }
+                        $avg = $sum/$count;
+                        $finalResult[$date] = $avg;
+                    }
+                    $result[$coinId] = $finalResult;
+                }
+            return $result;
+        default:
+            $range = '1HRS';
+            $startDate = str_replace(' ', 'T', Carbon::now()->subDay(1)->toDateTimeString());
+            return $this->graphData($range, $startDate, $endDate, $coinId);
         }
+    }
 
     public function recoveryKeys()
     {

@@ -2,6 +2,9 @@
 
 use App\Models\V1\User;
 use App\Http\Controllers\V1\{
+    CoinController,
+    GraphController,
+    PieChartController,
     UserController,
     WalletCoinController,
     RecoveryKeyController,
@@ -23,18 +26,19 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'users'], function () {
     Route::post('/', [UserController::class, 'create'])->name('users.create');
 });
-
-Route::get('/coins/coinshortname',[WalletCoinController::class, 'coinConversion']);
-Route::get('/real-time-graph/filter', [WalletCoinController::class, 'realTimeGraphFilter']);
-Route::get('/piechart/filter', [WalletCoinController::class, 'pieChartFilter']);
-                
+// route should be placed in CoinController
+Route::get('/coins/coinshortname',[CoinController::class, 'index']);
 
 Route::middleware('auth:api')
+
     ->prefix('users')
+
     ->group(function () {
+
         Route::prefix('{user}')->group(function () {
-            Route::get('/coinslist',[WalletCoinController::class,'showUserCoins']);
+
             Route::prefix('recovery-codes')->group(function () {
+
                 Route::post('/', [RecoveryKeyController::class, 'create']);
 
                 Route::get('/download', [RecoveryKeyController::class, 'download']);
@@ -47,6 +51,7 @@ Route::middleware('auth:api')
             });
 
             Route::prefix('signup')->group(function () {
+
                 Route::get('/info', [SignupController::class, 'info'])->missing(
                     fn () => response(
                         [
@@ -57,8 +62,9 @@ Route::middleware('auth:api')
                 );
             });
 
-            Route::prefix('graph')->group(function () {
-                Route::get('/piechartdata', [WalletCoinController::class, 'showPieChartData'])->missing(
+            Route::prefix('pie-chart')->group(function () {
+
+                Route::get('/', [PieChartController::class, 'show'])->missing(
                     fn () => response(
                         [
                             'error' => ['message' => 'User record not found'],
@@ -66,8 +72,20 @@ Route::middleware('auth:api')
                         404,
                     ),
                 );
-                Route::get('/real-time-graph/display/', [WalletCoinController::class, 'index']);
+
+                Route::get('/filter', [PieChartController::class, 'filter']);
                 
+            });
+
+            Route::prefix('graph')->group(function () {
+
+                Route::prefix('coins')->group(function () {
+                    Route::get('/', [GraphController::class,'getCoinIds']);
+                });
+
+                Route::get('/filter', [GraphController::class, 'filter']);
+
+                Route::get('/', [GraphController::class, 'show']);
             });
         });
     });
