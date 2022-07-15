@@ -2,18 +2,24 @@
 
 namespace App\Models\V1;
 
+use App\Enums\V1\TimePeriod;
 use App\Enums\V1\UserStatus;
 use App\Enums\V1\UserType;
-use App\Models\V1\{Coin, Signup};
+use App\Http\Requests\V1\ChartRequest;
+use App\Models\V1\{Signup,Setting};
+use App\Models\V1\{Coin};
 use App\Http\Requests\V1\CreateUserRequest;
+use App\Http\Requests\V1\GraphRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
+use Carbon\Carbon;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use App\Models\V1\Wallet;
-use App\Models\V1\Setting;
 
 class User extends Authenticatable
 {
@@ -99,6 +105,166 @@ class User extends Authenticatable
         Signup::create(['step_count' => 1, 'user_id' => $user->id]);
 
         return $user;
+
+    }
+
+    public function chartData(ChartRequest $request):array
+    {
+        $filter_by = $request->filter_by;
+        $wallets = $this->wallets()->select(['coin_id', 'balance'])
+            ->get()
+            ->mapToGroups(function ($wallet) {
+                return [$wallet->coin->coin_id => $wallet->balance];
+            })->map(function ($coins) {
+                return $coins->sum();
+            })->toArray();
+
+        if($filter_by == null || $filter_by == 'coins') {
+            return $wallets;
+        }
+
+        $result = [];
+
+        if($filter_by == 'currency') {
+
+            foreach($wallets as $key => $value) {
+
+                $primaryCurrency = $this->setting->primary_currency;
+                
+                $baseURL = config('cryptohistoricaldata.coin.api_url'). config('cryptohistoricaldata.coin.exchange_url');
+                
+                $baseURLIdReplaced = str_replace(
+                    ['{fromCoin}', '{toCoin}'],
+                    [$key, $primaryCurrency],
+                    $baseURL
+                );
+                
+                $response = Http::withHeaders([
+                        'X-CoinAPI-Key'=>config('cryptohistoricaldata.coin.api_key')
+                    ])->get($baseURLIdReplaced);
+                
+                $primaryBalance = Arr::get($response, 'rate', null)* $wallets[$key];
+                
+                $result[$key] = $primaryBalance;
+            } 
+        }
+
+        return $result;
+    }
+
+    public function historicalData(string $coinId, string $range, string $startDate, string $endDate):array
+    {
+        $baseURL = config('cryptohistoricaldata.coin.api_url').config('cryptohistoricaldata.coin.realtime_url');
+
+        $baseURLIdReplaced = str_replace(
+            ['{coin1}', '{range}', '{start_date}', '{end_date}'],
+            [$coinId, $range, $startDate, $endDate],
+            $baseURL
+        );
+
+        $response = Http::withHeaders(
+                ['X-CoinAPI-Key' => config('cryptohistoricaldata.coin.api_key')]
+            )->get($baseURLIdReplaced);
+
+        return json_decode($response);
+    }
+
+
+    public function getCoinId($coinId):array|collection
+    {
+        if($coinId != 'All') {
+            return $this->wallets->map(function($wallet) use($coinId) {
+                    return $wallet->coin()->whereCoinId($coinId)->first();    
+                })->unique('coin_id')->pluck('coin_id')->filter();
+        }
+        return $this->uniqueCoins()->pluck('coin_id')->toArray();
+    }
+
+    public function uniqueCoins():collection
+    {
+        return $this->wallets->map(fn($wallet) => $wallet->coin)->unique('coin_id');
+    }
+
+    
+    public function graphData(string $range, string $startDate, string $endDate, string $coinId):array
+    {
+        $result = [];
+        $coinIds = $this->getCoinId($coinId);
+        foreach($coinIds as $coinId) {
+            $response = $this->historicalData($coinId, $range, $startDate, $endDate);
+            $result[$coinId] = array_column($response, 'rate_close', 'time_period_end'); 
+        }
+        return $result;
+    }
+
+    public function graph(GraphRequest $request):array
+    {
+        $coinId = Arr::get($request, 'coin_id');
+
+        if(is_null($coinId)){
+            $coinId = 'All';
+        }
+
+        $timePeriod = $request->range;
+        $endDate = str_replace(' ','T', Carbon::now()->toDateTimeString());
+        switch($timePeriod) {
+            case TimePeriod::Day:
+                $range = '1HRS';
+                $startDate = str_replace(' ', 'T', Carbon::now()->subDay(1)->toDateTimeString());
+                return $this->graphData($range, $startDate, $endDate, $coinId);
+
+            case TimePeriod::Weekly:
+                $range = '1DAY';
+                $startDate = str_replace(' ', 'T', Carbon::now()->subDay(6)->toDateTimeString());
+                return $this->graphData($range, $startDate, $endDate, $coinId);
+
+            case TimePeriod::Monthly:
+                $range = '7DAY';
+                $startDate = str_replace(' ', 'T', Carbon::now()->subMonth(1)->toDateTimeString());
+                return $this->graphData($range, $startDate, $endDate, $coinId);
+
+            case TimePeriod::Yearly:
+                $range = '7DAY';
+                $startDate = str_replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString());
+                $response = $this->graphData($range, $startDate, $endDate, $coinId);
+                $result = [];
+                $newCoinData = [];
+
+                foreach($response as $coinId => $coinData) {
+                    foreach($coinData as $date => $price) {
+                        array_push($newCoinData,[
+                            'date'=>Carbon::parse($date)->format('Y-m'),
+                            'price'=>$price
+                        ]);
+                    }
+                    $dates = array_unique(array_column($newCoinData,'date'));
+
+                    $finalResult = [];
+                    foreach($dates as $date) {
+                        $count = 0;
+                        $sum = 0;
+                        foreach($newCoinData as $response){
+                            if($response['date'] == $date){
+                                $count++;
+                                $sum+=$response['price'];
+                            }
+                        }
+                        $avg = $sum/$count;
+                        $finalResult[$date] = $avg;
+                    }
+                    $result[$coinId] = $finalResult;
+                }
+            return $result;
+        default:
+            $range = '1HRS';
+            $startDate = str_replace(' ', 'T', Carbon::now()->subDay(1)->toDateTimeString());
+            return $this->graphData($range, $startDate, $endDate, $coinId);
+        }
+    }
+
+    public function recoveryKeys()
+    {
+        return $this->hasMany(RecoveryKey::class, 'user_id', 'id');
     }
 
     public function signUp()
