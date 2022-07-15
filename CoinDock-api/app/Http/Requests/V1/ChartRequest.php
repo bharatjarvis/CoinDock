@@ -24,8 +24,8 @@ class ChartRequest extends FormRequest
     public function rules()
     {
         return [
-            //
-            'filterBy' => 'string'
+
+            'filter_by' => 'string'
         ];
     }
 }

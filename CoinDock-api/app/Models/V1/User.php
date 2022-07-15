@@ -110,7 +110,7 @@ class User extends Authenticatable
 
     public function chartData(ChartRequest $request):array
     {
-        $filterBy = $request->filterBy;
+        $filter_by = $request->filter_by;
         $wallets = $this->wallets()->select(['coin_id', 'balance'])
             ->get()
             ->mapToGroups(function ($wallet) {
@@ -119,13 +119,13 @@ class User extends Authenticatable
                 return $coins->sum();
             })->toArray();
 
-        if($filterBy == null || $filterBy == 'coins') {
+        if($filter_by == null || $filter_by == 'coins') {
             return $wallets;
         }
 
         $result = [];
 
-        if($filterBy == 'currency') {
+        if($filter_by == 'currency') {
 
             foreach($wallets as $key => $value) {
 
