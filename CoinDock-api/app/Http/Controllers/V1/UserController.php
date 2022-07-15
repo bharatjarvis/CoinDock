@@ -66,7 +66,9 @@ class UserController extends AccessTokenController
     return response([
       'message' => 'success',
       'results' => [
-        array_merge($result, $totalPrimaryCurrency)
+        'heading'=>'Primary Currency',
+        'coin_name'=>$totalPrimaryCurrency['coin_name'],
+        'balance'=>$totalPrimaryCurrency['balance']
       ]
     ], Response::HTTP_OK);
   }
@@ -82,7 +84,10 @@ class UserController extends AccessTokenController
     return response([
       'message' => 'Success',
       'results' => [
-        array_merge($result, $topPerformer)
+        'heading'=>'Top performer',
+        'coin_name'=>$topPerformer['coin_name'],
+        'coin_id'=>$topPerformer['coin_id'],
+        'balance'=>$topPerformer['balance']
       ]
 
     ], Response::HTTP_OK);
@@ -101,7 +106,10 @@ class UserController extends AccessTokenController
     return response([
       'message' => 'Success',
       'results' => [
-        array_merge($result, $lowPerformer)
+        'heading'=>'Low performer',
+        'coin_name'=>$lowPerformer['coin_name'],
+        'coin_id'=>$lowPerformer['coin_id'],
+        'balance'=>$lowPerformer['balance']
       ]
     ], Response::HTTP_OK);
   }
