@@ -161,14 +161,14 @@ class User extends Authenticatable
     }
 
 
-    public function getCoinId($coinId):array|object
+    public function getCoinId($coinId):array|collection
     {
         if($coinId != 'All') {
             return $this->wallets->map(function($wallet) use($coinId) {
                     return $wallet->coin()->whereCoinId($coinId)->first();    
                 })->unique('coin_id')->pluck('coin_id')->filter();
         }
-        return $this->uniqueCoins()->pluck('coin_id');
+        return $this->uniqueCoins()->pluck('coin_id')->toArray();
     }
 
     public function uniqueCoins():collection
