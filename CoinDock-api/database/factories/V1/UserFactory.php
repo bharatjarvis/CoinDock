@@ -25,7 +25,7 @@ class UserFactory extends Factory
             'date_of_birth'=>$this->faker->date('Y-m-d'),
             'country'=> $this->faker->country(),
             'email' => $this->faker->unique()->safeEmail(),
-            'password' => 'coinDock@123', // password
+            'password' => 'coinDock@123',
             'status' => $this->faker->numberBetween(0,1)
         ];
     }

@@ -55,7 +55,7 @@ return [
             'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/7ec2ce6060674da58e39eae2a178369f.png'
         ],
         'Litecoin' => [
-            'coin_id' => 'BTCZ',
+            'coin_id' => 'LTC',
             'bal_path' => 'https://api.blockcypher.com/v1/ltc/main/addrs/{id}/balance',
             'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/a201762f149941ef9b84e0742cd00e48.png'
         ],
@@ -69,7 +69,8 @@ return [
         'Dash' => [
             'coin_id' => 'DASH',
             'bal_path' => 'https://api.blockcypher.com/v1/dash/main/addrs/{id}/balance',
-            'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/73fb6d7915a24f51930809b9e2b84c8f.png'
+            'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/73fb6d7915a24f51930809b9e2b84c8f.png',
+            'sats_to_crypt'=>0.000000000999658829081551391916
         ],
         'Aeternity' => [
             'coin_id' => 'AE',
@@ -105,6 +106,21 @@ return [
             'coin_id' => 'GRLC',
             'bal_path' => 'https://garli.co.in/insight-grlc-api/addr/{id}/?noTxList=1',
             'img_path' => 'https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/5dd946607a454b9cb6fd47f97e63de40.png'
+        ],
+        'Aion'=>[
+            'coin_id' => 'AION',
+            'bal_path' => 'https://mainnet-api.theoan.com/aion/dashboard/getAccountDetails?accountAddress={id}',
+            'img_path' => ''
+        ],
+        'Ubiq'=>[
+            'coin_id' => 'UBQ',
+            'bal_path' => 'https://mainnet-api.theoan.com/aion/dashboard/getAccountDetails?accountAddress={id}',
+            'img_path' => ''
+        ],
+        'PLSR'=>[
+            'coin_id' => 'PLSR',
+            'bal_path' => 'https://mainnet-api.theoan.com/aion/dashboard/getAccountDetails?accountAddress={id}',
+            'img_path' => ''
         ],
         'US Dollar' => [
             'coin_id' => 'USD',

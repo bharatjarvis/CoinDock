@@ -6,7 +6,6 @@ use App\Http\Controllers\V1\Auth\BuildPassportTokens;
 use App\Http\Requests\V1\CreateUserRequest;
 use App\Http\Requests\V1\updatePasswordRequest;
 use App\Http\Requests\V1\updateProfileRequest;
-use App\Models\V1\Setting;
 use App\Models\V1\Coin;
 use App\Models\V1\User;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
@@ -53,6 +52,16 @@ class UserController extends AccessTokenController
 
     }
 
+    //list of user titles 
+    public function usersTitles(){
+      $titles = ['Mr.','Ms.','Mrs.','Mx.'];
+      return response([
+        'message'=>'success',
+        'results'=>[
+          'titles'=>$titles
+        ]
+      ],Response::HTTP_OK);
+    }
 
   public function totalBtc(User $user)
   {

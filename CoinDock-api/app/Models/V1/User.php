@@ -38,6 +38,7 @@ class User extends Authenticatable
         'password',
         'status',
         'recovery_attempts',
+        'title'
     ];
 
     /**
@@ -84,6 +85,8 @@ class User extends Authenticatable
             'email' => $request->email,
             'password' => $request->password,
             'status' => UserStatus::Active,
+            'title'=>$request->title,
+
         ]);
 
         //Adding default Currency settings for user

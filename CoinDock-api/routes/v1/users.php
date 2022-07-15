@@ -3,10 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\{
     UserController,
-    WalletCoinController,
     RecoveryKeyController,
     SignupController,
-    CoinsController,
     CoinCardController,
     WalletController,
 };
@@ -29,6 +27,8 @@ Route::group(['prefix' => 'users'], function () {
 Route::middleware('auth:api')
     ->prefix('users')
     ->group(function () {
+
+        Route::get('/titles' ,[UserController::class,'usersTitles']);
 
         Route::prefix('{user}')->group(function () {
             Route::prefix('coin-cards')->group(function(){
@@ -76,8 +76,6 @@ Route::middleware('auth:api')
                 */
                 Route::put('/activate', [RecoveryKeyController::class, 'activate']);
 
-            });
-
 
             Route::prefix('signup')->group(function () {
                 Route::get('/info', [SignupController::class, 'info'])->missing(
@@ -89,16 +87,7 @@ Route::middleware('auth:api')
                     ),
                 );
             });
-
-            Route::prefix('graph')->group(function () {
-                Route::get('/', [WalletCoinController::class, 'index'])->missing(
-                    fn () => response(
-                        [
-                            'error' => ['message' => 'User record not found'],
-                        ],
-                        404,
-                    ),
-                );
+        
             });
 
 
