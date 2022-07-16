@@ -77,7 +77,7 @@ class UserController extends AccessTokenController
     if ($user->wallets->count() == 1) {
       return response([
         'message' => 'Success',
-        'results' => Null
+        'results' => null
       ], Response::HTTP_OK);
     }
     if ($user->wallets->isEmpty()) {
@@ -105,7 +105,7 @@ class UserController extends AccessTokenController
     if ($user->wallets->count() == 1) {
       return response([
         'message' => 'Success',
-        'results' => Null
+        'results' => null
       ], Response::HTTP_OK);
     }
     if ($user->wallets->isEmpty()) {
