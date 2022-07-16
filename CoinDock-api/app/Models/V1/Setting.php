@@ -19,14 +19,12 @@ class Setting extends Model
     ];
 
 
-    public function edit(Request $request){
+    public function edit(Request $request,User $user){
 
-        $user = Auth::user();
-        $user->setting;
-        $userSettings = $this::whereUserId($user->id)->first();
-
-        $settings = $request->all();
-        $userSettings->update($settings);
+        $request = $request->all();
+        $userSettings = $user->setting;
+        
+        $userSettings->update($request);
         return true;
     }
     public function user(){

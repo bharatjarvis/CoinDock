@@ -287,25 +287,19 @@ class User extends Authenticatable
         return $this->hasOne(Signup::class);
     }
 
-    public function updateProfile(updateProfileRequest $request)
+    public function updateProfile(User $user ,updateProfileRequest $request)
     {
         $request = $request->all();
-        $user = Auth::user();
+        $user->update($request);
 
-        $this::whereId($user->id)->update($request);
-
-        $updatedUser = $this::whereId($user->id)->first();
-        return $updatedUser;
-
-        
+        return $user;
     }
 
-    public function changePassword(updatePasswordRequest $request)
+    public function changePassword(updatePasswordRequest $request,User $user)
     {
-        $user = Auth::user();
         $updatedPassword = bcrypt($request->password);
 
-        $this::whereId($user->id)->update(['password' => $updatedPassword]);
+        $user->update(['password' => $updatedPassword]);
         
     }
 

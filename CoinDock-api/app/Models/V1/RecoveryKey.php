@@ -26,7 +26,7 @@ class RecoveryKey extends Model
     ];
 
 
-    public function GeneraterecoveryKeys(User $user)
+    public function GenerateRecoveryKeys(User $user)
     {
         //randomizing the dictionary words
         $recoveryArray = Arr::random(
@@ -49,7 +49,8 @@ class RecoveryKey extends Model
     //generating random Recovery words
     public function store(User $user, Request $request)
     {
-        if ($request->is_regenerate == false) {
+  
+        if ($request->is_regenerate == 'false') {
             $recoveryCode = $this->whereUserId($user->id)
                 ->whereStatus(RecoveryKeyStatus::Inactive)
                 ->latest()
@@ -59,38 +60,18 @@ class RecoveryKey extends Model
                 return $recoveryCode;
             }
 
-            $recoveryKeys = $this->GeneraterecoveryKeys($user);
+            $recoveryKeys = $this->GenerateRecoveryKeys($user);
             return $recoveryKeys;
         }
 
-        //If is_regenerate is false
+        //If is_regenerate is true
         $recoveryCode = $this->whereUserId($user->id)
             ->whereStatus(RecoveryKeyStatus::Inactive)
             ->latest()
             ->first()
             ->update(['status' => RecoveryKeyStatus::Used]);
-        $recoveryKeys = $this->GeneraterecoveryKeys($user);
+        $recoveryKeys = $this->GenerateRecoveryKeys($user);
         return $recoveryKeys;
-    }
-
-
-
-    //Reg-generarion of recovery-codes
-    public function reGenerateRecoveryKeys(User $user)
-    {
-
-        $recovery = RecoveryKey::whereUserId($user->id)->first();
-        //randomizing the dictionary words
-        $recoveryArray = Arr::random(
-            config('random_keys.recovery_codes'),
-            config('random_keys.recovery.block_length'),
-        );
-
-        //coverting to string
-        $recoveryString = implode(" ", $recoveryArray);
-
-        $recovery->update(['recovery_code' => $recoveryString]);
-        return $recovery;
     }
 
 

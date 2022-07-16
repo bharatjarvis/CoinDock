@@ -27,7 +27,8 @@ class updateProfileRequest extends FormRequest
             //
             'first_name' => 'string|max:45',
             'last_name' => 'string|max:45',
-            'country' => 'string'
+            'country' => 'string',
+            'title'=>'string',
         ];
     }
 }

@@ -43,36 +43,35 @@ class UserController extends AccessTokenController
     );
   }
 
-  public function changePassword(updatePasswordRequest $request)
+  public function changePassword(updatePasswordRequest $request, User $user)
   {
-    $user = new User();
-    $user->changePassword($request);
+    $userModel = new User();
+    $userModel->changePassword($request, $user);
 
     return response([
       'message' => 'Password updated successfully',
     ], Response::HTTP_OK);
-
   }
 
 
-  public function updateProfile(updateProfileRequest $request)
+  public function updateProfile(User $user ,updateProfileRequest $request)
   {
-    $user = new User();
-    $updatedUser = $user->updateProfile($request);
+    
+    $userModel = new User();
+    $updatedUser = $userModel->updateProfile($user,$request);
 
     return response([
       'message' => 'Profile updated successfully',
-      'results'=>[
-        'user'=>new UserResource($updatedUser)
+      'results' => [
+        'user' => new UserResource($updatedUser)
       ]
     ], Response::HTTP_OK);
-
   }
 
   //list of user titles 
   public function usersTitles()
   {
-    
+
     return response([
       'message' => 'success',
       'results' => [

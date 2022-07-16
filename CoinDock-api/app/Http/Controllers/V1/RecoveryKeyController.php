@@ -34,9 +34,10 @@ class RecoveryKeyController extends Controller
      */
     public function create(User $user, Request $request)
     {
-        $recovery = new RecoveryKey();
 
+        $recovery = new RecoveryKey();
         $recoveryKey = $recovery->store($user,$request);
+        
         return response(
             [
                 'message' => 'Recovery codes created successfully',
@@ -49,29 +50,6 @@ class RecoveryKeyController extends Controller
         );
     }
 
-
-
-    public function reGenerateRecoveryKeys(User $user){
-
-        $recovery = new RecoveryKey();
-
-        $recoveryKeys = $recovery->reGenerateRecoveryKeys($user);
-
-        return response(
-            [
-                'message' => 'Recovery codes re-generated successfully',
-                'results' => [
-                    'recovery_code' => new RecoveryCodeResource($recoveryKeys),
-                    'completed' => 3,
-                ],
-            ],
-            Response::HTTP_OK
-        );
-        
-
-    }
-
-
     
     public function download(User $user)
     {
@@ -83,6 +61,8 @@ class RecoveryKeyController extends Controller
 
         return $pdf->download("recovery-words-{$now}.pdf");
     }
+
+
 
     public function activate(User $user, RecoveryKeyRequest $request)
     {
@@ -102,4 +82,6 @@ class RecoveryKeyController extends Controller
 
         return $recoveryKey->recoveryKeys($user, $request);
     }
+
+    
 }

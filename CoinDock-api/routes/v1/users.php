@@ -6,6 +6,9 @@ use App\Http\Controllers\V1\{
     RecoveryKeyController,
     SignupController,
     CoinCardController,
+    GraphController,
+    PieChartController,
+    SettingController,
     WalletController,
 };
 
@@ -28,15 +31,58 @@ Route::middleware('auth:api')
     ->prefix('users')
     ->group(function () {
 
-        Route::get('/titles' ,[UserController::class,'usersTitles']);
+        Route::get('/titles', [UserController::class, 'usersTitles']);
 
         Route::prefix('{user}')->group(function () {
-            Route::prefix('coin-cards')->group(function(){
+
+            Route::group(['prefix' => 'accounts'], function () {
+
+                /*
+                    For        : Change password
+                    RouteName  : accounts/users/{user}/change-password
+                    Method     : PUT
+                    Access     : Private
+                */
+                Route::put('/change-password', [UserController::class, 'changePassword']);
+
+
+                /*
+                    For        : Recovery Codes generation
+                    RouteName  : accounts/users/{user}/profile/
+                    Method     : PUT
+                    Access     : Private
+                */
+                Route::put('/profile', [UserController::class, 'updateProfile']);
+
+
+                /*
+                    For        : Recovery Codes generation
+                    RouteName  : accounts/users/{user}/settings/
+                    Method     : PUT
+                    Access     : Private
+                */
+                Route::put('/settings', [SettingController::class, 'editCurrency']);
+
+
+                /*
+                    For        : Recovery Codes generation
+                    RouteName  : accounts/users/{user}/settings/
+                    Method     : PUT
+                    Access     : Private
+                */
+                Route::put('/regenerate-recovery-codes', [RecoveryKeyController::class, 'create']);
+            });
+
+
+
+            Route::prefix('coin-cards')->group(function () {
                 Route::get('/', [CoinCardController::class, 'index']);
             });
+
+
+
+
             Route::prefix('recovery-codes')->group(function () {
-
-
 
                 /*
                     For        : Recovery Codes generation
@@ -74,51 +120,50 @@ Route::middleware('auth:api')
                     Method     : PUT
                     Access     : Private
                 */
-                Route::put('/activate', [RecoveryKeyController::class, 'activate']);        
-        });
-
-
-        Route::prefix('signup')->group(function () {
-            Route::get('/info', [SignupController::class, 'info'])->missing(
-                fn () => response(
-                    [
-                        'error' => ['message' => 'User record not found'],
-                    ],
-                    404,
-                ),
-            );
-        });
-
-
-        Route::prefix('pie-chart')->group(function () {
-
-            Route::get('/', [PieChartController::class, 'show'])->missing(
-                fn () => response(
-                    [
-                        'error' => ['message' => 'User record not found'],
-                    ],
-                    404,
-                ),
-            );
-
-            Route::get('/filter', [PieChartController::class, 'filter']);
-            
-        });
-
-        Route::prefix('graph')->group(function () {
-
-            Route::prefix('coins')->group(function () {
-                Route::get('/', [GraphController::class,'getCoinIds']);
+                Route::put('/activate', [RecoveryKeyController::class, 'activate']);
             });
 
-            Route::get('/filter', [GraphController::class, 'filter']);
 
-            Route::get('/', [GraphController::class, 'show']);
-        });
+            Route::prefix('signup')->group(function () {
+                Route::get('/info', [SignupController::class, 'info'])->missing(
+                    fn () => response(
+                        [
+                            'error' => ['message' => 'User record not found'],
+                        ],
+                        404,
+                    ),
+                );
+            });
+
+
+            Route::prefix('pie-chart')->group(function () {
+
+                Route::get('/', [PieChartController::class, 'show'])->missing(
+                    fn () => response(
+                        [
+                            'error' => ['message' => 'User record not found'],
+                        ],
+                        404,
+                    ),
+                );
+
+                Route::get('/filter', [PieChartController::class, 'filter']);
+            });
+
+            Route::prefix('graph')->group(function () {
+
+                Route::prefix('coins')->group(function () {
+                    Route::get('/', [GraphController::class, 'getCoinIds']);
+                });
+
+                Route::get('/filter', [GraphController::class, 'filter']);
+
+                Route::get('/', [GraphController::class, 'show']);
+            });
 
 
 
-        
+
             Route::prefix('add-wallet')->group(
                 function () {
 
@@ -133,9 +178,8 @@ Route::middleware('auth:api')
             );
 
             Route::get('/total-default', [UserController::class, 'totalBTC']);
-            Route::get('/primary-currency',[UserController::class, 'primaryCurrency']);
+            Route::get('/primary-currency', [UserController::class, 'primaryCurrency']);
             Route::get('/top-performer', [UserController::class, 'topPerformer']);
             Route::get('/low-performer', [UserController::class, 'lowPerformer']);
-    
         });
     });
