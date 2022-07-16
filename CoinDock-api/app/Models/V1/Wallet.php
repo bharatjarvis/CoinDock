@@ -1,13 +1,15 @@
 <?php
 
 namespace App\Models\V1;
-use Carbon\Carbon;
-use App\Models\V1\{ User, Coin, Setting};
+
+use App\Exceptions\ApiKeyException;
+use App\Models\V1\{ User, Coin};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
 
 class Wallet extends Model
 {
@@ -101,10 +103,13 @@ class Wallet extends Model
 
         $cryptConversionBasePath = config('assets.coin_api.base_path') . config('assets.coin_api.crypto_usd');
         $cryptConversionPath = str_replace('{id}', $assetShortName, $cryptConversionBasePath);
-        $balanceInUsd = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
+        $response = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
             ->get($cryptConversionPath)['rate'];
 
-        return $balanceInUsd;
+        if(!$response){
+            throw new ApiKeyException('Server down, try again after some time',Response::HTTP_BAD_REQUEST);
+        }
+        return $response;
     }
 
     //Fetching number of coins through the Response

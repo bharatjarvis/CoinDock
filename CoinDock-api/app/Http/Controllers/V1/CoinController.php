@@ -121,11 +121,10 @@ class CoinController extends Controller
 
     //Conversions that we are accepting
     public function currencyConversions(){
-        $coin = new Coin();
         return response([
             'message'=>'Success',
             'results'=>[
-                'coins'=>CoinResource::collection($coin->currencyConversions())
+                'coins'=>CoinResource::collection(Coin::currencyConversions())
             ]
         ],Response::HTTP_OK);
     }
@@ -133,11 +132,10 @@ class CoinController extends Controller
 
     //Crypto coins that we are accepting
     public function acceptedCryptoCoins(){
-        $coin = new Coin();
         return response([
             'message'=>'Success',
             'results'=>[
-                'coins'=>CoinResource::collection($coin->acceptedCryptoCoins())
+                'coins'=>CoinResource::collection(Coin::acceptedCryptoCoins())
             ]
         ],Response::HTTP_OK);
     }

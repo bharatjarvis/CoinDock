@@ -28,6 +28,7 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::dropForeign('signups_user_id_foriegn');
         Schema::dropIfExists('signups');
     }
 };

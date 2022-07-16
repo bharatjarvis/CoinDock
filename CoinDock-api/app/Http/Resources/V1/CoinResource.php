@@ -18,9 +18,9 @@ class CoinResource extends JsonResource
             'id' => $this->id,
             'coin_id' => $this->coin_id,
             'name' => $this->name,
-            'status'=>$this->status,
-            'is_crypto'=>$this->is_crypto,
-            'image_path'=>$this->img_path
+            'status' => $this->status,
+            'is_crypto' => $this->is_crypto,
+            'image_path' => $this->img_path
 
         ];
     }

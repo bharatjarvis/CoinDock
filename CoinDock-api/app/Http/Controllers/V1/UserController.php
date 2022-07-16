@@ -6,8 +6,10 @@ use App\Http\Controllers\V1\Auth\BuildPassportTokens;
 use App\Http\Requests\V1\CreateUserRequest;
 use App\Http\Requests\V1\updatePasswordRequest;
 use App\Http\Requests\V1\updateProfileRequest;
+use App\Http\Resources\V1\UserResource;
 use App\Models\V1\Coin;
 use App\Models\V1\User;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,53 +17,69 @@ class UserController extends AccessTokenController
 {
   use BuildPassportTokens;
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(CreateUserRequest $request)
-    {
-        $user = new User();
-        $userData = $user->store($request);
+  /**
+   * Show the form for creating a new resource.
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function create(CreateUserRequest $request)
+  {
+    $user = new User();
+    $userData = $user->store($request);
 
-        $response = $this->requestPasswordGrant($request);
-        
-        return response(
-            ['status' => 'success', 'message' => 'Success! User registered.'
-                
-        ],
-            Response::HTTP_OK,
-            [
-                'Access-Token' => $response['access_token'],
-                'Refresh-Token' => $response['refresh_token'],
-                'Expires-In' => $response['expires_in'],
-            ],
-        );
-    }
+    $response = $this->requestPasswordGrant($request);
 
-    public function changePassword(updatePasswordRequest $request, User $user)
-    {
-        return $user->changePassword($request,$user);
-    }
+    return response(
+      [
+        'status' => 'success', 'message' => 'Success! User registered.'
+
+      ],
+      Response::HTTP_OK,
+      [
+        'Access-Token' => $response['access_token'],
+        'Refresh-Token' => $response['refresh_token'],
+        'Expires-In' => $response['expires_in'],
+      ],
+    );
+  }
+
+  public function changePassword(updatePasswordRequest $request)
+  {
+    $user = new User();
+    $user->changePassword($request);
+
+    return response([
+      'message' => 'Password updated successfully',
+    ], Response::HTTP_OK);
+
+  }
 
 
-    public function updateProfile(updateProfileRequest $request, User $user)
-    {
-        return $user->updateProfile($request,$user);
+  public function updateProfile(updateProfileRequest $request)
+  {
+    $user = new User();
+    $updatedUser = $user->updateProfile($request);
 
-    }
+    return response([
+      'message' => 'Profile updated successfully',
+      'results'=>[
+        'user'=>new UserResource($updatedUser)
+      ]
+    ], Response::HTTP_OK);
 
-    //list of user titles 
-    public function usersTitles(){
-      $titles = ['Mr.','Ms.','Mrs.','Mx.'];
-      return response([
-        'message'=>'success',
-        'results'=>[
-          'titles'=>$titles
-        ]
-      ],Response::HTTP_OK);
-    }
+  }
+
+  //list of user titles 
+  public function usersTitles()
+  {
+    
+    return response([
+      'message' => 'success',
+      'results' => [
+        'titles' => User::titles()
+      ]
+    ], Response::HTTP_OK);
+  }
 
   public function totalBtc(User $user)
   {
@@ -116,7 +134,7 @@ class UserController extends AccessTokenController
   }
 
 
-  
+
   public function lowPerformer(User $user)
   {
     if ($user->wallets->isEmpty()) {

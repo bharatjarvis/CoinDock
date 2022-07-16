@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models\V1;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -18,26 +19,27 @@ class Coin extends Model
         'img_path'
     ];
 
-    public function wallets(){
+
+    public function wallets()
+    {
         return $this->hasMany(Wallet::class);
     }
 
-    public function acceptedAssets(){
-        $acceptedAssets = $this::whereStatus(1)->get();
-        return $acceptedAssets;
-    }
 
     //Conversions that we are accepting
-    public function currencyConversions(){
-        $acceptedConversions = $this::whereStatus(1)->whereIsCrypto(0)->get();
-        return $acceptedConversions;
+    public static function currencyConversions()
+    {
+        return self::whereStatusAndIsCrypto(1,0)->get();
     }
 
-    //showing cruto coins that we are accepting
-   public function acceptedCryptoCoins(){
-        $acceptedCryptoCoins = $this::whereStatus(1)->whereIsCrypto(1)->get();
-        return $acceptedCryptoCoins;
-    }   
+
+    //showing crypto coins that we are accepting
+    public static function acceptedCryptoCoins()
+    {
+        return self::whereStatusAndIsCrypto(1,1)->get();
+    }
+
+
     //Number of Coins
     public function countCoins()
     {
@@ -48,7 +50,7 @@ class Coin extends Model
     }
 
     //Convertion
-    public function priceConversion($from, $to, $grouped):float
+    public function priceConversion($from, $to, $grouped): float
     {
         $baseUrl = config('coinapi.coin.api_url');
         $currencyURL = $baseUrl . config('coinapi.coin.exchange_url');
@@ -58,7 +60,7 @@ class Coin extends Model
     }
 
     //get the primary currency value
-    public function getPrimaryCurrency():float
+    public function getPrimaryCurrency(): float
     {
         //$from= 'BTC';
         $user = Auth::user();
@@ -70,7 +72,7 @@ class Coin extends Model
 
 
     //get secondary currency value
-    public function getSecondaryCurrency():float
+    public function getSecondaryCurrency(): float
     {
         $user = Auth::user();
         return $this->wallets()->whereUserId($user->id)
@@ -79,7 +81,7 @@ class Coin extends Model
     }
 
     //Coin Default Value
-    public function defaultCoin():float
+    public function defaultCoin(): float
     {
         $user = Auth::user();
         $grouped = $this->getSecondaryCurrency($user);

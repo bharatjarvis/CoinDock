@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\V1;
 
-use App\Http\Requests\FormRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
-class RecoveryKeyRequest extends FormRequest
+class editSettingsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +23,9 @@ class RecoveryKeyRequest extends FormRequest
      */
     public function rules()
     {
-        return  [
-            'key_response' => 'required|array',
-            'key_response.*' => 'required|string|max:6|min:4',
-
+        return [
+            'primary_currency' => 'string',
+            'secondary_currency' => 'string'
         ];
     }
 }

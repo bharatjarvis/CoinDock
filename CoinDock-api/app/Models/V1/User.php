@@ -24,6 +24,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use App\Models\V1\Wallet;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -74,6 +75,13 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = Hash::make($value);
     }
+
+    //User Titles
+    public static function titles(){
+        $titles = ['Mr.', 'Ms.', 'Mrs.', 'Mx.'];
+        return $titles;
+    }
+
 
     public function recoveryKey()
     {
@@ -279,26 +287,26 @@ class User extends Authenticatable
         return $this->hasOne(Signup::class);
     }
 
-    public function updateProfile(updateProfileRequest $request, User $user)
+    public function updateProfile(updateProfileRequest $request)
     {
-        $updatedUser = $request->all();
-        $user->update($updatedUser);
-        return response([
-            'message' => 'Profile updated succesfully',
-            'results'=>[
-                'user'=>new UserResource($user)
-            ]
-        ],Response::HTTP_OK );
+        $request = $request->all();
+        $user = Auth::user();
+
+        $this::whereId($user->id)->update($request);
+
+        $updatedUser = $this::whereId($user->id)->first();
+        return $updatedUser;
+
+        
     }
 
-    public function changePassword(updatePasswordRequest $request, User $user)
+    public function changePassword(updatePasswordRequest $request)
     {
-        $updatedPassword = $request->password;
+        $user = Auth::user();
+        $updatedPassword = bcrypt($request->password);
+
+        $this::whereId($user->id)->update(['password' => $updatedPassword]);
         
-        $this::whereId($user->id)->update(['password' => bcrypt($updatedPassword)]);
-        return response([
-            'message' => 'Password has been updated successfully',
-        ],Response::HTTP_OK );
     }
 
 

@@ -9,6 +9,7 @@ use App\Http\Resources\V1\RecoveryCodeResource;
 use App\Models\V1\{User, RecoveryKey};
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,11 +32,11 @@ class RecoveryKeyController extends Controller
      *
      * @return Response
      */
-    public function create(User $user)
+    public function create(User $user, Request $request)
     {
         $recovery = new RecoveryKey();
 
-        $recoveryKey = $recovery->store($user);
+        $recoveryKey = $recovery->store($user,$request);
         return response(
             [
                 'message' => 'Recovery codes created successfully',

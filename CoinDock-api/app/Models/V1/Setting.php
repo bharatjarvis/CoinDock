@@ -5,6 +5,7 @@ namespace App\Models\V1;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class Setting extends Model
@@ -18,16 +19,15 @@ class Setting extends Model
     ];
 
 
-    public function edit(User $user , Request $request){
+    public function edit(Request $request){
 
-        $userSettings = $user->settings();
+        $user = Auth::user();
+        $user->setting;
+        $userSettings = $this::whereUserId($user->id)->first();
+
         $settings = $request->all();
-
         $userSettings->update($settings);
-
-        return response([
-            'message'=>'Settings Updated Successfully'
-        ],Response::HTTP_OK);
+        return true;
     }
     public function user(){
         return $this->belongsTo(User::class);

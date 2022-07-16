@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix'=>'accounts','middleware'=>'auth:api'],function(){
     Route::group(['prefix'=>'users'],function(){
-        Route::group(['prefix'=>'{user}'],function(){
 
             /*
                     For        : Change password
@@ -34,7 +33,7 @@ Route::group(['prefix'=>'accounts','middleware'=>'auth:api'],function(){
                     Method     : PUT
                     Access     : Private
             */
-            Route::put('/recovery-codes',[RecoveryKeyController::class,'reGenerateRecoveryKeys']);
+            Route::put('/recovery-codes',[RecoveryKeyController::class,'create']);
 
 
 
@@ -44,8 +43,8 @@ Route::group(['prefix'=>'accounts','middleware'=>'auth:api'],function(){
                     Method     : PUT
                     Access     : Private
             */
-            Route::put('/settings',[SettingController::class,'editCurrency']);
-        });
+            Route::put('/settings',[SettingController::class,'editCurrency']);            
+        
     });
 });
 
