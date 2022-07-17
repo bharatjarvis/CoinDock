@@ -5,6 +5,7 @@ namespace App\Models\V1;
 use App\Enums\V1\TimePeriod;
 use App\Enums\V1\UserStatus;
 use App\Enums\V1\UserType;
+use App\Exceptions\ApiKeyException;
 use App\Http\Requests\V1\ChartRequest;
 use App\Models\V1\{Signup,Setting};
 use App\Models\V1\{Coin};
@@ -278,6 +279,11 @@ class User extends Authenticatable
         $baseUrl = config('coin.coin.api_url');
         $exchangeURL = $baseUrl . config('coin.coin.usd_to_Btc');
         $usdToBtC = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($exchangeURL);
+
+        if(!$usdToBtC){
+            throw new ApiKeyException('Server down, please try again after some time');
+        }
+
         return $usdToBtC['rate'] * $walletBalanceInUSD;
     }
 
@@ -289,6 +295,11 @@ class User extends Authenticatable
         $currencyURL = $baseUrl . config('coin.coin.primary_currency');
         $currency = str_replace('{id}', $primaryCurrency, $currencyURL);
         $primaryBalancePath = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
+
+        if(!$primaryBalancePath){
+            throw new ApiKeyException('Server down, please try again after some time');
+        }
+
         $balanceInUsd = $this->wallets
             ->mapToGroups(function ($wallet) {
                 return ['balance' => $wallet->balance];
@@ -314,6 +325,11 @@ class User extends Authenticatable
         foreach ($coins as $coin) {
             $currency = str_replace('{id}', $coin->coin_id, $currencyURL);
             $primaryBalancePath = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
+
+            if(!$primaryBalancePath){
+                throw new ApiKeyException('Server down, please try again after some time');
+            }
+
             if ($primaryBalancePath['rate'] > $topPerformerBal) {
                 $topPerformerBal = $primaryBalancePath['rate'];
                 $shortName = $primaryBalancePath['asset_id_base'];
@@ -339,6 +355,11 @@ class User extends Authenticatable
             foreach ($coins as $coin) {
                 $currency = str_replace('{id}', $coin->coin_id, $currencyURL);
                 $primaryBalancePath = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
+
+                if(!$primaryBalancePath){
+                    throw new ApiKeyException('Server down, please try again after some time');
+                }
+
                 if ($primaryBalancePath['rate'] < $lowPerformerBal) {
                     $lowPerformerBal = $primaryBalancePath['rate'];
                     $shortName= $primaryBalancePath['asset_id_base'];
@@ -362,4 +383,5 @@ class User extends Authenticatable
     {
         return $this->hasOne(Setting::class, 'user_id', 'id');
     }
+
 }
