@@ -22,7 +22,7 @@ class RecoveryCodeResource extends JsonResource
             'user_id' => $this->user_id,
             'recovery_codes' => explode(' ', $this->recovery_code),
             'status' => $this->status
-            
+
         ];
     }
 }
