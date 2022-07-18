@@ -23,8 +23,8 @@ class GraphController extends Controller
 
     public function getCoinIds(User $user)
     {
-        $result = $user->uniqueCoins()->pluck('name');
-        $result->prepend('All');
+        $result = $user->uniqueCoins()->pluck('name','coin_id');
+        $result->prepend('Coins','Coin');
         return response(
             [
                 'message' => 'success',

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\V1\Auth\BuildPassportTokens;
 use App\Http\Requests\V1\CreateUserRequest;
+use App\Http\Requests\V1\updateProfileRequest;
+use App\Http\Resources\V1\UserResource;
 use App\Models\V1\Coin;
 use App\Models\V1\User;
 use Illuminate\Support\Facades\Http;
@@ -22,14 +24,13 @@ class UserController extends AccessTokenController
   public function create(CreateUserRequest $request)
   {
     $user = new User();
-    $user->store($request);
+    $userData = $user->store($request);
 
     $response = $this->requestPasswordGrant($request);
 
     return response(
       [
-        'status' => 'success', 'message' => 'Success! User registered.',
-        'token' => $response['access_token']
+        'status' => 'success', 'message' => 'Success! User registered.'
 
       ],
       Response::HTTP_OK,
@@ -39,6 +40,30 @@ class UserController extends AccessTokenController
         'Expires-In' => $response['expires_in'],
       ],
     );
+  }
+
+  public function updateProfile(User $user ,updateProfileRequest $request)
+  {
+    $updatedUser = $user->updateProfile($user,$request);
+
+    return response([
+      'message' => 'Updated successfully',
+      'results' => [
+        'user' => new UserResource($updatedUser)
+      ]
+    ], Response::HTTP_OK);
+  }
+
+  //list of user titles 
+  public function usersTitles()
+  {
+
+    return response([
+      'message' => 'success',
+      'results' => [
+        'titles' => User::titles()
+      ]
+    ], Response::HTTP_OK);
   }
 
   public function totalBtc(User $user)
@@ -55,6 +80,8 @@ class UserController extends AccessTokenController
       ]
     ], Response::HTTP_OK);
   }
+
+
   public function primaryCurrency(User $user)
   {
     if ($user->wallets->isEmpty()) {
@@ -75,6 +102,8 @@ class UserController extends AccessTokenController
       ]
     ], Response::HTTP_OK);
   }
+
+
   public function topPerformer(User $user)
   {
     if ($user->wallets->count() == 1) {
@@ -101,6 +130,8 @@ class UserController extends AccessTokenController
 
     ], Response::HTTP_OK);
   }
+
+
 
   public function lowPerformer(User $user)
   {

@@ -21,11 +21,26 @@ class Coin extends Model
         'img_path'
     ];
 
+
     public function wallets()
     {
-
         return $this->hasMany(Wallet::class);
     }
+
+
+    //Conversions that we are accepting
+    public static function currencyConversions()
+    {
+        return self::whereStatusAndIsCrypto(1,0)->get();
+    }
+
+
+    //showing crypto coins that we are accepting
+    public static function acceptedCryptoCoins()
+    {
+        return self::whereStatusAndIsCrypto(1,1)->get();
+    }
+
 
     //Number of Coins
     public function countCoins()
