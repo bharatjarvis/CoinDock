@@ -7,10 +7,8 @@ use App\Http\Controllers\V1\{
     GraphController,
     PieChartController,
     UserController,
-    WalletCoinController,
     RecoveryKeyController,
     SignupController,
-    CoinsController,
     CoinCardController,
     WalletController,
 };
