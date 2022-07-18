@@ -13,6 +13,12 @@ import "./RecoveryCodeTest.css";
 import Popup from "Shared/Popup/Popup";
 
 function RecoveryCodeTestStep() {
+  const [buttonPopup, setButtonPopup] = useState(false);
+
+  const [isEnterted, setIsEnterted] = useState(false);
+
+  const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
+
   const navigate = useNavigate();
 
   const { data = [] } = useGetRandomRecoveryCodesQuery();
@@ -23,15 +29,9 @@ function RecoveryCodeTestStep() {
     key_response: {},
   });
 
-  const [buttonPopup, setButtonPopup] = useState(false);
-
-  const [isEnterted, setIsEnterted] = useState(false);
-
-  const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    recoveryTestCodes({
+    await recoveryTestCodes({
       ...formValues,
     })
       .unwrap()

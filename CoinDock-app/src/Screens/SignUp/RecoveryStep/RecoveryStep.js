@@ -30,7 +30,7 @@ function RecoveryCodeBoxStep() {
     <div className="paper">
       <div className="paper-container">
         <div className="row content d-flex justify-content-center align-items-center">
-          <div style={{ height: "100% " }}>
+          <div>
             <div>
               <div className="d-flex justify-content-between"></div>
               <Stepper totalSteps={3} />
