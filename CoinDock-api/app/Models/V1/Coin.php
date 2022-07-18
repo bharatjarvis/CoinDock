@@ -4,6 +4,7 @@ namespace App\Models\V1;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
@@ -56,7 +57,7 @@ class Coin extends Model
         $currencyURL = $baseUrl . config('coinapi.coin.exchange_url');
         $cryptConversionURL = str_replace(['{from}', '{to}'], [$from, $to], $currencyURL);
         $response = Http::withHeaders(['X-CoinAPI-Key' => config('coinapi.coin.api_key')])->get($cryptConversionURL);
-        return $response['rate'] * $grouped;
+        return Arr::get($response, 'rate', 0) * $grouped;
     }
 
     //get the primary currency value

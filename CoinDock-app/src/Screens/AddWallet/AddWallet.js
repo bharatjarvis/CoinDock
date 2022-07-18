@@ -9,20 +9,24 @@ import { closePopup } from "Screens/AddWallet/AddWalletSlice";
 import { walletnameValidation } from "Shared/Form/WalletFields/WalletName";
 import WalletName from "Shared/Form/WalletFields/WalletName";
 import { countryValidation } from "Shared/Form/Select/Select";
-import { useAddWalletMutation } from "App/Api/walletapi";
+import { useAddWalletMutation, useCoins } from "App/Api/walletapi";
 import { useNavigate } from "react-router-dom";
+import { useTopperformer } from "App/Api/CoinPerformence/coinperformance";
+import { useLineChart } from "App/Api/linechartapi";
 
 function AddWallet() {
   const open = useSelector((state) => state.addwallet.open);
-  // const {} =
-
+  const { refetch: topPerformerRefetch } = useTopperformer();
+  const { refetch: lineChartRefetch } = useLineChart();
+  const { data: coins } = useCoins;
+  console.log(coins);
   const navigate = useNavigate();
   const [wallet] = useAddWalletMutation();
   const dispatch = useDispatch();
   const initialValues = {
-    wallet: "",
+    coin: "",
     walletname: "",
-    walletaddress: "",
+    wallet_id: "",
   };
   const [formValues, setformValues] = useState(initialValues);
   const [formErrors, setformErrors] = useState({});
@@ -47,11 +51,8 @@ function AddWallet() {
 
     let isValid = true;
 
-    errors.walletaddress = walletnameValidation(
-      values.walletaddress,
-      "Wallet address"
-    );
-    errors.country = countryValidation(values.country, "Coin");
+    errors.wallet_id = walletnameValidation(values.wallet_id, "Wallet id");
+    errors.coin = countryValidation(values.coin, "Coin");
     setValid(!Object.values(errors).some(Boolean));
     return {
       isValid,
@@ -68,6 +69,9 @@ function AddWallet() {
     } else {
       try {
         await wallet({ ...formValues }).unwrap();
+        topPerformerRefetch();
+        lineChartRefetch();
+        setformValues(initialValues);
       } catch (errorResponse) {}
     }
   };
@@ -96,10 +100,10 @@ function AddWallet() {
           </div>
 
           <Select
-            name="country"
+            name="coin"
             className="form-control"
             label="Coin*"
-            value={formValues.country}
+            value={formValues.coin}
             options={[
               { label: "" },
               { label: "BitCoin", value: 1 },
@@ -109,10 +113,10 @@ function AddWallet() {
           />
 
           <WalletName
-            name="walletaddress"
+            name="wallet_id"
             placeholder="Wallet Address "
             label="Wallet Address*"
-            value={formValues.walletaddress}
+            value={formValues.wallet_id}
             formErrors={formErrors}
           />
           <WalletName

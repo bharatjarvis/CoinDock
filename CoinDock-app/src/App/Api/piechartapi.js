@@ -3,31 +3,18 @@ import baseApi from "./api";
 const piechartapi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     pie: build.query({
-      query: (filter) => ({
-        url: `/v1/users/${getUserId()}/recovery-codes`,
-        params: { filter },
-        method: "post",
+      query: (filter_by) => ({
+        url: `/v1/users/${getUserId()}/pie-chart/`,
+        params: { filter_by },
+        method: "get",
       }),
-      transformResponse: (response) => {
-        return {
-          result: {
-            Bitcoin: 9,
-            Ethereum: 14,
-          },
-        };
-      },
     }),
     piefilter: build.query({
       query: () => ({
-        url: `/v1/users/${getUserId()}/recovery-codes`,
-        method: "post",
+        url: `/v1/users/${getUserId()}/pie-chart/filter`,
+        method: "get",
       }),
-      transformResponse: (response) => {
-        return {
-          message: "success",
-          data: ["coins", "currency"],
-        };
-      },
+
       provideTags: ["piechart"],
     }),
 

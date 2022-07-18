@@ -4,9 +4,9 @@ const coincardapi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     coincard: build.query({
       query: () => ({
-        url: `/v1/users/${getUserId()}/recovery-codes`,
-
-        method: "post",
+        // url: `/v1/users/${getUserId()}/recovery-codes`,
+        url: `/v1/users/${getUserId()}/coin-cards/`,
+        method: "get",
       }),
       // transformResponse: (response) => {
       //   return {

@@ -17,8 +17,10 @@ import {
   useCoinFilter,
   useLineChart,
   useLineFilter,
+  useCoinShortName,
 } from "App/Api/linechartapi";
 import { sortBy, uniq } from "lodash";
+import { Card } from "react-bootstrap";
 
 ChartJS.register(
   CategoryScale,
@@ -46,19 +48,32 @@ export const options = {
     },
     title: {
       display: true,
-      text: "Line Chart",
+      text: "Market Statistics",
+    },
+  },
+  scales: {
+    x: {
+      grid: {
+        display: false,
+      },
     },
   },
 };
 
 export function LineChart() {
-  const [coinid, setCoinid] = useState("Coins");
-  const [range, setRange] = useState("Day");
-  const { data: line } = useLineChart({ coinid, range });
+  const [coinid, setCoinid] = useState("All");
+  const [range, setRange] = useState("0");
+  const {
+    data: line,
+    isLoading,
+    isError,
+  } = useLineChart({ coin_id: coinid, range });
   const { data: filter } = useLineFilter();
   const { data: coinfilter } = useCoinFilter();
+  const { data: coinshortname } = useCoinShortName();
+  console.log(coinshortname);
 
-  const linedata = Object.entries(line?.results ?? {});
+  const linedata = Object.entries(line?.data?.results ?? {});
   const labels = sortBy(
     uniq(
       linedata?.reduce((prev, current, array) => {
@@ -88,19 +103,19 @@ export function LineChart() {
       };
     }) ?? [];
 
-  // const onOptionClick = (e) => {
-  //   const chart = ChartJS.getChart("chart");
-  //   if (e.target.value === "Coins") {
-  //     chart.update("show");
-  //   } else if (e.target.value) {
-  //     chart.update((ctx) => {
-  //       return coinfilter?.data?.[ctx.datasetIndex].toString() ===
-  //         e.target.value.toString()
-  //         ? "show"
-  //         : "hide";
-  //     });
-  //   }
-  // };
+  const onOptionClick = (e) => {
+    const chart = ChartJS.getChart("chart");
+    if (e.target.value === "All") {
+      chart.update("show");
+    } else if (e.target.value) {
+      chart.update((ctx) => {
+        return coinfilter?.data?.[ctx.datasetIndex].toString() ===
+          e.target.value.toString()
+          ? "show"
+          : "hide";
+      });
+    }
+  };
 
   const handleChange = (e) => {
     setCoinid(e.target.value);
@@ -109,56 +124,62 @@ export function LineChart() {
     setRange(e.target.value);
   };
 
-  const rangefilter = Object.values(filter?.results ?? {}).map((value) => {
-    return value;
-  });
+  const rangefilter = Object.values(filter?.data?.results ?? {}).map(
+    (value) => {
+      return value;
+    }
+  );
+
+  if (isLoading || isError) {
+    return null;
+  }
 
   return (
-    <div className="cd-line-chart">
-      <div className="row">
-        <div className="col cd-filter">
-          <select
-            className="cd-line-filter"
-            name="coins"
-            // onChange={onOptionClick}
-            onChange={handleChange}
-          >
-            {coinfilter?.results?.map((value) => {
-              return (
-                <option value={value} key={value}>
-                  {value}
-                </option>
-              );
-            })}
-          </select>
-          &nbsp;
-          <select
-            className="cd-line-filter"
-            name="range"
-            onChange={handleRangeChange}
-          >
-            {rangefilter.map((value, index) => {
-              console.log(rangefilter);
-              console.log(value);
-              return (
-                <option value={value.key} key={value.key}>
-                  {value.description}
-                </option>
-              );
-            })}
-          </select>
+    <Card className="cd-line-chart-card">
+      <div className="cd-line-chart">
+        <div className="row">
+          <div className="col cd-filter">
+            <select
+              className="cd-line-filter"
+              name="coins"
+              // onChange={onOptionClick}
+              onChange={handleChange}
+            >
+              {coinfilter?.data?.results?.map((value) => {
+                return (
+                  <option value={value} key={value}>
+                    {value}
+                  </option>
+                );
+              })}
+            </select>
+            &nbsp;
+            <select
+              className="cd-line-filter"
+              name="range"
+              onChange={handleRangeChange}
+            >
+              {rangefilter.map((value) => {
+                return (
+                  <option value={value.value} key={value.key}>
+                    {value.description}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
         </div>
-      </div>
-      <Line
-        className="p-14"
-        id="chart"
-        options={options}
-        data={{
-          labels,
 
-          datasets: allDatas,
-        }}
-      />
-    </div>
+        <Line
+          className="p-14"
+          id="chart"
+          options={options}
+          data={{
+            labels,
+            datasets: allDatas,
+          }}
+        />
+      </div>
+    </Card>
   );
 }

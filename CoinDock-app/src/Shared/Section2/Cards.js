@@ -1,4 +1,5 @@
 import React from "react";
+import { Card } from "react-bootstrap";
 import "./Cards.css";
 
 const Cards = ({ name, value, logo }) => {
@@ -8,26 +9,28 @@ const Cards = ({ name, value, logo }) => {
     //   <div className="cd-currency-value cd-mt-5 cd-mb-6 cd-mr-4">{value}</div>
     //   {/* <img src={img} alt={name}></img> */}
     // </div>
-
-    <div>
-      <div className="card-deck">
-        <div className="card cd-flex-content-container">
-          <div className="card-body">
-            <p className="card-title cd-currency-performance">{name}</p>
-            <p className="card-text cd-currency-value">
-              {value}{" "}
-              {logo ? (
-                <img
-                  src={logo}
-                  alt="coin_logo"
-                  className="cd_coin_logo_name"
-                ></img>
-              ) : null}
-            </p>
+    <Card className="cd-performance-card">
+      <div>
+        <div className="card-deck">
+          <div className="cd-flex-content-container">
+            <Card className="coinperformance-inside-card">
+              {" "}
+              {/* {logo ? ( */}
+              <img
+                src={logo}
+                alt="coin_logo"
+                className="cd_coin_logo_name"
+              ></img>
+              {/* ) : null} */}
+            </Card>
+            <div className="cd-coin-card-body">
+              <p className="card-title cd-currency-performance">{name}</p>
+              <p className="card-text cd-currency-value">{value} </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 export default Cards;

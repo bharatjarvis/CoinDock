@@ -4,79 +4,34 @@ const coinperformanceapi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     total: build.query({
       query: () => ({
-        // url: `/v1/users/(user)/top-performer
-        url: `/v1/users/${getUserId()}/recovery-codes`,
-        method: "post",
+        url: `/v1/users/${getUserId()}/total-default`,
+        method: "get",
       }),
-      transformResponse: (response) => {
-        return {
-          message: "success",
-          result: {
-            heading: "Total BTC",
-            balance: 0.0011822782,
-            coin_id: "BTC",
-            coin_name: "Bitcoin",
-            img_url:
-              "https://s3.eu-central-1.amazonaws.com/bbxt-static-icons/type-id/png_512/4caf2b16a0174e26a3482cea69c34cba.png",
-          },
-        };
-      },
+
       provideTags: ["total"],
     }),
     primary: build.query({
       query: () => ({
-        // url: `/v1/users/(user)/top-performer
-        url: `/v1/users/${getUserId()}/recovery-codes`,
-        method: "post",
+        url: `/v1/users/${getUserId()}/primary-currency`,
+        method: "get",
       }),
-      transformResponse: (response) => {
-        return {
-          message: "success",
-          result: {
-            heading: "Primary Currency",
-            coin_name: "INR",
-            balance: 79371.2342079689,
-          },
-        };
-      },
+
       provideTags: ["primarycurrency"],
     }),
     top: build.query({
       query: () => ({
-        // url: `/v1/users/(user)/top-performer
-        url: `/v1/users/${getUserId()}/recovery-codes`,
-        method: "post",
+        url: `/v1/users/${getUserId()}/top-performer`,
+        method: "get",
       }),
-      transformResponse: (response) => {
-        return {
-          message: "Success",
-          result: {
-            heading: "Top Performer ",
-            balance: 19975.52151559625,
-            coin_name: "Bitcoin",
-            coin_id: "BTC",
-          },
-        };
-      },
+
       provideTags: ["topperformer"],
     }),
     low: build.query({
       query: () => ({
-        // url: `/v1/users/(user)/top-performer
-        url: `/v1/users/${getUserId()}/recovery-codes`,
-        method: "post",
+        url: `/v1/users/${getUserId()}/low-performer`,
+        method: "get",
       }),
-      transformResponse: (response) => {
-        return {
-          message: "Success",
-          result: {
-            heading: "Low Performer ",
-            balance: 1133.3528207302234,
-            coin_name: "Ethereum",
-            coin_id: "ETH",
-          },
-        };
-      },
+
       provideTags: ["lowperformer"],
     }),
 
