@@ -66,28 +66,35 @@ class UserController extends AccessTokenController
     return response([
       'message' => 'success',
       'results' => [
-        'heading'=>'Primary Currency',
-        'coin_name'=>$totalPrimaryCurrency['coin_name'],
-        'balance'=>$totalPrimaryCurrency['balance']
+        'heading' => 'Primary Currency',
+        'coin_name' => $totalPrimaryCurrency['coin_name'],
+        'balance' => $totalPrimaryCurrency['balance']
       ]
     ], Response::HTTP_OK);
   }
   public function topPerformer(User $user)
   {
+    if ($user->wallets->count() == 1) {
+      return response([
+        'message' => 'Success',
+        'results' => null
+      ], Response::HTTP_OK);
+    }
     if ($user->wallets->isEmpty()) {
       return response([
         'message' => 'User Wallet Not Found'
       ], Response::HTTP_BAD_REQUEST);
     }
+
     $result = ['heading' => 'Top Performer'];
     $topPerformer = $user->topPerformer();
     return response([
       'message' => 'Success',
       'results' => [
-        'heading'=>'Top performer',
-        'coin_name'=>$topPerformer['coin_name'],
-        'coin_id'=>$topPerformer['coin_id'],
-        'balance'=>$topPerformer['balance']
+        'heading' => 'Top performer',
+        'coin_name' => $topPerformer['coin_name'],
+        'coin_id' => $topPerformer['coin_id'],
+        'balance' => $topPerformer['balance']
       ]
 
     ], Response::HTTP_OK);
@@ -95,6 +102,12 @@ class UserController extends AccessTokenController
 
   public function lowPerformer(User $user)
   {
+    if ($user->wallets->count() == 1) {
+      return response([
+        'message' => 'Success',
+        'results' => null
+      ], Response::HTTP_OK);
+    }
     if ($user->wallets->isEmpty()) {
       return response([
         'message' => 'User Wallet Not Found'
@@ -106,10 +119,10 @@ class UserController extends AccessTokenController
     return response([
       'message' => 'Success',
       'results' => [
-        'heading'=>'Low performer',
-        'coin_name'=>$lowPerformer['coin_name'],
-        'coin_id'=>$lowPerformer['coin_id'],
-        'balance'=>$lowPerformer['balance']
+        'heading' => 'Low performer',
+        'coin_name' => $lowPerformer['coin_name'],
+        'coin_id' => $lowPerformer['coin_id'],
+        'balance' => $lowPerformer['balance']
       ]
     ], Response::HTTP_OK);
   }
