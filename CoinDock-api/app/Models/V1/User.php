@@ -5,6 +5,7 @@ namespace App\Models\V1;
 use App\Enums\V1\TimePeriod;
 use App\Enums\V1\UserStatus;
 use App\Enums\V1\UserType;
+use App\Exceptions\ApiKeyException;
 use App\Http\Requests\V1\ChartRequest;
 use App\Models\V1\{Signup,Setting};
 use App\Models\V1\{Coin};
@@ -130,10 +131,10 @@ class User extends Authenticatable
     public function chartData(ChartRequest $request):array
     {
         $filter_by = $request->filter_by;
-        $wallets = $this->wallets()->select(['coin_id', 'balance'])
+        $wallets = $this->wallets()->select(['coin_id', 'coins'])
             ->get()
             ->mapToGroups(function ($wallet) {
-                return [$wallet->coin->coin_id => $wallet->balance];
+                return [$wallet->coin->coin_id => $wallet->coins];
             })->map(function ($coins) {
                 return $coins->sum();
             })->toArray();
@@ -161,6 +162,7 @@ class User extends Authenticatable
                 $response = Http::withHeaders([
                         'X-CoinAPI-Key'=>config('cryptohistoricaldata.coin.api_key')
                     ])->get($baseURLIdReplaced);
+
                 
                 $primaryBalance = Arr::get($response, 'rate', null)* $wallets[$key];
                 
@@ -191,7 +193,7 @@ class User extends Authenticatable
 
     public function getCoinId($coinId):array|collection
     {
-        if($coinId != 'All') {
+        if($coinId != 'Coins') {
             return $this->wallets->map(function($wallet) use($coinId) {
                     return $wallet->coin()->whereCoinId($coinId)->first();    
                 })->unique('coin_id')->pluck('coin_id')->filter();
