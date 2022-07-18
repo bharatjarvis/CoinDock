@@ -6,6 +6,7 @@ use App\Http\Controllers\V1\Auth\BuildPassportTokens;
 use App\Http\Requests\V1\CreateUserRequest;
 use App\Models\V1\Coin;
 use App\Models\V1\User;
+use Illuminate\Support\Facades\Http;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -61,14 +62,16 @@ class UserController extends AccessTokenController
         'message' => 'User Wallet Not Found'
       ],  Response::HTTP_BAD_REQUEST);
     }
-    $result = ['heading' => 'Primary Currency'];
     $totalPrimaryCurrency = $user->totalPrimaryCurrency();
+
+    $image_path = Coin::select('img_path')->where('coin_id', '=', $totalPrimaryCurrency['coin_name'])->get();
     return response([
       'message' => 'success',
       'results' => [
         'heading' => 'Primary Currency',
         'coin_name' => $totalPrimaryCurrency['coin_name'],
-        'balance' => $totalPrimaryCurrency['balance']
+        'balance' => $totalPrimaryCurrency['balance'],
+        'img_url' => $image_path[0]['img_path']
       ]
     ], Response::HTTP_OK);
   }
@@ -85,8 +88,6 @@ class UserController extends AccessTokenController
         'message' => 'User Wallet Not Found'
       ], Response::HTTP_BAD_REQUEST);
     }
-
-    $result = ['heading' => 'Top Performer'];
     $topPerformer = $user->topPerformer();
     return response([
       'message' => 'Success',
@@ -94,7 +95,8 @@ class UserController extends AccessTokenController
         'heading' => 'Top performer',
         'coin_name' => $topPerformer['coin_name'],
         'coin_id' => $topPerformer['coin_id'],
-        'balance' => $topPerformer['balance']
+        'balance' => $topPerformer['balance'],
+        'image_path' => 'http://127.0.0.1:8000/storage/images/up.png'
       ]
 
     ], Response::HTTP_OK);
@@ -113,7 +115,6 @@ class UserController extends AccessTokenController
         'message' => 'User Wallet Not Found'
       ], Response::HTTP_BAD_REQUEST);
     }
-    $result = ['heading' => 'Low Performer'];
     $lowPerformer = $user->lowPerformer();
 
     return response([
@@ -122,7 +123,8 @@ class UserController extends AccessTokenController
         'heading' => 'Low performer',
         'coin_name' => $lowPerformer['coin_name'],
         'coin_id' => $lowPerformer['coin_id'],
-        'balance' => $lowPerformer['balance']
+        'balance' => $lowPerformer['balance'],
+        'image_path' => 'http://127.0.0.1:8000/storage/images/down.png'
       ]
     ], Response::HTTP_OK);
   }

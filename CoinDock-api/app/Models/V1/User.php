@@ -7,7 +7,7 @@ use App\Enums\V1\UserStatus;
 use App\Enums\V1\UserType;
 use App\Exceptions\ApiKeyException;
 use App\Http\Requests\V1\ChartRequest;
-use App\Models\V1\{Signup,Setting};
+use App\Models\V1\{Signup, Setting};
 use App\Models\V1\{Coin};
 use App\Http\Requests\V1\CreateUserRequest;
 use App\Http\Requests\V1\GraphRequest;
@@ -21,6 +21,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use App\Models\V1\Wallet;
+use Symfony\Component\HttpFoundation\Response;
 
 class User extends Authenticatable
 {
@@ -91,11 +92,11 @@ class User extends Authenticatable
 
         //Adding default Currency settings for user
         Setting::create([
-            'user_id'=>$user->id,
-            'primary_currency'=>'IND',
-            'secondary_currency'=>Null
+            'user_id' => $user->id,
+            'primary_currency' => 'IND',
+            'secondary_currency' => Null
         ]);
-        
+
         // REGISTRATION STATUS UPDATION -  STEP:1
         $signup = $this->signUp;
         if ($signup) {
@@ -106,10 +107,9 @@ class User extends Authenticatable
         Signup::create(['step_count' => 1, 'user_id' => $user->id]);
 
         return $user;
-
     }
 
-    public function chartData(ChartRequest $request):array
+    public function chartData(ChartRequest $request): array
     {
         $filter_by = $request->filter_by;
         $wallets = $this->wallets()->select(['coin_id', 'balance'])
@@ -120,42 +120,48 @@ class User extends Authenticatable
                 return $coins->sum();
             })->toArray();
 
-        if($filter_by == null || $filter_by == 'coins') {
+        if ($filter_by == null || $filter_by == 'coins') {
             return $wallets;
         }
 
         $result = [];
 
-        if($filter_by == 'currency') {
+        if ($filter_by == 'currency') {
 
-            foreach($wallets as $key => $value) {
+            foreach ($wallets as $key => $value) {
 
                 $primaryCurrency = $this->setting->primary_currency;
-                
-                $baseURL = config('cryptohistoricaldata.coin.api_url'). config('cryptohistoricaldata.coin.exchange_url');
-                
+
+                $baseURL = config('cryptohistoricaldata.coin.api_url') . config('cryptohistoricaldata.coin.exchange_url');
+
                 $baseURLIdReplaced = str_replace(
                     ['{fromCoin}', '{toCoin}'],
                     [$key, $primaryCurrency],
                     $baseURL
                 );
-                
-                $response = Http::withHeaders([
-                        'X-CoinAPI-Key'=>config('cryptohistoricaldata.coin.api_key')
-                    ])->get($baseURLIdReplaced);
-                
-                $primaryBalance = Arr::get($response, 'rate', null)* $wallets[$key];
-                
+
+
+                try {
+                    $response = Http::withHeaders([
+                        'X-CoinAPI-Key' => config('cryptohistoricaldata.coin.api_key')
+                    ])->get($baseURLIdReplaced)['rate'];
+                } catch (\Throwable $th) {
+
+                    throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
+                }
+
+                $primaryBalance = $response * $wallets[$key];
+
                 $result[$key] = $primaryBalance;
-            } 
+            }
         }
 
         return $result;
     }
 
-    public function historicalData(string $coinId, string $range, string $startDate, string $endDate):array
+    public function historicalData(string $coinId, string $range, string $startDate, string $endDate): array
     {
-        $baseURL = config('cryptohistoricaldata.coin.api_url').config('cryptohistoricaldata.coin.realtime_url');
+        $baseURL = config('cryptohistoricaldata.coin.api_url') . config('cryptohistoricaldata.coin.realtime_url');
 
         $baseURLIdReplaced = str_replace(
             ['{coin1}', '{range}', '{start_date}', '{end_date}'],
@@ -163,52 +169,56 @@ class User extends Authenticatable
             $baseURL
         );
 
-        $response = Http::withHeaders(
+        try {
+            $response = Http::withHeaders(
                 ['X-CoinAPI-Key' => config('cryptohistoricaldata.coin.api_key')]
             )->get($baseURLIdReplaced);
+            return json_decode($response);
+        } catch (\Throwable $th) {
 
-        return json_decode($response);
+            throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
+        }
     }
 
 
-    public function getCoinId($coinId):array|collection
+    public function getCoinId($coinId): array|collection
     {
-        if($coinId != 'All') {
-            return $this->wallets->map(function($wallet) use($coinId) {
-                    return $wallet->coin()->whereCoinId($coinId)->first();    
-                })->unique('coin_id')->pluck('coin_id')->filter();
+        if ($coinId != 'All') {
+            return $this->wallets->map(function ($wallet) use ($coinId) {
+                return $wallet->coin()->whereCoinId($coinId)->first();
+            })->unique('coin_id')->pluck('coin_id')->filter();
         }
         return $this->uniqueCoins()->pluck('coin_id')->toArray();
     }
 
-    public function uniqueCoins():collection
+    public function uniqueCoins(): collection
     {
-        return $this->wallets->map(fn($wallet) => $wallet->coin)->unique('coin_id');
+        return $this->wallets->map(fn ($wallet) => $wallet->coin)->unique('coin_id');
     }
 
-    
-    public function graphData(string $range, string $startDate, string $endDate, string $coinId):array
+
+    public function graphData(string $range, string $startDate, string $endDate, string $coinId): array
     {
         $result = [];
         $coinIds = $this->getCoinId($coinId);
-        foreach($coinIds as $coinId) {
+        foreach ($coinIds as $coinId) {
             $response = $this->historicalData($coinId, $range, $startDate, $endDate);
-            $result[$coinId] = array_column($response, 'rate_close', 'time_period_end'); 
+            $result[$coinId] = array_column($response, 'rate_close', 'time_period_end');
         }
         return $result;
     }
 
-    public function graph(GraphRequest $request):array
+    public function graph(GraphRequest $request): array
     {
         $coinId = Arr::get($request, 'coin_id');
 
-        if(is_null($coinId)){
+        if (is_null($coinId)) {
             $coinId = 'All';
         }
 
         $timePeriod = $request->range;
-        $endDate = str_replace(' ','T', Carbon::now()->toDateTimeString());
-        switch($timePeriod) {
+        $endDate = str_replace(' ', 'T', Carbon::now()->toDateTimeString());
+        switch ($timePeriod) {
             case TimePeriod::Day:
                 $range = '1HRS';
                 $startDate = str_replace(' ', 'T', Carbon::now()->subDay(1)->toDateTimeString());
@@ -231,35 +241,35 @@ class User extends Authenticatable
                 $result = [];
                 $newCoinData = [];
 
-                foreach($response as $coinId => $coinData) {
-                    foreach($coinData as $date => $price) {
-                        array_push($newCoinData,[
-                            'date'=>Carbon::parse($date)->format('Y-m'),
-                            'price'=>$price
+                foreach ($response as $coinId => $coinData) {
+                    foreach ($coinData as $date => $price) {
+                        array_push($newCoinData, [
+                            'date' => Carbon::parse($date)->format('Y-m'),
+                            'price' => $price
                         ]);
                     }
-                    $dates = array_unique(array_column($newCoinData,'date'));
+                    $dates = array_unique(array_column($newCoinData, 'date'));
 
                     $finalResult = [];
-                    foreach($dates as $date) {
+                    foreach ($dates as $date) {
                         $count = 0;
                         $sum = 0;
-                        foreach($newCoinData as $response){
-                            if($response['date'] == $date){
+                        foreach ($newCoinData as $response) {
+                            if ($response['date'] == $date) {
                                 $count++;
-                                $sum+=$response['price'];
+                                $sum += $response['price'];
                             }
                         }
-                        $avg = $sum/$count;
+                        $avg = $sum / $count;
                         $finalResult[$date] = $avg;
                     }
                     $result[$coinId] = $finalResult;
                 }
-            return $result;
-        default:
-            $range = '1HRS';
-            $startDate = str_replace(' ', 'T', Carbon::now()->subDay(1)->toDateTimeString());
-            return $this->graphData($range, $startDate, $endDate, $coinId);
+                return $result;
+            default:
+                $range = '1HRS';
+                $startDate = str_replace(' ', 'T', Carbon::now()->subDay(1)->toDateTimeString());
+                return $this->graphData($range, $startDate, $endDate, $coinId);
         }
     }
 
@@ -278,13 +288,14 @@ class User extends Authenticatable
         $walletBalanceInUSD = $this->wallets()->sum('balance');
         $baseUrl = config('coin.coin.api_url');
         $exchangeURL = $baseUrl . config('coin.coin.usd_to_Btc');
-        $usdToBtC = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($exchangeURL);
+        try {
+            $usdToBtC = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($exchangeURL)['rate'];
+        } catch (\Throwable $th) {
 
-        if(!$usdToBtC){
-            throw new ApiKeyException('Server down, please try again after some time');
+            throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
         }
 
-        return $usdToBtC['rate'] * $walletBalanceInUSD;
+        return $usdToBtC * $walletBalanceInUSD;
     }
 
     public function totalPrimaryCurrency(): array
@@ -294,12 +305,13 @@ class User extends Authenticatable
         $baseUrl = config('coin.coin.api_url');
         $currencyURL = $baseUrl . config('coin.coin.primary_currency');
         $currency = str_replace('{id}', $primaryCurrency, $currencyURL);
-        $primaryBalancePath = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
 
-        if(!$primaryBalancePath){
-            throw new ApiKeyException('Server down, please try again after some time');
+        try {
+            $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency)['rate'];
+        } catch (\Throwable $th) {
+
+            throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
         }
-
         $balanceInUsd = $this->wallets
             ->mapToGroups(function ($wallet) {
                 return ['balance' => $wallet->balance];
@@ -309,11 +321,11 @@ class User extends Authenticatable
             });
         return [
             'coin_name' => $primaryCurrency,
-            'balance'  => $primaryBalancePath['rate'] * $balanceInUsd['balance']
+            'balance'  => $response * $balanceInUsd['balance']
         ];
     }
 
-    public function topPerformer():array
+    public function topPerformer(): array
     {
         $walletCoinIds = $this->wallets()->pluck('coin_id');
         $coins = Coin::select(['coin_id', 'name'])->whereIn('id', $walletCoinIds)->get();
@@ -324,54 +336,53 @@ class User extends Authenticatable
         $shortName = null;
         foreach ($coins as $coin) {
             $currency = str_replace('{id}', $coin->coin_id, $currencyURL);
-            $primaryBalancePath = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
+            try {
+                $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
+                if ($response['rate'] > $topPerformerBal) {
+                    $topPerformerBal = $response['rate'];
+                    $shortName = $response['asset_id_base'];
+                    $coinName  = Coin::whereCoinId($shortName)->first()?->name;
+                }
+            } catch (\Throwable $th) {
 
-            if(!$primaryBalancePath){
-                throw new ApiKeyException('Server down, please try again after some time');
-            }
-
-            if ($primaryBalancePath['rate'] > $topPerformerBal) {
-                $topPerformerBal = $primaryBalancePath['rate'];
-                $shortName = $primaryBalancePath['asset_id_base'];
-                $coinName  = Coin::whereCoinId($shortName)->first()?->name;
+                throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
             }
         }
-            return[
-                'balance' => $topPerformerBal,
-                'coin_name' => $coinName,
-                'coin_id' =>  $shortName
-            ];
+        return [
+            'balance' => $topPerformerBal,
+            'coin_name' => $coinName,
+            'coin_id' =>  $shortName
+        ];
     }
 
     public function lowPerformer(): array
     {
         $walletCoinIds = $this->wallets()->pluck('coin_id');
         $coins = Coin::select(['coin_id', 'name'])->whereIn('id', $walletCoinIds)->get();
-            $baseUrl = config('coin.coin.api_url');
-            $currencyURL = $baseUrl . config('coin.coin.top_performer');
-            $lowPerformerBal = PHP_INT_MAX;
-            $coinName = null;
-            $shortName= null;
-            foreach ($coins as $coin) {
-                $currency = str_replace('{id}', $coin->coin_id, $currencyURL);
-                $primaryBalancePath = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
-
-                if(!$primaryBalancePath){
-                    throw new ApiKeyException('Server down, please try again after some time');
-                }
-
-                if ($primaryBalancePath['rate'] < $lowPerformerBal) {
-                    $lowPerformerBal = $primaryBalancePath['rate'];
-                    $shortName= $primaryBalancePath['asset_id_base'];
+        $baseUrl = config('coin.coin.api_url');
+        $currencyURL = $baseUrl . config('coin.coin.top_performer');
+        $lowPerformerBal = PHP_INT_MAX;
+        $coinName = null;
+        $shortName = null;
+        foreach ($coins as $coin) {
+            $currency = str_replace('{id}', $coin->coin_id, $currencyURL);
+            try {
+                $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
+                if ($response['rate'] < $lowPerformerBal) {
+                    $lowPerformerBal = $response['rate'];
+                    $shortName = $response['asset_id_base'];
                     $coinName  = Coin::whereCoinId($shortName)->first()?->name;
                 }
+            } catch (\Throwable $th) {
+
+                throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
             }
-            return [
-                'balance' => $lowPerformerBal,
-                'coin_name' => $coinName,
-                'coin_id' => $shortName
-            ];
-        
+        }
+        return [
+            'balance' => $lowPerformerBal,
+            'coin_name' => $coinName,
+            'coin_id' => $shortName
+        ];
     }
 
     public function wallets()
@@ -383,5 +394,4 @@ class User extends Authenticatable
     {
         return $this->hasOne(Setting::class, 'user_id', 'id');
     }
-
 }
