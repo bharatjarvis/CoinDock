@@ -155,6 +155,8 @@ class Wallet extends Model
         $basePath = $this->basePath($userCoinId, $walletId);
         $response = Http::get($basePath);
 
+        return $response;
+
         if ($userCoin == 'Expanse') {
             $response = Http::post($basePath, ['addr' => $walletId, 'options' => ['balance']]);
         }
