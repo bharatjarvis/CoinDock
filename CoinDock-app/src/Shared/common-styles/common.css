@@ -23,13 +23,11 @@
   height: 87px;
   left: 14px;
   top: 141px;
-
   display: inline;
-  font-family: "Lora";
-  font-style: normal;
   font-weight: 400;
   font-size: 18px;
   line-height: 160%;
+  font-family: "Roboto, Helvetica, Arial, sans-serif";
 }
 
 .cd-content-row-center {
@@ -37,6 +35,7 @@
   width: 100%;
   justify-content: center;
   flex-direction: row;
+  font-family: "Roboto, Helvetica, Arial, sans-serif";
 }
 
 .cd-content-row-end {
