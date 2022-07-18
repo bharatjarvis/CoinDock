@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Requests\V1\RecoveryKeyRequest;
 use App\Models\V1\Signup;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
 class RecoveryKey extends Model
@@ -24,18 +25,9 @@ class RecoveryKey extends Model
         'status' => RecoveryKeyStatus::class,
     ];
 
-    //generating random Recovery words
-    public function store(User $user)
-    {
-        $recoveryCode = $this->whereUserId($user->id)
-            ->whereStatus(RecoveryKeyStatus::Inactive)
-            ->latest()
-            ->first();
-            
-        if ($recoveryCode) {
-            return $recoveryCode;
-        }
 
+    public function GenerateRecoveryKeys(User $user)
+    {
         //randomizing the dictionary words
         $recoveryArray = Arr::random(
             config('random_keys.recovery_codes'),
@@ -52,11 +44,30 @@ class RecoveryKey extends Model
             'status' => RecoveryKeyStatus::Inactive,
         ]);
 
-       
-        
-
         return $recoveryGeneration;
     }
+    //generating random Recovery words
+    public function store(User $user, Request $request)
+    {
+
+        if ($request->is_regenerate) {
+            $recoveryCode = $this->whereUserId($user->id)
+                ->whereNot('status', RecoveryKeyStatus::Used)
+                ->update(['status' => RecoveryKeyStatus::Used]);
+        }
+        
+        $recoveryCode = $this->whereUserId($user->id)
+            ->whereStatus(RecoveryKeyStatus::Inactive)
+            ->latest()
+            ->first();
+
+        if ($recoveryCode) {
+            return $recoveryCode;
+        }
+
+        return $this->GenerateRecoveryKeys($user);
+    }
+
 
     //Downloading RecoveryWords
     public function download(User $user)
@@ -67,11 +78,11 @@ class RecoveryKey extends Model
         $data = [
             'words_array' => explode(' ', $userRecoveryCodes),
         ];
-        
+
         // USER SUCCESSFULLY DOWNLOADED THE RECOVERY CODES  STEP:2
         $signup = Signup::whereUserId($user->id)->get()->first();
-        if($signup){
-            $signup->step_count+=1;
+        if ($signup) {
+            $signup->step_count += 1;
             $signup->save();
         }
 
@@ -81,7 +92,7 @@ class RecoveryKey extends Model
     public function recoveryKeys(User $user, RecoveryKeyRequest $request)
     {
         $passArray = explode(" ", $this->recovery_code);
-          
+
         $count = 0;
 
         $keyResponses = $request->key_response;
@@ -99,15 +110,14 @@ class RecoveryKey extends Model
 
             // USER SIGNUP STATUS RECOVERY CODES MATCHED SUCCESSFULLY - STEP:3
             $signup = Signup::whereUserId($user->id)->get()->first();
-            if($signup){
-                $signup->step_count+=1;
-                if($signup->step_count==3){
+            if ($signup) {
+                $signup->step_count += 1;
+                if ($signup->step_count == 3) {
                     $signup->save();
-                }else{
+                } else {
                     $signup->step_count = 3;
                     $signup->save();
                 }
-                
             }
 
             return response(

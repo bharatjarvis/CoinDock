@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ed3078e18df06aafb7d902aef5ee70fa",
+    "content-hash": "16ff26443de26ea1e75481911e0540b6",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -6201,6 +6201,86 @@
             "time": "2022-06-26T17:06:14+00:00"
         },
         {
+            "name": "symfony/intl",
+            "version": "v6.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/intl.git",
+                "reference": "9fc07ba57eb33d44c6b3b86b4e1ef927620d1a39"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/intl/zipball/9fc07ba57eb33d44c6b3b86b4e1ef927620d1a39",
+                "reference": "9fc07ba57eb33d44c6b3b86b4e1ef927620d1a39",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "symfony/filesystem": "^5.4|^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Intl\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bernhard Schussek",
+                    "email": "bschussek@gmail.com"
+                },
+                {
+                    "name": "Eriksen Costa",
+                    "email": "eriksen.costa@infranology.com.br"
+                },
+                {
+                    "name": "Igor Wiedler",
+                    "email": "igor@wiedler.ch"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides a PHP replacement layer for the C intl extension that includes additional data from the ICU library",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "i18n",
+                "icu",
+                "internationalization",
+                "intl",
+                "l10n",
+                "localization"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/intl/tree/v6.1.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-04-12T16:22:53+00:00"
+        },
+        {
             "name": "symfony/mailer",
             "version": "v6.1.2",
             "source": {
@@ -7753,6 +7833,55 @@
                 }
             ],
             "time": "2022-05-21T13:33:31+00:00"
+        },
+        {
+            "name": "terdia/currency-util",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/terdia/currency-util.git",
+                "reference": "ea23ad9d3d29744d104066a00d0b46f2ea4badc8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/terdia/currency-util/zipball/ea23ad9d3d29744d104066a00d0b46f2ea4badc8",
+                "reference": "ea23ad9d3d29744d104066a00d0b46f2ea4badc8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Currency\\Util\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "terdia",
+                    "email": "support@devscreencast.com",
+                    "homepage": "https://devscreencast.com"
+                }
+            ],
+            "description": "A simple library to lookup the currency symbol for a given currency code.",
+            "keywords": [
+                "currency",
+                "mapping",
+                "php currency map"
+            ],
+            "support": {
+                "issues": "https://github.com/terdia/currency-util/issues",
+                "source": "https://github.com/terdia/currency-util/tree/v1.0.1"
+            },
+            "time": "2022-03-20T15:55:12+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
