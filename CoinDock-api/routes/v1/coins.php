@@ -43,10 +43,40 @@ Route::group(['prefix' => 'coins', 'middleware' => 'auth:api'], function () {
     Route::get('/', [CoinController::class , 'index']);
 
 
+
+    /*
+    For        : Listing all the coins
+    RouteName  : /coins/accepted
+    Method     : GET
+    Access     : Private
+    */
+    Route::get('/accepted', [CoinController::class , 'acceptedAssets']);
+
+
+
+    /*
+    For        : Listing all allowed Crypto Coins
+    RouteName  : /coins/accepted-crypto
+    Method     : GET
+    Access     : Private
+    */
+    Route::get('/accepted-crypto', [CoinController::class , 'acceptedCryptoCoins']);
+
+
+    
+    /*
+    For        : Listing all the currency Conversions
+    RouteName  : /coins/currency-convresions
+    Method     : GET
+    Access     : Private
+    */
+    Route::get('/currency-conversions', [CoinController::class , 'currencyConversions']);
+
+
     
     /*
     For        : Show a particular Coin
-    RouteName  : /coins/{user}
+    RouteName  : /coins/{coin}
     Method     : SHOW
     Access     : Private
     */
@@ -56,7 +86,7 @@ Route::group(['prefix' => 'coins', 'middleware' => 'auth:api'], function () {
     
     /*
     For        : Updating Coin Details
-    RouteName  : /coins/{user}
+    RouteName  : /coins/{coin}
     Method     : PUT
     Access     : Private
     */
@@ -66,19 +96,15 @@ Route::group(['prefix' => 'coins', 'middleware' => 'auth:api'], function () {
     
     /*
     For        : Delete a Coin
-    RouteName  : /coins/{user}
+    RouteName  : /coins/{coin}
     Method     : DELETE
     Access     : Private
     */
     Route::delete('/{coin}',[CoinController::class , 'delete']);
 
+    
 
-    /*
-    For        : Get accepted Coins
-    RouteName  : /accepted-coins
-    Method     : DELETE
-    Access     : Private
-    */
-    Route::get('/accepted-assets', [CoinController::class , 'acceptedAssets']);
+
+
 
 });
