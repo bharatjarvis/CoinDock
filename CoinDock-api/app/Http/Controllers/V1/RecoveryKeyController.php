@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
-
+use App\Http\Requests\V1\CreateRecoveryKeyRequest;
 use App\Http\Requests\V1\RecoveryKeyRequest;
 use App\Http\Resources\V1\RecoveryCodeResource;
 use App\Models\V1\{User, RecoveryKey};
@@ -32,7 +32,7 @@ class RecoveryKeyController extends Controller
      *
      * @return Response
      */
-    public function create(User $user, Request $request)
+    public function create(User $user, CreateRecoveryKeyRequest $request)
     {
 
         $recovery = new RecoveryKey();

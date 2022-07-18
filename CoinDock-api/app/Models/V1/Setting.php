@@ -2,11 +2,9 @@
 
 namespace App\Models\V1;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\V1\editSettingsRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
 
 class Setting extends Model
 {
@@ -15,20 +13,16 @@ class Setting extends Model
         'user_id',
         'primary_currency',
         'secondary_currency'
-        
+
     ];
 
 
-    public function edit(Request $request,User $user){
-
-        $request = $request->all();
-        $userSettings = $user->setting;
-        
-        $userSettings->update($request);
-        return true;
+    public function edit(editSettingsRequest $request)
+    {
+        return $this->update($request->all());
     }
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\V1\User;
 
 class CountryController extends Controller
 {
@@ -17,7 +17,7 @@ class CountryController extends Controller
         return response([
             'message' => 'Success',
             'results' => [
-                'countries' => config('countries.countries')
+                'countries' => User::countries()
             ]
         ]);
     }

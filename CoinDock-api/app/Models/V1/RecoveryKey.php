@@ -49,29 +49,23 @@ class RecoveryKey extends Model
     //generating random Recovery words
     public function store(User $user, Request $request)
     {
-  
-        if ($request->is_regenerate == 'false') {
+
+        if ($request->is_regenerate) {
             $recoveryCode = $this->whereUserId($user->id)
-                ->whereStatus(RecoveryKeyStatus::Inactive)
-                ->latest()
-                ->first();
-
-            if ($recoveryCode) {
-                return $recoveryCode;
-            }
-
-            $recoveryKeys = $this->GenerateRecoveryKeys($user);
-            return $recoveryKeys;
+                ->whereNot('status', RecoveryKeyStatus::Used)
+                ->update(['status' => RecoveryKeyStatus::Used]);
         }
-
-        //If is_regenerate is true
+        
         $recoveryCode = $this->whereUserId($user->id)
             ->whereStatus(RecoveryKeyStatus::Inactive)
             ->latest()
-            ->first()
-            ->update(['status' => RecoveryKeyStatus::Used]);
-        $recoveryKeys = $this->GenerateRecoveryKeys($user);
-        return $recoveryKeys;
+            ->first();
+
+        if ($recoveryCode) {
+            return $recoveryCode;
+        }
+
+        return $this->GenerateRecoveryKeys($user);
     }
 
 

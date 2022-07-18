@@ -4,7 +4,7 @@ namespace App\Http\Requests\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class updatePasswordRequest extends FormRequest
+class CreateRecoveryKeyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class updatePasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'password' => 'required|string|max:45|min:12|',
+            'is_regenerate'=>'boolean'
         ];
     }
 }

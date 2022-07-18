@@ -10,7 +10,7 @@ use App\Models\V1\{Signup,Setting};
 use App\Models\V1\{Coin};
 use App\Http\Requests\V1\CreateUserRequest;
 use App\Http\Requests\V1\updatePasswordRequest;
-use App\Http\Requests\V1\updateProfileRequest;
+use App\Http\Requests\V1\UpdateProfileRequest;
 use App\Http\Resources\V1\UserResource;
 use App\Http\Requests\V1\GraphRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -77,11 +77,15 @@ class User extends Authenticatable
     }
 
     //User Titles
-    public static function titles(){
-        $titles = ['Mr.', 'Ms.', 'Mrs.', 'Mx.'];
-        return $titles;
+    public static function titles()
+    {
+        return ['Mr.', 'Ms.', 'Mrs.', 'Mx.'];
     }
 
+    public static function countries()
+    {
+        return config('countries.countries');
+    }
 
     public function recoveryKey()
     {
@@ -287,20 +291,18 @@ class User extends Authenticatable
         return $this->hasOne(Signup::class);
     }
 
-    public function updateProfile(User $user ,updateProfileRequest $request)
+    public function updateProfile(User $user ,UpdateProfileRequest $request)
     {
-        $request = $request->all();
-        $user->update($request);
+        $data = $request->all();
+        $settings = $user->setting();
+
+        $user->update($data);
+
+        if($request->primary_currency || $request->secondary_currency){
+            $settings->update($data);
+        }
 
         return $user;
-    }
-
-    public function changePassword(updatePasswordRequest $request,User $user)
-    {
-        $updatedPassword = bcrypt($request->password);
-
-        $user->update(['password' => $updatedPassword]);
-        
     }
 
 

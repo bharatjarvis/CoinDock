@@ -38,16 +38,7 @@ Route::middleware('auth:api')
             Route::group(['prefix' => 'accounts'], function () {
 
                 /*
-                    For        : Change password
-                    RouteName  : accounts/users/{user}/change-password
-                    Method     : PUT
-                    Access     : Private
-                */
-                Route::put('/change-password', [UserController::class, 'changePassword']);
-
-
-                /*
-                    For        : Recovery Codes generation
+                    For        : Update User profile
                     RouteName  : accounts/users/{user}/profile/
                     Method     : PUT
                     Access     : Private
@@ -55,22 +46,7 @@ Route::middleware('auth:api')
                 Route::put('/profile', [UserController::class, 'updateProfile']);
 
 
-                /*
-                    For        : Recovery Codes generation
-                    RouteName  : accounts/users/{user}/settings/
-                    Method     : PUT
-                    Access     : Private
-                */
-                Route::put('/settings', [SettingController::class, 'editCurrency']);
-
-
-                /*
-                    For        : Recovery Codes generation
-                    RouteName  : accounts/users/{user}/settings/
-                    Method     : PUT
-                    Access     : Private
-                */
-                Route::put('/regenerate-recovery-codes', [RecoveryKeyController::class, 'create']);
+                
             });
 
 
@@ -91,6 +67,15 @@ Route::middleware('auth:api')
                     Access     : Private
                 */
                 Route::post('/', [RecoveryKeyController::class, 'create']);
+
+
+                /*
+                    For        : Recovery Codes generation
+                    RouteName  : accounts/users/{user}/settings/
+                    Method     : PUT
+                    Access     : Private
+                */
+                Route::put('/', [RecoveryKeyController::class, 'create']);
 
 
 

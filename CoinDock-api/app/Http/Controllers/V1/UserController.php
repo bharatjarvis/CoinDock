@@ -4,12 +4,10 @@ namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\V1\Auth\BuildPassportTokens;
 use App\Http\Requests\V1\CreateUserRequest;
-use App\Http\Requests\V1\updatePasswordRequest;
 use App\Http\Requests\V1\updateProfileRequest;
 use App\Http\Resources\V1\UserResource;
 use App\Models\V1\Coin;
 use App\Models\V1\User;
-use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -43,25 +41,12 @@ class UserController extends AccessTokenController
     );
   }
 
-  public function changePassword(updatePasswordRequest $request, User $user)
-  {
-    $userModel = new User();
-    $userModel->changePassword($request, $user);
-
-    return response([
-      'message' => 'Password updated successfully',
-    ], Response::HTTP_OK);
-  }
-
-
   public function updateProfile(User $user ,updateProfileRequest $request)
   {
-    
-    $userModel = new User();
-    $updatedUser = $userModel->updateProfile($user,$request);
+    $updatedUser = $user->updateProfile($user,$request);
 
     return response([
-      'message' => 'Profile updated successfully',
+      'message' => 'Updated successfully',
       'results' => [
         'user' => new UserResource($updatedUser)
       ]
