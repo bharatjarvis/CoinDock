@@ -80,7 +80,9 @@ class CoinController extends Controller
             'results'=>[
                 'coin'=>new CoinResource($coin)
             ]
-            ],200);
+        ],Response::HTTP_OK
+        );
+
     }
 
     /**
@@ -115,8 +117,27 @@ class CoinController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function acceptedAssets(){
-        $acceptedAssets = Coin::whereStatus(1)->get();
-        return $acceptedAssets;
+
+
+    //Conversions that we are accepting
+    public function currencyConversions(){
+        return response([
+            'message'=>'Success',
+            'results'=>[
+                'coins'=>CoinResource::collection(Coin::currencyConversions())
+            ]
+        ],Response::HTTP_OK);
     }
+
+
+    //Crypto coins that we are accepting
+    public function acceptedCryptoCoins(){
+        return response([
+            'message'=>'Success',
+            'results'=>[
+                'coins'=>CoinResource::collection(Coin::acceptedCryptoCoins())
+            ]
+        ],Response::HTTP_OK);
+    }
+
 }

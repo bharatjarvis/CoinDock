@@ -1,17 +1,14 @@
 <?php
 
-use App\Models\V1\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\{
-    CoinController,
-    GraphController,
-    PieChartController,
     UserController,
-    WalletCoinController,
     RecoveryKeyController,
     SignupController,
-    CoinsController,
     CoinCardController,
+    GraphController,
+    PieChartController,
+    SettingController,
     WalletController,
 };
 
@@ -29,21 +26,41 @@ use App\Http\Controllers\V1\{
 Route::group(['prefix' => 'users'], function () {
     Route::post('/', [UserController::class, 'create'])->name('users.create');
 });
-// route should be placed in CoinController
-
 
 Route::middleware('auth:api')
     ->prefix('users')
-
     ->group(function () {
+        Route::get('/titles', [UserController::class, 'usersTitles']);
 
-        Route::group(['prefix' => '{user}', 'middleware' =>'can:index,user'],function () {
+        Route::group(['prefix' => '{user}', 'middleware' => 'can:index,user'], function () {
+            
             Route::prefix('coin-cards')->group(function(){
-                Route::get('/', [CoinCardController::class, 'index']);
+                    Route::get('/', [CoinCardController::class, 'index']);
+                });
+        
+
+            Route::group(['prefix' => 'accounts'], function () {
+
+                /*
+                    For        : Update User profile
+                    RouteName  : accounts/users/{user}/profile/
+                    Method     : PUT
+                    Access     : Private
+                */
+                Route::put('/profile', [UserController::class, 'updateProfile']);
+
+
+                
             });
+
+
+
+            
+
+
+
+
             Route::prefix('recovery-codes')->group(function () {
-
-
 
                 /*
                     For        : Recovery Codes generation
@@ -52,6 +69,15 @@ Route::middleware('auth:api')
                     Access     : Private
                 */
                 Route::post('/', [RecoveryKeyController::class, 'create']);
+
+
+                /*
+                    For        : Recovery Codes generation
+                    RouteName  : accounts/users/{user}/settings/
+                    Method     : PUT
+                    Access     : Private
+                */
+                Route::put('/', [RecoveryKeyController::class, 'create']);
 
 
 
@@ -78,16 +104,14 @@ Route::middleware('auth:api')
                 /*
                     For        : Activating Recovery Codes
                     RouteName  : /users/{user}/recovery-codes/activate/
-                    Method     : POST
+                    Method     : PUT
                     Access     : Private
                 */
                 Route::put('/activate', [RecoveryKeyController::class, 'activate']);
-
             });
 
 
             Route::prefix('signup')->group(function () {
-
                 Route::get('/info', [SignupController::class, 'info'])->missing(
                     fn () => response(
                         [
@@ -97,6 +121,7 @@ Route::middleware('auth:api')
                     ),
                 );
             });
+
 
             Route::prefix('pie-chart')->group(function () {
 
@@ -110,13 +135,12 @@ Route::middleware('auth:api')
                 );
 
                 Route::get('/filter', [PieChartController::class, 'filter']);
-                
             });
 
             Route::prefix('graph')->group(function () {
 
                 Route::prefix('coins')->group(function () {
-                    Route::get('/', [GraphController::class,'getCoinIds']);
+                    Route::get('/', [GraphController::class, 'getCoinIds']);
                 });
 
                 Route::get('/filter', [GraphController::class, 'filter']);
@@ -125,11 +149,13 @@ Route::middleware('auth:api')
             });
 
 
+
+
             Route::prefix('add-wallet')->group(
                 function () {
 
                     /*
-                    For        : Adding an User Wallet
+                    For        : Add an User Wallet
                     RouteName  : /users/{user}/add-wallet/
                     Method     : POST
                     Access     : Private
@@ -139,9 +165,8 @@ Route::middleware('auth:api')
             );
 
             Route::get('/total-default', [UserController::class, 'totalBTC']);
-            Route::get('/primary-currency',[UserController::class, 'primaryCurrency']);
+            Route::get('/primary-currency', [UserController::class, 'primaryCurrency']);
             Route::get('/top-performer', [UserController::class, 'topPerformer']);
             Route::get('/low-performer', [UserController::class, 'lowPerformer']);
-    
         });
     });

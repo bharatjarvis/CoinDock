@@ -15,7 +15,7 @@ class CoinCardController extends Controller
             return $wallet->coin;
         });
         if ($coins->isEmpty()) {
-            return response(['message' => "You don't have wallets"], Response::HTTP_BAD_REQUEST);
+            return response(['message' => "Wallets are not found for this user"], Response::HTTP_BAD_REQUEST);
         } else {
             return response([
                 'message' => 'success',

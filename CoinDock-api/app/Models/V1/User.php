@@ -5,21 +5,27 @@ namespace App\Models\V1;
 use App\Enums\V1\TimePeriod;
 use App\Enums\V1\UserStatus;
 use App\Enums\V1\UserType;
+use App\Exceptions\ApiKeyException;
 use App\Http\Requests\V1\ChartRequest;
 use App\Models\V1\{Signup,Setting};
 use App\Models\V1\{Coin};
 use App\Http\Requests\V1\CreateUserRequest;
+use App\Http\Requests\V1\updatePasswordRequest;
+use App\Http\Requests\V1\UpdateProfileRequest;
+use App\Http\Resources\V1\UserResource;
 use App\Http\Requests\V1\GraphRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
+use Symfony\Component\HttpFoundation\Response;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use App\Models\V1\Wallet;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -40,6 +46,7 @@ class User extends Authenticatable
         'password',
         'status',
         'recovery_attempts',
+        'title'
     ];
 
     /**
@@ -70,6 +77,17 @@ class User extends Authenticatable
         $this->attributes['password'] = Hash::make($value);
     }
 
+    //User Titles
+    public static function titles()
+    {
+        return ['Mr.', 'Ms.', 'Mrs.', 'Mx.'];
+    }
+
+    public static function countries()
+    {
+        return config('countries.countries');
+    }
+
     public function recoveryKey()
     {
         return $this->hasOne(RecoveryKey::class);
@@ -86,13 +104,15 @@ class User extends Authenticatable
             'email' => $request->email,
             'password' => $request->password,
             'status' => UserStatus::Active,
+            'title'=>$request->title,
+
         ]);
 
         //Adding default Currency settings for user
         Setting::create([
             'user_id'=>$user->id,
-            'primary_currency'=>'IND',
-            'secondary_currency'=>Null
+            'primary_currency'=>config('countries.default_country.currency'),
+            'secondary_currency'=>'USD'
         ]);
         
         // REGISTRATION STATUS UPDATION -  STEP:1
@@ -111,10 +131,10 @@ class User extends Authenticatable
     public function chartData(ChartRequest $request):array
     {
         $filter_by = $request->filter_by;
-        $wallets = $this->wallets()->select(['coin_id', 'balance'])
+        $wallets = $this->wallets()->select(['coin_id', 'coins'])
             ->get()
             ->mapToGroups(function ($wallet) {
-                return [$wallet->coin->coin_id => $wallet->balance];
+                return [$wallet->coin->coin_id => $wallet->coins];
             })->map(function ($coins) {
                 return $coins->sum();
             })->toArray();
@@ -142,6 +162,7 @@ class User extends Authenticatable
                 $response = Http::withHeaders([
                         'X-CoinAPI-Key'=>config('cryptohistoricaldata.coin.api_key')
                     ])->get($baseURLIdReplaced);
+
                 
                 $primaryBalance = Arr::get($response, 'rate', null)* $wallets[$key];
                 
@@ -172,7 +193,7 @@ class User extends Authenticatable
 
     public function getCoinId($coinId):array|collection
     {
-        if($coinId != 'All') {
+        if($coinId != 'Coins') {
             return $this->wallets->map(function($wallet) use($coinId) {
                     return $wallet->coin()->whereCoinId($coinId)->first();    
                 })->unique('coin_id')->pluck('coin_id')->filter();
@@ -271,6 +292,21 @@ class User extends Authenticatable
     {
         return $this->hasOne(Signup::class);
     }
+
+    public function updateProfile(User $user ,UpdateProfileRequest $request)
+    {
+        $data = $request->all();
+        $settings = $user->setting();
+
+        $user->update($data);
+
+        if($request->primary_currency || $request->secondary_currency){
+            $settings->update($data);
+        }
+
+        return $user;
+    }
+
 
     public function totalDefault()
     {

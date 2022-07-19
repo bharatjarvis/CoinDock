@@ -12,8 +12,8 @@ class WalletController extends Controller
 {
     public function create(User $user, AddWalletRequest $request){
         $wallet = new Wallet();
-
         $walletId = $request->wallet_id;
+        
         $walletCheck = $wallet->whereWalletId($walletId)->first();
         if ($walletCheck) {
             return response([
