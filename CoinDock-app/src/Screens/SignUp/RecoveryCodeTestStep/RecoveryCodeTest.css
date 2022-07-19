@@ -5,3 +5,9 @@
 .cd-row-space-between {
   justify-content: space-between;
 }
+
+.cd-error {
+  color: red;
+  font-size: 18px;
+  text-align: center;
+}

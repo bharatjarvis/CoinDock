@@ -13,6 +13,12 @@ import "./RecoveryCodeTest.css";
 import Popup from "Shared/Popup/Popup";
 
 function RecoveryCodeTestStep() {
+  const [buttonPopup, setButtonPopup] = useState(false);
+
+  const [isEnterted, setIsEnterted] = useState(false);
+
+  const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
+
   const navigate = useNavigate();
 
   const { data = [] } = useGetRandomRecoveryCodesQuery();
@@ -23,26 +29,35 @@ function RecoveryCodeTestStep() {
     key_response: {},
   });
 
-  const [buttonPopup, setButtonPopup] = useState(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await recoveryTestCodes({ userId: 1, ...formValues }).unwrap();
-
-      navigate("/dashboard");
-    } catch (error) {
-      if (error.status === 400) {
-        setButtonPopup(true);
-      }
-    }
+    await recoveryTestCodes({
+      ...formValues,
+    })
+      .unwrap()
+      .then(() => {
+        navigate("/dashboard");
+      })
+      .catch((error) => {
+        if (error.status === 400) {
+          setButtonPopup(true);
+        }
+        if (error.status === 422) {
+          setDisplayErrorMessage(true);
+        }
+      });
   };
 
   const handleOnInput = (event) => {
+    setIsEnterted(true);
     setformValues((formValues) => {
       formValues.key_response[event.target.name] = event.target.value;
       return formValues;
     });
+  };
+
+  const handleOnFocus = () => {
+    if (displayErrorMessage) setDisplayErrorMessage(false);
   };
 
   const recoveryCodes = data?.results;
@@ -55,7 +70,15 @@ function RecoveryCodeTestStep() {
             <div>
               <div className="d-flex justify-content-between"></div>
               <Stepper totalSteps={3} />
-              <form onInput={handleOnInput}>
+              {displayErrorMessage && (
+                <p className="cd-error">
+                  {error?.data?.message.substring(
+                    0,
+                    error?.data?.message.indexOf(".")
+                  ) + "."}
+                </p>
+              )}
+              <form onInput={handleOnInput} onFocus={handleOnFocus}>
                 <div className="p-3" />
 
                 <div className="cd-step-header-content">
@@ -94,7 +117,7 @@ function RecoveryCodeTestStep() {
                   <div className="col-md-4 offset-md-4 cd-width-unset">
                     <button
                       className="cd-button cd-button-2"
-                      // disabled={!buttonPopup}
+                      disabled={!isEnterted}
                       onClick={handleSubmit}
                     >
                       Confirm

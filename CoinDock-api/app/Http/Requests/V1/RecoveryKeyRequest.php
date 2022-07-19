@@ -23,10 +23,10 @@ class RecoveryKeyRequest extends FormRequest
      */
     public function rules()
     {
+        $blockLength = config('random_keys.recovery.test_block_length');
         return  [
-            'key_response' => 'required|array',
+            'key_response' => "required|array|size:{$blockLength}",
             'key_response.*' => 'required|string|max:6|min:4',
-
         ];
     }
 }
