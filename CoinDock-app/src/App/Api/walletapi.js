@@ -20,6 +20,19 @@ const wallet = baseApi.injectEndpoints({
           wallet_id: wallet_id,
         },
       }),
+      invalidatesTags: [
+        "linechart",
+        "filter",
+        "coinfilter",
+        "coinshortname",
+        "pie",
+        "piefilter",
+        "total",
+        "primarycurrency",
+        "topperformer",
+        "lowperformer",
+        "coincard",
+      ],
       transformResponse: (response) => {
         return response;
       },
@@ -33,13 +46,12 @@ const wallet = baseApi.injectEndpoints({
         };
       },
 
-      provideTags: ["coins"],
+      providesTags: ["coins"],
     }),
   }),
 });
 
 export default wallet;
 
-export const { useAddWalletMutation,
-  useCoinsQuery: useCoins } = wallet;
+export const { useAddWalletMutation, useCoinsQuery: useCoins } = wallet;
 export const { usePrefetch: useWalletPrefetch } = wallet;

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use App\Exceptions\ApiKeyException;
+use Symfony\Component\HttpFoundation\Response;
 
 class Coin extends Model
 {
@@ -53,11 +55,16 @@ class Coin extends Model
     //Convertion
     public function priceConversion($from, $to, $grouped): float
     {
-        $baseUrl = config('coinapi.coin.api_url');
-        $currencyURL = $baseUrl . config('coinapi.coin.exchange_url');
+        $baseUrl = config('coin.coin.api_url');
+        $currencyURL = $baseUrl . config('coin.coin.exchange_url');
         $cryptConversionURL = str_replace(['{from}', '{to}'], [$from, $to], $currencyURL);
-        $response = Http::withHeaders(['X-CoinAPI-Key' => config('coinapi.coin.api_key')])->get($cryptConversionURL);
-        return Arr::get($response, 'rate', 0) * $grouped;
+        try {
+            $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($cryptConversionURL)['rate'];
+        } catch (\Throwable $th) {
+
+            throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
+        }
+        return $response * $grouped;
     }
 
     //get the primary currency value

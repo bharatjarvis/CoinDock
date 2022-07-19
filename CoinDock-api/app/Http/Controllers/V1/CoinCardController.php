@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
-use App\Models\V1\User;
+use App\Models\V1\{User, Wallet};
 use App\Http\Resources\V1\CoinCardResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class CoinCardController extends Controller
 {
     public function index(User $user)
-    {
+    {  
         $coins = $user->wallets->map(function ($wallet) {
             return $wallet->coin;
         });

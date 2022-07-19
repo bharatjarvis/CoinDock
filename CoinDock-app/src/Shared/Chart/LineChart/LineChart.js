@@ -19,7 +19,7 @@ import {
   useLineFilter,
   useCoinShortName,
 } from "App/Api/linechartapi";
-import { sortBy, uniq } from "lodash";
+import { isEmpty, sortBy, uniq } from "lodash";
 import { Card } from "react-bootstrap";
 
 ChartJS.register(
@@ -116,8 +116,13 @@ export function LineChart() {
     }
   );
 
-  if (isLoading || isError) {
+
+
+  if (isLoading) {
     return <Loading />;
+  }
+  if (isError || isEmpty(line?.data?.results)) {
+    return null;
   }
 
   return (

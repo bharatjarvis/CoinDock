@@ -4,7 +4,11 @@ import { Card, CardGroup } from "react-bootstrap";
 import "./Wallet.css";
 
 const Wallet = () => {
-  const { data: coincard } = useCoinCard();
+  const { data: coincard, isLoading, isError } = useCoinCard();
+
+  if (isLoading || isError) {
+    return null;
+  }
 
   return (
     <div class="cd-wallet-card cd-pagetitle mt-5000 container">

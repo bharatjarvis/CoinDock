@@ -1,5 +1,8 @@
 import { getUserId } from "App/Auth/helper";
 import baseApi from "./api";
+baseApi.enhanceEndpoints({
+  addTagTypes: ["coincard"],
+});
 const coincardapi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     coincard: build.query({
@@ -8,6 +11,7 @@ const coincardapi = baseApi.injectEndpoints({
         url: `/v1/users/${getUserId()}/coin-cards/`,
         method: "get",
       }),
+
       // transformResponse: (response) => {
       //   return {
       //     message: "success",
@@ -31,13 +35,13 @@ const coincardapi = baseApi.injectEndpoints({
       //     ],
       //   };
       // },
-      provideTags: ["coincard"],
+      providesTags: ["coincard"],
     }),
 
     getData: build.mutation({
       query: ({ ...data }) => ({
-        url: `/v1/email`,
-        method: "post",
+        url: `/v1/coin-cards`,
+        method: "get",
         data,
       }),
     }),
