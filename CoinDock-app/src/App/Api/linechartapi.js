@@ -1,104 +1,50 @@
 import { getUserId } from "App/Auth/helper";
 import baseApi from "./api";
+baseApi.enhanceEndpoints({
+  addTagTypes: ["linechart", "filter", "coinfilter", "coinshortname"],
+});
 const linechartapi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     line: build.query({
       query: (params) => {
         return {
-          url: `/v1/users/${getUserId()}/recovery-codes`,
+          url: `/v1/users/${getUserId()}/graph`,
           params: { ...params },
-          method: "post",
+          method: "get",
         };
       },
-      transformResponse: (response) => {
-        return {
-          message: "success",
-          results: {
-            BTC: {
-              "2022-07-13T09:00:00.0000000Z": 19842.20395433144,
-              "2022-07-13T10:00:00.0000000Z": 19792.36728348283,
-            },
-            RVN: {
-              "2022-07-13T09:00:00.0000000Z": 0.021657301991622437,
-              "2022-07-13T10:00:00.0000000Z": 0.021575070261595903,
-            },
-          },
-        };
-      },
-      provideTags: ["linechart"],
+      providesTags: ["linechart"],
     }),
     filter: build.query({
       query: () => ({
-        url: `/v1/users/${getUserId()}/recovery-codes`,
-        method: "post",
+        url: `/v1/users/${getUserId()}/graph/filter`,
+        method: "get",
       }),
-      transformResponse: (response) => {
-        return {
-          message: "success",
-          results: {
-            Day: {
-              value: 0,
-              key: "Day",
-              description: "Day",
-            },
-            Weekly: {
-              value: 1,
-              key: "Weekly",
-              description: "Weekly",
-            },
-            Monthly: {
-              value: 2,
-              key: "Monthly",
-              description: "Monthly",
-            },
-            Yearly: {
-              value: 3,
-              key: "Yearly",
-              description: "Yearly",
-            },
-          },
-        };
-      },
-      provideTags: ["filter"],
+
+      providesTags: ["filter"],
     }),
 
     coinfilter: build.query({
       query: () => ({
-        url: `/v1/users/${getUserId()}/recovery-codes`,
-        method: "post",
+        url: `/v1/users/${getUserId()}/graph/coins`,
+        method: "get",
       }),
-      transformResponse: (response) => {
-        return {
-          message: "success",
-          results: ["Coins", "Bitcoin", "Ravencoin"],
-        };
-      },
-      provideTags: ["coinfilter"],
+
+      providesTags: ["coinfilter"],
     }),
     coinshortname: build.query({
       query: () => ({
-        url: `/v1/users/${getUserId()}/recovery-codes`,
-        method: "post",
+        url: `/v1/coins/coin-shortname`,
+        method: "get",
       }),
-      transformResponse: (response) => {
-        return [
-          {
-            coin_name: "US Dollor",
-            coin_short_name: "USD",
-          },
-          {
-            coin_name: "Bitcoin",
-            coin_short_name: "BTC",
-          },
-        ];
-      },
-      provideTags: ["coinshortname"],
+
+      providesTags: ["coinshortname"],
     }),
 
     getData: build.mutation({
       query: ({ ...data }) => ({
-        url: `/v1/email`,
-        method: "post",
+        url: `/v1/graph`,
+        method: "get",
         data,
       }),
     }),

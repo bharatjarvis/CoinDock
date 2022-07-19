@@ -22,7 +22,7 @@ function Header() {
   const handleLogoutClick = async () => {
     try {
       await logout().unwrap();
-      navigate("/");
+      navigate("/login");
     } catch (e) {
       navigate("/");
     }
@@ -34,7 +34,7 @@ function Header() {
     <React.Fragment>
       <div className="cd-header-dimensions">
         <Navbar variant="dark" className="cd-app-header cd-header-dimensions">
-          <Navbar.Brand>
+          <Navbar.Brand href="/dashboard">
             <img className="cd-logo-image" src={Logo2} alt="Lock Images" />{" "}
             <span> &nbsp; CoinDock </span>
           </Navbar.Brand>

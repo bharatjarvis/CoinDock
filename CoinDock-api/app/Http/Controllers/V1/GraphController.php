@@ -10,28 +10,28 @@ use App\Models\V1\User;
 class GraphController extends Controller
 {
     public function filter(User $user)
-    { 
+    {
         return response(
             [
                 'message' => 'success',
                 'results' => TimePeriod::getInstances()
             ],
             Response::HTTP_OK
-        ); 
-        
+        );
+
     }
 
     public function getCoinIds(User $user)
     {
-        $result = $user->uniqueCoins()->pluck('name');
-        $result->prepend('All');
+        $result = $user->uniqueCoins()->pluck('name','coin_id');
+        $result->prepend('Coins','Coins');
         return response(
             [
                 'message' => 'success',
                 'results' => $result
             ],
             Response::HTTP_OK
-        ); 
+        );
     }
 
     public function show(User $user, GraphRequest $request)
@@ -43,5 +43,5 @@ class GraphController extends Controller
             ],
             Response::HTTP_OK
         );
-    } 
+    }
 }

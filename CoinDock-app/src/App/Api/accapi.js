@@ -43,5 +43,5 @@ export const {
   useAccountQuery: useAccount,
   usePutAccountDataMutation: useAccountData ,
   useCountryfilterQuery: useCountry,
-  useCurrencyfilterQuery: useCurrency
+  useCurrencyfilterQuery: useCurrency,
 } = accapi;

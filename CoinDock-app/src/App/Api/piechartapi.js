@@ -1,39 +1,30 @@
 import { getUserId } from "App/Auth/helper";
 import baseApi from "./api";
+baseApi.enhanceEndpoints({
+  addTagTypes: ["pie", "piefilter"],
+});
 const piechartapi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     pie: build.query({
-      query: (filter) => ({
-        url: `/v1/users/${getUserId()}/recovery-codes`,
-        params: { filter },
-        method: "post",
+      query: (filter_by) => ({
+        url: `/v1/users/${getUserId()}/pie-chart/`,
+        params: { filter_by },
+        method: "get",
       }),
-      transformResponse: (response) => {
-        return {
-          result: {
-            Bitcoin: 9,
-            Ethereum: 14,
-          },
-        };
-      },
+      providesTags: ["pie"],
     }),
     piefilter: build.query({
       query: () => ({
-        url: `/v1/users/${getUserId()}/recovery-codes`,
-        method: "post",
+        url: `/v1/users/${getUserId()}/pie-chart/filter`,
+        method: "get",
       }),
-      transformResponse: (response) => {
-        return {
-          message: "success",
-          data: ["coins", "currency"],
-        };
-      },
-      provideTags: ["piechart"],
+
+      providesTags: ["piefilter"],
     }),
 
     getData: build.mutation({
       query: ({ ...data }) => ({
-        url: `/v1/email`,
+        url: `/v1/pie-chart`,
         method: "post",
         data,
       }),

@@ -9,20 +9,31 @@ import { closePopup } from "Screens/AddWallet/AddWalletSlice";
 import { walletnameValidation } from "Shared/Form/WalletFields/WalletName";
 import WalletName from "Shared/Form/WalletFields/WalletName";
 import { countryValidation } from "Shared/Form/Select/Select";
-import { useAddWalletMutation } from "App/Api/walletapi";
+import { useAddWalletMutation, useCoins } from "App/Api/walletapi";
 import { useNavigate } from "react-router-dom";
+import {
+  useLowperformer,
+  usePrimaryCurrency,
+  useTopperformer,
+  useTotalCurrency,
+} from "App/Api/CoinPerformence/coinperformance";
+import { useLineChart } from "App/Api/linechartapi";
+import { usePieChart } from "App/Api/piechartapi";
+import { useCoinCard } from "App/Api/coincardapi";
 
 function AddWallet() {
   const open = useSelector((state) => state.addwallet.open);
-  // const {} =
+
+  const { data: coins } = useCoins();
 
   const navigate = useNavigate();
   const [wallet] = useAddWalletMutation();
+
   const dispatch = useDispatch();
   const initialValues = {
-    wallet: "",
+    coin: "",
     walletname: "",
-    walletaddress: "",
+    wallet_id: "",
   };
   const [formValues, setformValues] = useState(initialValues);
   const [formErrors, setformErrors] = useState({});
@@ -47,11 +58,8 @@ function AddWallet() {
 
     let isValid = true;
 
-    errors.walletaddress = walletnameValidation(
-      values.walletaddress,
-      "Wallet address"
-    );
-    errors.country = countryValidation(values.country, "Coin");
+    errors.wallet_id = walletnameValidation(values.wallet_id, "Wallet id");
+    errors.coin = countryValidation(values.coin, "Coin");
     setValid(!Object.values(errors).some(Boolean));
     return {
       isValid,
@@ -68,6 +76,8 @@ function AddWallet() {
     } else {
       try {
         await wallet({ ...formValues }).unwrap();
+
+        setformValues(initialValues);
       } catch (errorResponse) {}
     }
   };
@@ -96,23 +106,21 @@ function AddWallet() {
           </div>
 
           <Select
-            name="country"
+            name="coin"
             className="form-control"
             label="Coin*"
-            value={formValues.country}
-            options={[
-              { label: "" },
-              { label: "BitCoin", value: 1 },
-              { label: "Ethereum", value: 2 },
-            ]}
+            value={formValues.coin}
+            options={(coins?.data?.results?.coins ?? []).map((value) => {
+              return { label: value.name, value: value.name };
+            })}
             formErrors={formErrors}
           />
 
           <WalletName
-            name="walletaddress"
+            name="wallet_id"
             placeholder="Wallet Address "
             label="Wallet Address*"
-            value={formValues.walletaddress}
+            value={formValues.wallet_id}
             formErrors={formErrors}
           />
           <WalletName

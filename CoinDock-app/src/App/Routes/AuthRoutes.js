@@ -26,7 +26,6 @@ const AuthRoutes = (props) => {
   }
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
       <Route path="/account" element={<Account />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/recovery-codes" element={<RecoveryCodeBoxStep />} />

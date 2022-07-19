@@ -1,5 +1,4 @@
 .cd-line-chart {
-  /* border: 0.1rem solid #09bbff; */
   padding: 20px;
 }
 .cd-line-chart .cd-line-filter {
@@ -11,4 +10,12 @@
   .cd-line-chart {
     max-width: 600px;
   }
+}
+.cd-line-chart-card {
+  border: 0.1rem solid;
+  border-radius: 1rem;
+  box-shadow: rgb(0 0 0 / 14%) 0rem 0.25rem 1.25rem 0rem;
+}
+.cd-line-filter {
+  margin-left: 12px;
 }

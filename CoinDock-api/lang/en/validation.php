@@ -158,15 +158,16 @@ return [
         'email' => [
         'email.email' => 'Email field must be email address.',],
          'password'=>[
-          
+
         'password.required' => 'Password is required.Password must be at least 12 characters.
                                                         Password must contain at least one number.
                                                         Your password must include at least one letter.
                                                         Password must contain at least one special character, e.g. @$!%*#?&"',
-            
-            
-         ]
-        
+
+
+         ],
+         'key_response.*' => "The recovery words must be at least 4 characters."
+
 
     ],
 
