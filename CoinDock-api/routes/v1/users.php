@@ -33,12 +33,11 @@ Route::group(['prefix' => 'users'], function () {
 
 
 Route::middleware('auth:api')
-
     ->prefix('users')
 
     ->group(function () {
 
-        Route::prefix('{user}')->group(function () {
+        Route::group(['prefix' => '{user}', 'middleware' =>'can:index,user'],function () {
             Route::prefix('coin-cards')->group(function(){
                 Route::get('/', [CoinCardController::class, 'index']);
             });
