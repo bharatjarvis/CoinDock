@@ -87,7 +87,7 @@ class Wallet extends Model
             if ($userCoinName == $coin) {
                 $basePath  = config('assets.accepted_coins');
                 $basePath = $basePath[$coin]['bal_path'];
-                if ($userCoinName == 'Expanse') {
+                if ($userCoinName == 'Expanse' || $userCoinName == 'MOAC') {
                     return $basePath;
                 }
             }
@@ -107,7 +107,7 @@ class Wallet extends Model
 
         try {
             $response = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
-            ->get($cryptConversionPath)['rate'];
+                ->get($cryptConversionPath)['rate'];
         } catch (\Throwable $th) {
             throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
         }
@@ -121,9 +121,24 @@ class Wallet extends Model
         $responseArray = json_decode($response, true);
         $responseArrayKeys = array_keys($responseArray);
 
-        if ($coin == 'Expanse') {
-            return $response['balance'];
+        switch ($coin) {
+            
+            case 'Expanse'||'MOAC':
+                return $response['balance'];
+                break;
+            case 'Aion':
+                return $response['content'][0]['balance'];
+                break;
+            case 'PLSR':
+                return $response['data'][2][4];
+                break;
+            case 'NEOX':
+                return $response['data'][1][4];
+                break;
+            default:
+                break;
         }
+
         foreach ($responseArrayKeys as $jsonKey) {
             if ($jsonKey == 'balance' || $jsonKey == 'data' || $jsonKey == 'result') {
 
@@ -151,11 +166,13 @@ class Wallet extends Model
         $userCoinId = Coin::whereName($userCoin)->first()?->id;
 
         $balanceInUsd = $this->cryptoToUsd($userCoin);
-
         $basePath = $this->basePath($userCoinId, $walletId);
         $response = Http::get($basePath);
 
+
         if ($userCoin == 'Expanse') {
+            $response = Http::post($basePath, ['addr' => $walletId, 'options' => ['balance']]);
+        } elseif ($userCoin == 'MOAC') {
             $response = Http::post($basePath, ['addr' => $walletId, 'options' => ['balance']]);
         }
 

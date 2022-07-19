@@ -29,14 +29,14 @@ class Coin extends Model
     //Conversions that we are accepting
     public static function currencyConversions()
     {
-        return self::whereStatusAndIsCrypto(1,0)->get();
+        return self::whereStatusAndIsCrypto(1,0)->orderBy('name','asc')->get();
     }
 
 
     //showing crypto coins that we are accepting
     public static function acceptedCryptoCoins()
     {
-        return self::whereStatusAndIsCrypto(1,1)->get();
+        return self::whereStatusAndIsCrypto(1,1)->orderBy('name','asc')->get();
     }
 
 
