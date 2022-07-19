@@ -48,7 +48,6 @@ class User extends Authenticatable
             'title'
         ];
 
-
         /**
          * The attributes that should be hidden for serialization.
          *
@@ -416,9 +415,7 @@ class User extends Authenticatable
                 'coin_name' => $coinName,
                 'coin_id' => $shortName
             ];
-
-    }
-
+        }
 
         public function wallets()
         {

@@ -1,7 +1,7 @@
 import { getUserId } from "App/Auth/helper";
 import baseApi from "../api";
 baseApi.enhanceEndpoints({
-  addTagTypes: ["total", "primarycurrency","topperformer","lowperformer"],
+  addTagTypes: ["total", "primarycurrency", "topperformer", "lowperformer"],
 });
 const coinperformanceapi = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -40,7 +40,7 @@ const coinperformanceapi = baseApi.injectEndpoints({
 
     getData: build.mutation({
       query: ({ ...data }) => ({
-        url: `/v1/total`,
+        url: `/v1/low`,
         method: "get",
         data,
       }),

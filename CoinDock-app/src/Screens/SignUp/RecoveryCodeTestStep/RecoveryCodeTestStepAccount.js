@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import "./RecoveryCodeTest.css";
 import Popup from "Shared/Popup/Popup";
 
-function RecoveryCodeTestStep() {
+function RecoveryCodeTestStepAccount() {
   const navigate = useNavigate();
 
   const { data = [] } = useGetRandomRecoveryCodesQuery();
@@ -111,4 +111,4 @@ function RecoveryCodeTestStep() {
   );
 }
 
-export default RecoveryCodeTestStep;
+export default RecoveryCodeTestStepAccount;

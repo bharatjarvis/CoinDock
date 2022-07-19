@@ -1,49 +1,60 @@
-
-  .cd-accordion {
-    width:260%;
+  .cd-card {
+    padding-top:1.5px;
     max-width: 500px;
-    /* margin: 2rem auto; */
-
-  }
-
-  .cd-accordion-title {
-    display: flex;
-    border: rgb(115, 118, 119) 1px;
-    flex-direction: row;
-    justify-content: space-between;
-    cursor: pointer;
-    background-color: #ebf2f3;
-    border-style: groove;
-  }
-
-  .cd-accordion-title:hover {
-    background-color: #b6dbe2;
-  }
-
-  .cd-accordion-title,
-  .cd-accordion-content {
-    padding: 1rem;
-  }
-
-  .cd-accordion-content {
-    background-color: #e4d3ee;
-    border: #edf0f0 ridge 2px;
-    padding: 8px;
+    margin: 1rem auto;
     }
-  .container-1{
+    .cd-card1 {
+      /* padding-top:auto; */
+      max-width: 650px;
+      margin:  auto;
+      }
+    .cd-headerStyle {
+      margin-left: 33%;
+      margin-top: 20px;
+      padding-bottom: 10px;
+    }
+    .cd-edit-style{
+      align-items: center;
+      justify-content: center;
+      margin-top: 30px;
+      margin-left:-10%
+    }
+  .cd-cardstyle {
+    display: inline-block;
+    width:400px;
+    padding:5px;
+    height:70px;
+    box-shadow:1px 1px rgb(252, 253, 253);
+    border-style: groove;
+    font-family: Verdana;
+    margin:auto;
+   }
+
+
+  .container-11{
    margin: auto;
    max-width: 490px;
- }
-  
+  }
+  .cd-back {
+    margin-left:30%;
+    margin-top: 8px;
+
+  }
+  .container-2{
+  margin: auto;
+  width: 300px;
+  max-width: 490px;
+  }
+
   @media screen and (max-width: 480px) {
     body {
       font-size: 18px;
       margin:auto;
       margin-right:5%
     }
-
-    .accordion {
+    .card {
       width: 90%;
       margin-top:'7%';
     }
-  } 
+
+  }
