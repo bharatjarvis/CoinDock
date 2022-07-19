@@ -128,6 +128,10 @@ class User extends Authenticatable
 
     }
 
+    public function show(User $user){
+        return $user;
+    }
+
     public function chartData(ChartRequest $request)
     {
         $filter_by = $request->filter_by;

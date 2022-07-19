@@ -41,9 +41,22 @@ class UserController extends AccessTokenController
     );
   }
 
-  public function updateProfile(User $user ,updateProfileRequest $request)
+
+  public function show(User $user)
   {
-    $updatedUser = $user->updateProfile($user,$request);
+      return response([
+        'message' => 'success',
+        'results' => [
+          'user' => new UserResource($user->show($user))
+        ]
+      ]);
+
+  }
+
+
+  public function updateProfile(User $user, updateProfileRequest $request)
+  {
+    $updatedUser = $user->updateProfile($user, $request);
 
     return response([
       'message' => 'Updated successfully',
@@ -53,7 +66,7 @@ class UserController extends AccessTokenController
     ], Response::HTTP_OK);
   }
 
-  //list of user titles 
+  //list of user titles
   public function usersTitles()
   {
 
@@ -86,7 +99,7 @@ class UserController extends AccessTokenController
     if ($user->wallets->isEmpty()) {
       return response([
         'message' => 'User Wallet Not Found'
-      ],  Response::HTTP_BAD_REQUEST);
+      ],  Response::HTTP_NOT_FOUND);
     }
     $result = ['heading' => 'Primary Currency'];
     $totalPrimaryCurrency = $user->totalPrimaryCurrency();
@@ -112,7 +125,7 @@ class UserController extends AccessTokenController
     if ($user->wallets->isEmpty()) {
       return response([
         'message' => 'User Wallet Not Found'
-      ], Response::HTTP_BAD_REQUEST);
+      ], Response::HTTP_NOT_FOUND);
     }
 
     $result = ['heading' => 'Top Performer'];
@@ -142,7 +155,7 @@ class UserController extends AccessTokenController
     if ($user->wallets->isEmpty()) {
       return response([
         'message' => 'User Wallet Not Found'
-      ], Response::HTTP_BAD_REQUEST);
+      ], Response::HTTP_NOT_FOUND);
     }
     $result = ['heading' => 'Low Performer'];
     $lowPerformer = $user->lowPerformer();
