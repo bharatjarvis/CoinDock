@@ -2,10 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\V1\Wallet;
-use Illuminate\Support\Facades\Gate;
+use App\Models\V1\User;
 use App\Policies\UserPolicy;
-
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
 use Laravel\Passport\AuthCode;
@@ -20,8 +18,9 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
-        // Wallet::class => WalletPolicy::class
+        'App\Model' => 'App\Policies\ModelPolicy',
+        User::class => UserPolicy::class,
+
     ];
 
     /**
@@ -32,13 +31,10 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
         Passport::routes();
-        
         Passport::useClientModel(Client::class);
         Passport::useAuthCodeModel(AuthCode::class);
         Passport::usePersonalAccessClientModel(PersonalAccessClient::class);
-
         Passport::tokensExpireIn(now()->addDays(config('passport.tokens_expire_in')));
         Passport::refreshTokensExpireIn(now()->addDays(config('passport.personal_access_tokens_expire_in')));
         Passport::personalAccessTokensExpireIn(now()->addMonths(config('passport.refresh_tokens_expire_in')));
