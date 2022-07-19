@@ -149,10 +149,10 @@ class User extends Authenticatable
 
                     $primaryCurrency = $this->setting->primary_currency;
 
-                    $baseURL = config('cryptohistoricaldata.coin.api_url') . config('cryptohistoricaldata.coin.exchange_url');
+                    $baseURL = config('coin.coin.api_url') . config('coin.coin.exchange_url');
 
                     $baseURLIdReplaced = str_replace(
-                        ['{fromCoin}', '{toCoin}'],
+                        ['{from}', '{to}'],
                         [$key, $primaryCurrency],
                         $baseURL
                     );
@@ -160,7 +160,7 @@ class User extends Authenticatable
 
                     try {
                         $response = Http::withHeaders([
-                            'X-CoinAPI-Key' => config('cryptohistoricaldata.coin.api_key')
+                            'X-CoinAPI-Key' => config('coin.coin.api_key')
                         ])->get($baseURLIdReplaced)['rate'];
                     } catch (\Throwable $th) {
 
@@ -178,7 +178,7 @@ class User extends Authenticatable
 
         public function historicalData(string $coinId, string $range, string $startDate, string $endDate): array
         {
-            $baseURL = config('cryptohistoricaldata.coin.api_url') . config('cryptohistoricaldata.coin.realtime_url');
+            $baseURL = config('coin.coin.api_url') . config('coin.coin.realtime_url');
 
             $baseURLIdReplaced = str_replace(
                 ['{coin1}', '{range}', '{start_date}', '{end_date}'],
@@ -188,7 +188,7 @@ class User extends Authenticatable
 
             try {
                 $response = Http::withHeaders(
-                    ['X-CoinAPI-Key' => config('cryptohistoricaldata.coin.api_key')]
+                    ['X-CoinAPI-Key' => config('coin.coin.api_key')]
                 )->get($baseURLIdReplaced);
                 return json_decode($response);
             } catch (\Throwable $th) {
