@@ -11,6 +11,7 @@ use App\Models\V1\User;
 use Illuminate\Support\Facades\Http;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends AccessTokenController
 {
@@ -42,9 +43,9 @@ class UserController extends AccessTokenController
     );
   }
 
-  public function updateProfile(User $user ,updateProfileRequest $request)
+  public function updateProfile(User $user, updateProfileRequest $request)
   {
-    $updatedUser = $user->updateProfile($user,$request);
+    $updatedUser = $user->updateProfile($user, $request);
 
     return response([
       'message' => 'Updated successfully',
@@ -118,6 +119,8 @@ class UserController extends AccessTokenController
       ], Response::HTTP_BAD_REQUEST);
     }
     $topPerformer = $user->topPerformer();
+    $path = storage_path('app/public/images/uparrow.png');
+
     return response([
       'message' => 'Success',
       'results' => [
@@ -125,7 +128,7 @@ class UserController extends AccessTokenController
         'coin_name' => $topPerformer['coin_name'],
         'coin_id' => $topPerformer['coin_id'],
         'balance' => $topPerformer['balance'],
-        'image_path' => 'http://127.0.0.1:8000/storage/images/uparrow.png'
+        'image_path' => $path
       ]
 
     ], Response::HTTP_OK);
@@ -147,7 +150,7 @@ class UserController extends AccessTokenController
       ], Response::HTTP_BAD_REQUEST);
     }
     $lowPerformer = $user->lowPerformer();
-
+    $path = storage_path('app/public/images/downarrow.png');
     return response([
       'message' => 'Success',
       'results' => [
@@ -155,7 +158,7 @@ class UserController extends AccessTokenController
         'coin_name' => $lowPerformer['coin_name'],
         'coin_id' => $lowPerformer['coin_id'],
         'balance' => $lowPerformer['balance'],
-        'image_path' => 'http://127.0.0.1:8000/storage/images/downarrow.png'
+        'image_path' => $path
       ]
     ], Response::HTTP_OK);
   }
