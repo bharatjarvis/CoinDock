@@ -25,6 +25,7 @@ use App\Http\Controllers\V1\{
 
 Route::group(['prefix' => 'users'], function () {
     Route::post('/', [UserController::class, 'create'])->name('users.create');
+    Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
 });
 
 Route::middleware('auth:api')

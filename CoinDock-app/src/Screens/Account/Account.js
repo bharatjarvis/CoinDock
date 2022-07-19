@@ -1,75 +1,40 @@
 import React from "react";
-import Accordion from "./Accordian";
 import "./Account.css";
 import { useAccount } from "App/Api/accapi";
 import { useNavigate } from "react-router-dom";
 import "Shared/common-styles/button.css";
 import { useLogout } from "App/Api/auth";
 import "Shared/common-styles/common.css";
-
+import { Card } from "react-bootstrap";
 
 function Account() {
  const { data: account}= useAccount();
- const accountDetails = account?.result?.user || {};
+ const accountDetails = account?.data?.results?.user || {};
  const [logout] = useLogout();
  const navigate = useNavigate();
+ const handleCardProfile=()=>{
+     navigate('/profile-settings')
+ }
+ const handleCardAccount=()=>{
+  navigate('/account-settings')
+}
+const handleCardSystem=()=>{
+  navigate('/system-settings')
+}
 
+console.log(account)
  const accordianBasedAccountDetails = [
    {
      label:'Profile settings',
-     fields:[
-       {
-       label:'Name',
-       fieldKey:'name',
-       type:'edit'
-      },
-       {
-        label:'DateofBirth',
-        fieldKey:'dateofbirth',
-        type:'edit'
-       },
-       {
-        label:'Country',
-        fieldKey:'country',
-        type:'edit'
-       },
-    ]
+     key:'profile',
    },
    {
      label:'Account settings',
-     fields:[
-         {
-          label:'Email',
-          fieldKey:'email',
-          type:'edit'
-         },
-         {
-          label:'Change Password',
-          fieldKey:'changePassword',
-          type:'edit'
-         },
-         {
-          label:'Recovery Code',
-          fieldKey:'recoverycode',
-          navigate: "/recovery-codes-account",
-         },
-
-    ]
+     key:'accounts',
    },
      {
      label:'System settings',
-     fields:[
-       {
-         label:'Primary currency',
-         fieldKey:'primarycurrency',
-         type:'edit'
-       },
-       {
-        label:'Secondary currency',
-        fieldKey:'secondarycurrency',
-        type:'edit'
-      }
-     ]
+     key:'system',
      }
   ]
 
@@ -81,28 +46,46 @@ function Account() {
   }
 };
 return (
-    <div className="container-1 justify-content-center align-items-center">
-         <div className="col-md-4 col py-5 ">
+  <div><h1 style={{marginTop:'5px',marginLeft:'42%'}}>Account</h1>
+    <div className="container-11">
+         <div className=" col py-5 ">
          {accordianBasedAccountDetails && accordianBasedAccountDetails.map((item,id) => (
-               <div>
-                  <Accordion
-                    key={id}
-                    label={item.label}
-                    fields={item.fields}
-                    value={accountDetails}
-                  />
+               <div key={id}>
+                {item.key == 'profile'?
+                   <Card
+                     type="submit"
+                     className="cd-cardstyle bg-light mb-3"
+                     onClick={() => {handleCardProfile()}}
+                    >
+                     <Card.Body >{item.label}</Card.Body>
+                   </Card>:
+                 item.key == 'accounts' ?
+                   <Card
+                     type="submit"
+                     onClick={() => handleCardAccount()}
+                     className="cd-cardstyle bg-light mb-3">
+                     <Card.Body>{item.label}</Card.Body>
+                    </Card>:
+                 item.key == 'system' ?
+                   <Card
+                     onClick={() => handleCardSystem()}
+                     className="cd-cardstyle bg-light mb-3"
+                     type="submit">
+                     <Card.Body>{item.label}</Card.Body>
+                   </Card>: null
+                  }
                </div>
           ))}
        </div>
         <div className='d-flex justify-content-start'>
            <button
-             className='cd-button cd-button-2 cd-logout-button'
+             className='cd-button-2'
              onClick={handleLogoutClick}>
               Logout
             </button>
          </div>
      </div>
-
+</div>
     );
 };
 export default Account;

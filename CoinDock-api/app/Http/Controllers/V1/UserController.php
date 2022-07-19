@@ -43,6 +43,19 @@ class UserController extends AccessTokenController
 		);
 	}
 
+
+  public function show(User $user)
+  {
+      return response([
+        'message' => 'success',
+        'results' => [
+          'user' => new UserResource($user->show($user))
+        ]
+      ]);
+
+  }
+
+
 	public function updateProfile(User $user, updateProfileRequest $request)
 	{
 		$updatedUser = $user->updateProfile($user, $request);
