@@ -13,7 +13,7 @@ import { requiredValidation } from "Shared/Validation/requiredValidation";
 
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import Email from "Shared/Form/Email";
+import Email from "Shared/Form/Email/Email.js";
 function Login() {
   let navigate = useNavigate();
   const [login, loginOptions] = useLogin();

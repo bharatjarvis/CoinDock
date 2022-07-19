@@ -103,7 +103,7 @@ class User extends Authenticatable
             'email' => $request->email,
             'password' => $request->password,
             'status' => UserStatus::Active,
-            'title'=>$request->title,
+            'title'=>'Mr.',
 
         ]);
 
@@ -149,23 +149,23 @@ class User extends Authenticatable
             foreach($wallets as $key => $value) {
 
                 $primaryCurrency = $this->setting->primary_currency;
-                
+
                 $baseURL = config('cryptohistoricaldata.coin.api_url'). config('cryptohistoricaldata.coin.exchange_url');
-                
+
                 $baseURLIdReplaced = str_replace(
                     ['{fromCoin}', '{toCoin}'],
                     [$key, $primaryCurrency],
                     $baseURL
                 );
-                
+
                 $response = Http::withHeaders([
                         'X-CoinAPI-Key'=>config('cryptohistoricaldata.coin.api_key')
                     ])->get($baseURLIdReplaced);
-                
+
                 $primaryBalance = Arr::get($response, 'rate', null)* $wallets[$key];
-                
+
                 $result[$key] = $primaryBalance;
-            } 
+            }
         }
 
         return $result;
@@ -193,7 +193,7 @@ class User extends Authenticatable
     {
         if($coinId != 'All') {
             return $this->wallets->map(function($wallet) use($coinId) {
-                    return $wallet->coin()->whereCoinId($coinId)->first();    
+                    return $wallet->coin()->whereCoinId($coinId)->first();
                 })->unique('coin_id')->pluck('coin_id')->filter();
         }
         return $this->uniqueCoins()->pluck('coin_id')->toArray();
@@ -204,14 +204,14 @@ class User extends Authenticatable
         return $this->wallets->map(fn($wallet) => $wallet->coin)->unique('coin_id');
     }
 
-    
+
     public function graphData(string $range, string $startDate, string $endDate, string $coinId):array
     {
         $result = [];
         $coinIds = $this->getCoinId($coinId);
         foreach($coinIds as $coinId) {
             $response = $this->historicalData($coinId, $range, $startDate, $endDate);
-            $result[$coinId] = array_column($response, 'rate_close', 'time_period_end'); 
+            $result[$coinId] = array_column($response, 'rate_close', 'time_period_end');
         }
         return $result;
     }
@@ -384,7 +384,7 @@ class User extends Authenticatable
                 'coin_name' => $coinName,
                 'coin_id' => $shortName
             ];
-        
+
     }
 
     public function wallets()
