@@ -1,18 +1,20 @@
 <?php
 
 namespace App\Models\V1;
-use Carbon\Carbon;
-use App\Models\V1\{ User, Coin, Setting};
+
+use App\Exceptions\ApiKeyException;
+use App\Models\V1\{User, Coin};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
 
 class Wallet extends Model
 {
     use HasFactory;
-     /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -39,7 +41,8 @@ class Wallet extends Model
         return true;
     }
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
@@ -101,10 +104,15 @@ class Wallet extends Model
 
         $cryptConversionBasePath = config('assets.coin_api.base_path') . config('assets.coin_api.crypto_usd');
         $cryptConversionPath = str_replace('{id}', $assetShortName, $cryptConversionBasePath);
-        $balanceInUsd = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
-            ->get($cryptConversionPath)['rate'];
 
-        return $balanceInUsd;
+        try {
+            $response = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
+            ->get($cryptConversionPath)['rate'];
+        } catch (\Throwable $th) {
+            throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
+        }
+
+        return $response;
     }
 
     //Fetching number of coins through the Response
@@ -157,7 +165,7 @@ class Wallet extends Model
                 if ($userCoin == 'Expanse') {
                     return $this->WalletCreate($user->id, $walletId, $userCoinId, $coins, $response['balanceUSD']);
                 }
-                return $this->WalletCreate($user->id, $walletId, $userCoinId, $coins, $balanceInUsd*$coins);
+                return $this->WalletCreate($user->id, $walletId, $userCoinId, $coins, $balanceInUsd * $coins);
             }
         }
         return true;

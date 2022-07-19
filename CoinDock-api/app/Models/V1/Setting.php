@@ -12,11 +12,11 @@ class Setting extends Model
         'user_id',
         'primary_currency',
         'secondary_currency'
-        
+
     ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-
 }

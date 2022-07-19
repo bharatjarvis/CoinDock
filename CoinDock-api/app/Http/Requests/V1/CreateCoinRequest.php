@@ -24,12 +24,12 @@ class CreateCoinRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' =>'string',
-            'coin_id' =>'string',
-            'is_crypto' =>'integer',
-            'status' =>'integer',
-            'is_default' =>'integer',
-            'img_path' =>'string'
+            'name' => 'string',
+            'coin_id' => 'string',
+            'is_crypto' => 'integer',
+            'status' => 'integer',
+            'is_default' => 'integer',
+            'img_path' => 'string'
         ];
     }
 }

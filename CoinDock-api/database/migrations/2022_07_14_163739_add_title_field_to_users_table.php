@@ -13,11 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('signups', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->integer('step_count');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('title')->after('id');
         });
     }
 
@@ -28,7 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropForeign('signups_user_id_foriegn');
-        Schema::dropIfExists('signups');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('title');
+        });
     }
 };
