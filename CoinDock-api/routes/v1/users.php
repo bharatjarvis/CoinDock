@@ -32,12 +32,12 @@ Route::middleware('auth:api')
     ->group(function () {
         Route::get('/titles', [UserController::class, 'usersTitles']);
 
-        Route::group(['prefix' => '{user}', 'middleware' => 'can:index,user'], function () {
-            
+        Route::group(['prefix' => '{user}'], function () {
+
             Route::prefix('coin-cards')->group(function(){
                     Route::get('/', [CoinCardController::class, 'index']);
                 });
-        
+
 
             Route::group(['prefix' => 'accounts'], function () {
 
@@ -50,12 +50,12 @@ Route::middleware('auth:api')
                 Route::put('/profile', [UserController::class, 'updateProfile']);
 
 
-                
+
             });
 
 
 
-            
+
 
 
 
