@@ -7,7 +7,7 @@ const Wallet = () => {
   const { data: coincard } = useCoinCard();
 
   return (
-    <div class="cd-pagetitle mt-5000 container">
+    <div class="cd-wallet-card cd-pagetitle mt-5000 container">
       <div class="card p-3">
         <h6>Wallets</h6>
         {Object.values(coincard?.data?.results ?? {}).map((value) => {
@@ -63,7 +63,7 @@ const Wallet = () => {
                         <img
                           src={value?.logo}
                           className="cd_coin_logo"
-                          alt="coin_logo"
+                          alt={value.coin_name}
                         />
                       </h6>
                     </div>
@@ -88,9 +88,7 @@ const Wallet = () => {
                   </div>
                   <div className="col-md-2">
                     <div className="photo-box">
-                      <h6 className="text-end">
-                        {value?.secondary_currency}
-                      </h6>
+                      <h6 className="text-end">{value?.secondary_currency}</h6>
                       <p className="mb-2 text-muted text-end">USD</p>
                     </div>
                   </div>

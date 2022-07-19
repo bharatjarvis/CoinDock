@@ -16,3 +16,6 @@
   border-radius: 1rem;
   box-shadow: rgb(0 0 0 / 14%) 0rem 0.25rem 1.25rem 0rem;
 }
+.cd-line-filter {
+  margin-left: 12px;
+}

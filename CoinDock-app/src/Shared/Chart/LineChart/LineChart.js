@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from "react";
 import moment from "moment";
-
+import Loading from "Shared/Loading/Loading";
 import "./LineChart.css";
 import {
   Chart as ChartJS,
@@ -61,7 +61,7 @@ export const options = {
 };
 
 export function LineChart() {
-  const [coinid, setCoinid] = useState("All");
+  const [coinid, setCoinid] = useState("Coins");
   const [range, setRange] = useState("0");
   const {
     data: line,
@@ -71,14 +71,14 @@ export function LineChart() {
   const { data: filter } = useLineFilter();
   const { data: coinfilter } = useCoinFilter();
   const { data: coinshortname } = useCoinShortName();
-  console.log(coinshortname);
+  console.log(coinfilter);
 
   const linedata = Object.entries(line?.data?.results ?? {});
   const labels = sortBy(
     uniq(
       linedata?.reduce((prev, current, array) => {
         const label = Object.keys(current?.[1] ?? {}).map((value) => {
-          return moment(value).format("DD MM YYYY, hh");
+          return moment(value).format("DD-MM-YY, hh");
         });
 
         return [...prev, ...label];
@@ -103,20 +103,6 @@ export function LineChart() {
       };
     }) ?? [];
 
-  const onOptionClick = (e) => {
-    const chart = ChartJS.getChart("chart");
-    if (e.target.value === "All") {
-      chart.update("show");
-    } else if (e.target.value) {
-      chart.update((ctx) => {
-        return coinfilter?.data?.[ctx.datasetIndex].toString() ===
-          e.target.value.toString()
-          ? "show"
-          : "hide";
-      });
-    }
-  };
-
   const handleChange = (e) => {
     setCoinid(e.target.value);
   };
@@ -131,7 +117,7 @@ export function LineChart() {
   );
 
   if (isLoading || isError) {
-    return null;
+    return <Loading />;
   }
 
   return (
@@ -142,16 +128,17 @@ export function LineChart() {
             <select
               className="cd-line-filter"
               name="coins"
-              // onChange={onOptionClick}
               onChange={handleChange}
             >
-              {coinfilter?.data?.results?.map((value) => {
-                return (
-                  <option value={value} key={value}>
-                    {value}
-                  </option>
-                );
-              })}
+              {Object.entries(coinfilter?.data?.results ?? {})?.map(
+                ([key, value]) => {
+                  return (
+                    <option value={key} key={value}>
+                      {value}
+                    </option>
+                  );
+                }
+              )}
             </select>
             &nbsp;
             <select

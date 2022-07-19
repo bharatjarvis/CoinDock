@@ -25,10 +25,10 @@ const wallet = baseApi.injectEndpoints({
       },
     }),
     coins: build.query({
-      query: (params) => {
+      query: () => {
         return {
           url: `/v1/coins/accepted-crypto`,
-          params: { ...params },
+
           method: "get",
         };
       },
@@ -40,5 +40,6 @@ const wallet = baseApi.injectEndpoints({
 
 export default wallet;
 
-export const { useAddWalletMutation, useCoinsQuery: useCoins } = wallet;
+export const { useAddWalletMutation,
+  useCoinsQuery: useCoins } = wallet;
 export const { usePrefetch: useWalletPrefetch } = wallet;

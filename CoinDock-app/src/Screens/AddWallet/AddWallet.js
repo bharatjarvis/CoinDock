@@ -11,17 +11,31 @@ import WalletName from "Shared/Form/WalletFields/WalletName";
 import { countryValidation } from "Shared/Form/Select/Select";
 import { useAddWalletMutation, useCoins } from "App/Api/walletapi";
 import { useNavigate } from "react-router-dom";
-import { useTopperformer } from "App/Api/CoinPerformence/coinperformance";
+import {
+  useLowperformer,
+  usePrimaryCurrency,
+  useTopperformer,
+  useTotalCurrency,
+} from "App/Api/CoinPerformence/coinperformance";
 import { useLineChart } from "App/Api/linechartapi";
+import { usePieChart } from "App/Api/piechartapi";
+import { useCoinCard } from "App/Api/coincardapi";
 
 function AddWallet() {
   const open = useSelector((state) => state.addwallet.open);
   const { refetch: topPerformerRefetch } = useTopperformer();
+  const { refetch: lowPerformerRefetch } = useLowperformer();
   const { refetch: lineChartRefetch } = useLineChart();
-  const { data: coins } = useCoins;
+  const { refetch: pieChartRefetch } = usePieChart();
+  const { refetch: coinCardRefetch } = useCoinCard();
+  const { refetch: totalCurreyRefetch } = useTotalCurrency();
+  const { refetch: primaryCurrencyRefetch } = usePrimaryCurrency();
+
+  const { data: coins } = useCoins();
   console.log(coins);
   const navigate = useNavigate();
   const [wallet] = useAddWalletMutation();
+
   const dispatch = useDispatch();
   const initialValues = {
     coin: "",
@@ -71,6 +85,11 @@ function AddWallet() {
         await wallet({ ...formValues }).unwrap();
         topPerformerRefetch();
         lineChartRefetch();
+        pieChartRefetch();
+        lowPerformerRefetch();
+        coinCardRefetch();
+        totalCurreyRefetch();
+        primaryCurrencyRefetch();
         setformValues(initialValues);
       } catch (errorResponse) {}
     }
@@ -104,11 +123,9 @@ function AddWallet() {
             className="form-control"
             label="Coin*"
             value={formValues.coin}
-            options={[
-              { label: "" },
-              { label: "BitCoin", value: 1 },
-              { label: "Ethereum", value: 2 },
-            ]}
+            options={(coins?.data?.results?.coins ?? []).map((value) => {
+              return { label: value.name, value: value.name };
+            })}
             formErrors={formErrors}
           />
 

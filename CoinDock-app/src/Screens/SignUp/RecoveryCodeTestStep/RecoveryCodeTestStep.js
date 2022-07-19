@@ -92,7 +92,11 @@ function RecoveryCodeTestStep() {
                   </div>
 
                   <div className="col-md-4 offset-md-4 cd-width-unset">
-                    <button className="cd-button" onClick={handleSubmit}>
+                    <button
+                      className="cd-button cd-button-2"
+                      // disabled={!buttonPopup}
+                      onClick={handleSubmit}
+                    >
                       Confirm
                     </button>
                   </div>

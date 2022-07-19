@@ -1,5 +1,8 @@
 import { getUserId } from "App/Auth/helper";
 import baseApi from "./api";
+baseApi.enhanceEndpoints({
+  addTagTypes: ["linechart", "filter", "coinfilter", "coinshortname"],
+});
 const linechartapi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     line: build.query({
@@ -41,8 +44,8 @@ const linechartapi = baseApi.injectEndpoints({
 
     getData: build.mutation({
       query: ({ ...data }) => ({
-        url: `/v1/email`,
-        method: "post",
+        url: `/v1/graph`,
+        method: "get",
         data,
       }),
     }),

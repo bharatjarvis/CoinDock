@@ -6,6 +6,7 @@ import { usePieFilter } from "App/Api/piechartapi";
 import "./PieChart.css";
 import { isError } from "lodash";
 import { Card } from "react-bootstrap";
+import Loading from "Shared/Loading/Loading";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -22,7 +23,7 @@ export const options = {
   responsive: true,
   plugins: {
     legend: {
-      display: false,
+      display: true,
     },
     title: {
       display: true,
@@ -55,7 +56,7 @@ export function PieChart() {
   };
   console.log(piefilter);
   if (isLoading || isError) {
-    return null;
+    return <Loading />;
   }
   return (
     <Card className="cd-pie-chart-card">

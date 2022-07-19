@@ -32,6 +32,7 @@ const Select = ({
     setFieldsTouched(true);
     onInput?.(e);
   };
+  console.log(options);
 
   return (
     <>
@@ -43,7 +44,7 @@ const Select = ({
         onBlur={handleFocus}
       >
         {emptyPlaceHolder && <option />}
-        {options.map(({value,label}, index) => {
+        {options.map(({ value, label }, index) => {
           return (
             <option value={value} key={index} onInput={handleInput}>
               {label}
@@ -57,8 +58,8 @@ const Select = ({
     </>
   );
 };
-Select.defaultProps ={
-  formErrors : {}
+Select.defaultProps = {
+  formErrors: {},
 };
 Select.propTypes = {
   label: propTypes.string,
