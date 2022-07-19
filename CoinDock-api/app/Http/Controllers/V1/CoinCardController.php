@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CoinCardController extends Controller
 {
-    public function index(User $user, Wallet $wallet)
+    public function index(User $user)
     {  
         $coins = $user->wallets->map(function ($wallet) {
             return $wallet->coin;
