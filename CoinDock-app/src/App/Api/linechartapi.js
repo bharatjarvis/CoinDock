@@ -13,8 +13,7 @@ const linechartapi = baseApi.injectEndpoints({
           method: "get",
         };
       },
-
-      provideTags: ["linechart"],
+      providesTags: ["linechart"],
     }),
     filter: build.query({
       query: () => ({
@@ -22,7 +21,7 @@ const linechartapi = baseApi.injectEndpoints({
         method: "get",
       }),
 
-      provideTags: ["filter"],
+      providesTags: ["filter"],
     }),
 
     coinfilter: build.query({
@@ -31,7 +30,7 @@ const linechartapi = baseApi.injectEndpoints({
         method: "get",
       }),
 
-      provideTags: ["coinfilter"],
+      providesTags: ["coinfilter"],
     }),
     coinshortname: build.query({
       query: () => ({
@@ -39,7 +38,7 @@ const linechartapi = baseApi.injectEndpoints({
         method: "get",
       }),
 
-      provideTags: ["coinshortname"],
+      providesTags: ["coinshortname"],
     }),
 
     getData: build.mutation({

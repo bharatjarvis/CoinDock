@@ -12,6 +12,7 @@ import { useLowperformer } from "App/Api/CoinPerformence/coinperformance";
 import { usePrimaryCurrency } from "App/Api/CoinPerformence/coinperformance";
 import { useTotalCurrency } from "App/Api/CoinPerformence/coinperformance";
 import { Card } from "react-bootstrap";
+import { isEmpty, isError } from "lodash";
 function Dashboard() {
   const { data: total } = useTotalCurrency();
   const { data: primary } = usePrimaryCurrency();
@@ -19,6 +20,20 @@ function Dashboard() {
   const { data: low } = useLowperformer();
   console.log({ total, primary, top, low });
 
+  // if (isError || isEmpty(total?.data?.results)) {
+  //   return null;
+  // }
+  // if (isError || isEmpty(primary?.data?.results)) {
+  //   return null;
+  // }
+  // if (isError || isEmpty(top?.data?.results)) {
+  //   return null;
+  // }
+  // if (isError || isEmpty(low?.data?.results)) {
+  //   return null;
+  // }
+  console.log(primary);
+  console.log(top);
   return (
     <React.Fragment>
       <div className="container p-20">
@@ -35,6 +50,7 @@ function Dashboard() {
             <Cards
               name={primary?.data?.results?.heading}
               value={primary?.data?.results?.balance}
+              logo={primary?.data?.results?.img_url}
             />
           )}
 
@@ -42,6 +58,7 @@ function Dashboard() {
             <Cards
               name={top?.data?.results?.heading}
               value={top?.data?.results?.coin_name}
+              logo={top?.data?.results?.img_path}
             />
           )}
 
@@ -49,6 +66,7 @@ function Dashboard() {
             <Cards
               name={low?.data?.results?.heading}
               value={low?.data?.results?.coin_name}
+              logo={low?.data?.results?.img_path}
             />
           )}
         </div>

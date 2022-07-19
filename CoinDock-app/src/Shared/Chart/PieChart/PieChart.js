@@ -4,7 +4,7 @@ import { Pie } from "react-chartjs-2";
 import { usePieChart } from "App/Api/piechartapi";
 import { usePieFilter } from "App/Api/piechartapi";
 import "./PieChart.css";
-import { isError } from "lodash";
+import { isEmpty, isError } from "lodash";
 import { Card } from "react-bootstrap";
 import Loading from "Shared/Loading/Loading";
 
@@ -54,9 +54,11 @@ export function PieChart() {
   const handleChange = (e) => {
     setFilter(e.target.value);
   };
-  console.log(piefilter);
-  if (isLoading || isError) {
+  if (isLoading) {
     return <Loading />;
+  }
+  if (isError || isEmpty(pie?.data?.results)) {
+    return null;
   }
   return (
     <Card className="cd-pie-chart-card">

@@ -1,5 +1,8 @@
 import { getUserId } from "App/Auth/helper";
 import baseApi from "../api";
+baseApi.enhanceEndpoints({
+  addTagTypes: ["total", "primarycurrency","topperformer","lowperformer"],
+});
 const coinperformanceapi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     total: build.query({
@@ -8,7 +11,7 @@ const coinperformanceapi = baseApi.injectEndpoints({
         method: "get",
       }),
 
-      provideTags: ["total"],
+      providesTags: ["total"],
     }),
     primary: build.query({
       query: () => ({
@@ -16,7 +19,7 @@ const coinperformanceapi = baseApi.injectEndpoints({
         method: "get",
       }),
 
-      provideTags: ["primarycurrency"],
+      providesTags: ["primarycurrency"],
     }),
     top: build.query({
       query: () => ({
@@ -24,7 +27,7 @@ const coinperformanceapi = baseApi.injectEndpoints({
         method: "get",
       }),
 
-      provideTags: ["topperformer"],
+      providesTags: ["topperformer"],
     }),
     low: build.query({
       query: () => ({
@@ -32,13 +35,13 @@ const coinperformanceapi = baseApi.injectEndpoints({
         method: "get",
       }),
 
-      provideTags: ["lowperformer"],
+      providesTags: ["lowperformer"],
     }),
 
     getData: build.mutation({
       query: ({ ...data }) => ({
-        url: `/v1/email`,
-        method: "post",
+        url: `/v1/total`,
+        method: "get",
         data,
       }),
     }),

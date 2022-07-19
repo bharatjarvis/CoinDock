@@ -23,16 +23,9 @@ import { useCoinCard } from "App/Api/coincardapi";
 
 function AddWallet() {
   const open = useSelector((state) => state.addwallet.open);
-  const { refetch: topPerformerRefetch } = useTopperformer();
-  const { refetch: lowPerformerRefetch } = useLowperformer();
-  const { refetch: lineChartRefetch } = useLineChart();
-  const { refetch: pieChartRefetch } = usePieChart();
-  const { refetch: coinCardRefetch } = useCoinCard();
-  const { refetch: totalCurreyRefetch } = useTotalCurrency();
-  const { refetch: primaryCurrencyRefetch } = usePrimaryCurrency();
 
   const { data: coins } = useCoins();
-  console.log(coins);
+
   const navigate = useNavigate();
   const [wallet] = useAddWalletMutation();
 
@@ -83,13 +76,7 @@ function AddWallet() {
     } else {
       try {
         await wallet({ ...formValues }).unwrap();
-        topPerformerRefetch();
-        lineChartRefetch();
-        pieChartRefetch();
-        lowPerformerRefetch();
-        coinCardRefetch();
-        totalCurreyRefetch();
-        primaryCurrencyRefetch();
+
         setformValues(initialValues);
       } catch (errorResponse) {}
     }

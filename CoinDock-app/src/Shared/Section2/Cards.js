@@ -24,8 +24,8 @@ const Cards = ({ name, value, logo }) => {
               {/* ) : null} */}
             </Card>
             <div className="cd-coin-card-body">
-              <p className="card-title cd-currency-performance">{name}</p>
-              <p className="card-text cd-currency-value">{value} </p>
+              <p className="card-title cd-currency-performance text-end">{name}</p>
+              <p className="card-text cd-currency-value text-end">{value} </p>
             </div>
           </div>
         </div>

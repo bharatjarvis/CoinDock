@@ -1,5 +1,8 @@
 import { getUserId } from "App/Auth/helper";
 import baseApi from "./api";
+baseApi.enhanceEndpoints({
+  addTagTypes: ["pie", "piefilter"],
+});
 const piechartapi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     pie: build.query({
@@ -8,6 +11,7 @@ const piechartapi = baseApi.injectEndpoints({
         params: { filter_by },
         method: "get",
       }),
+      providesTags: ["pie"],
     }),
     piefilter: build.query({
       query: () => ({
@@ -15,12 +19,12 @@ const piechartapi = baseApi.injectEndpoints({
         method: "get",
       }),
 
-      provideTags: ["piechart"],
+      providesTags: ["piefilter"],
     }),
 
     getData: build.mutation({
       query: ({ ...data }) => ({
-        url: `/v1/email`,
+        url: `/v1/pie-chart`,
         method: "post",
         data,
       }),
