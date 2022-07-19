@@ -119,8 +119,6 @@ class UserController extends AccessTokenController
 			], Response::HTTP_BAD_REQUEST);
 		}
 		$topPerformer = $user->topPerformer();
-		$path = Storage::path('app/public/images/uparrow.png');
-
 		return response([
 			'message' => 'Success',
 			'results' => [
@@ -128,7 +126,7 @@ class UserController extends AccessTokenController
 				'coin_name' => $topPerformer['coin_name'],
 				'coin_id' => $topPerformer['coin_id'],
 				'balance' => $topPerformer['balance'],
-				'image_path' => Storage::path('app/public/images/uparrow.png')
+				'image_path' => Storage::path('public\images\uparrow.png')
 			]
 
 		], Response::HTTP_OK);
@@ -157,7 +155,7 @@ class UserController extends AccessTokenController
 				'coin_name' => $lowPerformer['coin_name'],
 				'coin_id' => $lowPerformer['coin_id'],
 				'balance' => $lowPerformer['balance'],
-				'image_path' => Storage::path('app/public/images/downarrow.png')
+				'image_path' => Storage::path('public\images\downarrow.png')
 			]
 		], Response::HTTP_OK);
 	}
