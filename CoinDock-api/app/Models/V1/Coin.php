@@ -54,11 +54,11 @@ class Coin extends Model
     //Convertion
     public function priceConversion($from, $to, $grouped): float
     {
-        $baseUrl = config('coinapi.coin.api_url');
-        $currencyURL = $baseUrl . config('coinapi.coin.exchange_url');
+        $baseUrl = config('coin.coin.api_url');
+        $currencyURL = $baseUrl . config('coin.coin.exchange_url');
         $cryptConversionURL = str_replace(['{from}', '{to}'], [$from, $to], $currencyURL);
         try {
-            $response = Http::withHeaders(['X-CoinAPI-Key' => config('coinapi.coin.api_key')])->get($cryptConversionURL)['rate'];
+            $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($cryptConversionURL)['rate'];
         } catch (\Throwable $th) {
 
             throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
