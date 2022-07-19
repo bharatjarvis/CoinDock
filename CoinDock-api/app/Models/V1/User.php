@@ -5,7 +5,6 @@ namespace App\Models\V1;
 use App\Enums\V1\TimePeriod;
 use App\Enums\V1\UserStatus;
 use App\Enums\V1\UserType;
-use App\Exceptions\ApiKeyException;
 use App\Http\Requests\V1\ChartRequest;
 use App\Models\V1\{Signup,Setting};
 use App\Models\V1\{Coin};
@@ -111,7 +110,7 @@ class User extends Authenticatable
 
     public function chartData(ChartRequest $request):array
     {
-        $filter_by = $request->filter_by;
+        $filterBy = $request->filter_by;
         $wallets = $this->wallets()->select(['coin_id', 'coins'])
             ->get()
             ->mapToGroups(function ($wallet) {
@@ -120,13 +119,13 @@ class User extends Authenticatable
                 return $coins->sum();
             })->toArray();
 
-        if($filter_by == null || $filter_by == 'coins') {
+        if($filterBy == null || $filterBy == 'coins') {
             return $wallets;
         }
 
         $result = [];
 
-        if($filter_by == 'currency') {
+        if($filterBy == 'currency') {
 
             foreach($wallets as $key => $value) {
 
@@ -154,7 +153,7 @@ class User extends Authenticatable
         return $result;
     }
 
-    public function historicalData(string $coinId, string $range, string $startDate, string $endDate):array
+    public function historicalData(string $coinId, string $range, string $startDate, string $endDate): array
     {
         $baseURL = config('cryptohistoricaldata.coin.api_url').config('cryptohistoricaldata.coin.realtime_url');
 
@@ -163,11 +162,11 @@ class User extends Authenticatable
             [$coinId, $range, $startDate, $endDate],
             $baseURL
         );
-
         $response = Http::withHeaders(
                 ['X-CoinAPI-Key' => config('cryptohistoricaldata.coin.api_key')]
             )->get($baseURLIdReplaced);
-
+        
+        
         return json_decode($response);
     }
 
