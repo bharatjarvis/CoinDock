@@ -21,7 +21,10 @@ function RecoveryCodeTestStep() {
 
   const navigate = useNavigate();
 
-  const { data = [] } = useGetRandomRecoveryCodesQuery();
+  const { data = [] } = useGetRandomRecoveryCodesQuery(
+    {},
+    { refetchOnMountOrArgChange: true }
+  );
 
   const [recoveryTestCodes, { error }] = usePutRecoveryCodesMutation();
 
