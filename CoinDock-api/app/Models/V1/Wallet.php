@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -124,17 +125,13 @@ class Wallet extends Model
         switch ($coin) {
             
             case 'Expanse'||'MOAC':
-                return $response['balance'];
-                break;
+                return Arr::get($response,'balance');
             case 'Aion':
-                return $response['content'][0]['balance'];
-                break;
+                return Arr::get(Arr::get(Arr::get($response,'content'),0),'balance');
             case 'PLSR':
-                return $response['data'][2][4];
-                break;
+                return Arr::get(Arr::get(Arr::get($response,'data'),2),4);
             case 'NEOX':
-                return $response['data'][1][4];
-                break;
+                return Arr::get(Arr::get(Arr::get($response,'data'),1),4);
             default:
                 break;
         }
