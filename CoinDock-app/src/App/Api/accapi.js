@@ -7,8 +7,8 @@ const accapi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     account: build.query({
       query: () => ({
-        url:`/v1/users/${getUserId()}/accounts/profile`,
-        method: "put",
+        url:`/v1/users/${getUserId()}/`,
+        method: "get",
        }),
       providesTags: ['accountDetails']
   }),

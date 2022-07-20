@@ -22,7 +22,6 @@ const handleCardSystem=()=>{
   navigate('/system-settings')
 }
 
-console.log(account)
  const accordianBasedAccountDetails = [
    {
      label:'Profile settings',
