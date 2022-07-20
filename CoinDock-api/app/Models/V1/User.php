@@ -131,7 +131,7 @@ class User extends Authenticatable
         }
         public function chartData(ChartRequest $request): array
         {
-            $filter_by = $request->filter_by;
+            $filterBy = $request->filter_by;
             $wallets = $this->wallets()->select(['coin_id', 'coins'])
                 ->get()
                 ->mapToGroups(function ($wallet) {
@@ -140,33 +140,32 @@ class User extends Authenticatable
                     return $coins->sum();
                 })->toArray();
 
-            if ($filter_by == null || $filter_by == 'coins') {
+            if ($filterBy == null || $filterBy == 'coins') {
                 return $wallets;
             }
 
             $result = [];
 
-            if ($filter_by == 'currency') {
+            if ($filterBy == 'currency') {
 
                 foreach ($wallets as $key => $value) {
 
                     $primaryCurrency = $this->setting->primary_currency;
 
                     $baseURL = config('coin.coin.api_url') . config('coin.coin.exchange_url');
-
+                    
                     $baseURLIdReplaced = str_replace(
                         ['{from}', '{to}'],
                         [$key, $primaryCurrency],
                         $baseURL
                     );
-
+                    
 
                     try {
                         $response = Http::withHeaders([
                             'X-CoinAPI-Key' => config('coin.coin.api_key')
                         ])->get($baseURLIdReplaced)['rate'];
                     } catch (\Throwable $th) {
-
                         throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
                     }
 
