@@ -40,7 +40,7 @@ const handleCardSystem=()=>{
  const handleLogoutClick = async () => {
   try {
     await logout().unwrap();
-    navigate("/");
+    navigate("/login");
   } catch (e) {
   }
 };

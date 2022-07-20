@@ -15,8 +15,8 @@ import SystemSettings from "Screens/Account/settings/SystemSettings";
 import ProfileName from "Screens/Account/Profile/ProfileName";
 import DateofBirth from "Screens/Account/Profile/DateOfBirth";
 import Country from "Screens/Account/Profile/Country";
-import Aemail from "Screens/Account/AccountS.js/Accountemail";
-import Apassword from "Screens/Account/AccountS.js/Accountpassword";
+import Accountemail from "Screens/Account/AccountS.js/Accountemail";
+import Accountpassword from "Screens/Account/AccountS.js/Accountpassword";
 import Primary from "Screens/Account/System.js/Primary";
 import Secondary from "Screens/Account/System.js/Secondary";
 const AuthRoutes = (props) => {
@@ -38,8 +38,8 @@ const AuthRoutes = (props) => {
       <Route path="/profile-dob" element={<DateofBirth/>}/>
       <Route path="/profile-country" element={<Country/>}/>
       <Route path="/account-settings" element={<AccountSettings/>}/>
-      <Route path="/aemail" element={<Aemail/>}/>
-      <Route path="/apassword" element={<Apassword/>}/>
+      <Route path="/account-email" element={<Accountemail/>}/>
+      <Route path="/account-password" element={<Accountpassword/>}/>
       <Route path="/system-settings" element={<SystemSettings/>}/>
       <Route path="/primary" element={<Primary/>}/>
       <Route path="/secondary" element={<Secondary/>}/>
