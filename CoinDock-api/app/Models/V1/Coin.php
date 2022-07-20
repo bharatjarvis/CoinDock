@@ -67,32 +67,33 @@ class Coin extends Model
     }
 
     //get the primary currency value
-    public function getPrimaryCurrency(): float
+    public function getPrimaryCurrency():float
     {
         //$from= 'BTC';
         $user = Auth::user();
-        $grouped = $this->countCoins($user);
+        $grouped = $this->defaultCoin();
         $from = Coin::whereIsDefault(1)->first()?->coin_id;
         $to = $user->setting->whereUserId($user->id)->first()?->primary_currency;
         return $this->priceConversion($from, $to, $grouped);
     }
 
 
-    //get secondary currency value
-    public function getSecondaryCurrency(): float
-    {
+    //Get Secondary Currency
+    public function getSecondaryCurrency():float{
         $user = Auth::user();
         return $this->wallets()->whereUserId($user->id)
             ->whereCoinId($this->id)
             ->sum('balance');
+        
+
     }
 
     //Coin Default Value
-    public function defaultCoin(): float
+    public function defaultCoin():float
     {
         $user = Auth::user();
-        $grouped = $this->getSecondaryCurrency($user);
-        $from = $user->setting->whereUserId($user->id)->first()?->primary_currency;
+        $grouped = $this->getSecondaryCurrency();
+        $from = $user->setting->whereUserId($user->id)->first()?->secondary_currency;
         $to = Coin::whereIsDefault(1)->first()?->coin_id;
         return $this->priceConversion($from, $to, $grouped);
     }
