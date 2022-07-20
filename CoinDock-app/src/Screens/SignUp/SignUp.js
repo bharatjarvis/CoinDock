@@ -19,10 +19,13 @@ import "Shared/common-styles/button.css";
 import { useNavigate } from "react-router-dom";
 import { useRefresh } from "App/Api/auth";
 import Lock from "Shared/images/Lock.png";
+import { useCountry } from "App/Api/accapi";
 function SignUP(props) {
   const navigate = useNavigate();
   const [refresh] = useRefresh();
   const [buttonPopup, setButtonPopup] = useState(false);
+  const { data: countryfilter } = useCountry();
+  console.log("....from signup", countryfilter);
   const [register] = usePostRegisterMutation();
   const [isValid, setValid] = useState(false);
   const initialValues = {
@@ -37,7 +40,7 @@ function SignUP(props) {
   };
   const [formValues, setformValues] = useState(initialValues);
   const [formErrors, setformErrors] = useState({});
-
+  const [filter, setFilter] = useState({});
   const handleChanges = (e) => {
     const { name, value } = e.target;
     setformValues((formValues) => {
@@ -114,7 +117,9 @@ function SignUP(props) {
       errors,
     };
   };
-
+  const handleChange = (e) => {
+    setFilter(e.target.value);
+  };
   const handleSuccessPopupButtonClick = () => {
     refresh()
       .unwrap()
@@ -170,13 +175,15 @@ function SignUP(props) {
                   <Select
                     name="country"
                     label="Country"
-                    value={formValues.country}
-                    options={[
-                      { label: "" },
-                      { label: "India", value: 1 },
-                      { label: "Pakistan", value: 2 },
-                    ]}
+                    onChange={handleChange}
+                    defaultValue={formValues.country}
                     formErrors={formErrors}
+                    options={(
+                      countryfilter?.data?.results?.countries ?? []
+                    ).map((value) => ({
+                      label: value,
+                      key: value,
+                    }))}
                   />
                 </div>
                 <div>
@@ -198,7 +205,7 @@ function SignUP(props) {
                 </div>
 
                 <p className="condition cd-mt-12">
-                  By clicking on confirm, you agreed to the CoinDock terms and
+                  By clicking on confirm, you agree to the CoinDock terms and
                   conditions
                 </p>
                 <div className="d-flex justify-content-end">

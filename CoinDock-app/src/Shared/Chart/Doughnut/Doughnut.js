@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Pie } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import { usePieChart } from "App/Api/piechartapi";
 import { usePieFilter } from "App/Api/piechartapi";
-import "./PieChart.css";
+import "./Doughnut.css";
 import { isEmpty, isError } from "lodash";
 import { Card } from "react-bootstrap";
 import Loading from "Shared/Loading/Loading";
@@ -27,7 +27,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: "Pie Chart",
+      text: "User coins Statastics",
     },
   },
 };
@@ -72,7 +72,7 @@ export function PieChart() {
             );
           })}
         </select>
-        <Pie options={options} data={data} />
+        <Doughnut options={options} data={data} />
       </div>
     </Card>
   );

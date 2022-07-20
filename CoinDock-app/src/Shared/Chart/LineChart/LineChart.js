@@ -71,14 +71,27 @@ export function LineChart() {
   const { data: filter } = useLineFilter();
   const { data: coinfilter } = useCoinFilter();
   const { data: coinshortname } = useCoinShortName();
+
   console.log(coinfilter);
 
   const linedata = Object.entries(line?.data?.results ?? {});
+  const rangefilter = Object.values(filter?.data?.results ?? {}).map(
+    (value) => {
+      return value;
+    }
+  );
   const labels = sortBy(
     uniq(
       linedata?.reduce((prev, current, array) => {
         const label = Object.keys(current?.[1] ?? {}).map((value) => {
-          return moment(value).format("DD-MM-YY, hh");
+          // if (
+          //   rangefilter.find(
+          //     (value) => value.value.toString() === range.toString()
+          //   ).key === "Day"
+          // ) {
+          //   return moment(value).format("DD-MM-YY, hh");
+          // }
+          return moment(value).format("DD-MM-YY");
         });
 
         return [...prev, ...label];
@@ -109,14 +122,6 @@ export function LineChart() {
   const handleRangeChange = (e) => {
     setRange(e.target.value);
   };
-
-  const rangefilter = Object.values(filter?.data?.results ?? {}).map(
-    (value) => {
-      return value;
-    }
-  );
-
-
 
   if (isLoading) {
     return <Loading />;

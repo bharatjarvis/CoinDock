@@ -70,10 +70,10 @@ class Coin extends Model
     //get the primary currency value
     public function getPrimaryCurrency(): float
     {
-        //$from= 'BTC';
+        $from= 'USD';
         $user = Auth::user();
-        $grouped = $this->countCoins($user);
-        $from = Coin::whereIsDefault(1)->first()?->coin_id;
+        $grouped = $this->getSecondaryCurrency();
+        //$from = Coin::whereIsDefault(1)->first()?->coin_id;
         $to = $user->setting->whereUserId($user->id)->first()?->primary_currency;
         return $this->priceConversion($from, $to, $grouped);
     }

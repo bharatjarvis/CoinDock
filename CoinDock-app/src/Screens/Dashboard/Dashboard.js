@@ -2,7 +2,7 @@ import React from "react";
 
 import "Shared/common-styles/space.css";
 import "./Dashboard.css";
-import { PieChart } from "Shared/Chart/PieChart/PieChart";
+import { PieChart } from "Shared/Chart/Doughnut/Doughnut";
 import { LineChart } from "Shared/Chart/LineChart/LineChart";
 import "Shared/common-styles/space.css";
 import Cards from "Shared/Section2/Cards";
@@ -13,25 +13,14 @@ import { usePrimaryCurrency } from "App/Api/CoinPerformence/coinperformance";
 import { useTotalCurrency } from "App/Api/CoinPerformence/coinperformance";
 import { Card } from "react-bootstrap";
 import { isEmpty, isError } from "lodash";
+import Loading from "Shared/Loading/Loading";
 function Dashboard() {
   const { data: total } = useTotalCurrency();
   const { data: primary } = usePrimaryCurrency();
   const { data: top } = useTopperformer();
   const { data: low } = useLowperformer();
-  console.log({ total, primary, top, low });
-
-  // if (isError || isEmpty(total?.data?.results)) {
-  //   return null;
-  // }
-  // if (isError || isEmpty(primary?.data?.results)) {
-  //   return null;
-  // }
-  // if (isError || isEmpty(top?.data?.results)) {
-  //   return null;
-  // }
-  // if (isError || isEmpty(low?.data?.results)) {
-  //   return null;
-  // }
+  console.log(top?.data?.results?.image_path);
+  console.log(primary?.data?.results?.img_url);
   return (
     <React.Fragment>
       <div className="container p-20">
@@ -47,7 +36,7 @@ function Dashboard() {
           {primary && (
             <Cards
               name={primary?.data?.results?.heading}
-              value={primary?.data?.results?.balance}
+              value={primary?.data?.results?.balance.toFixed(2)}
               logo={primary?.data?.results?.img_url}
             />
           )}

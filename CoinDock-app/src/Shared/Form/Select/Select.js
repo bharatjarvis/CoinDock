@@ -32,7 +32,6 @@ const Select = ({
     setFieldsTouched(true);
     onInput?.(e);
   };
-  console.log(options);
 
   return (
     <>

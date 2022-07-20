@@ -13,5 +13,6 @@
 @media screen {
   .cd_performance_wrap {
     max-width: 400px;
+    margin-top: 30px;
   }
 }

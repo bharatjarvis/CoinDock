@@ -168,7 +168,7 @@ class UserController extends AccessTokenController
 				'coin_name' => $lowPerformer['coin_name'],
 				'coin_id' => $lowPerformer['coin_id'],
 				'balance' => $lowPerformer['balance'],
-				'image_path' => Storage::path('public\images\downarrow.png')
+				'image_path' => Storage::path("public\images\downarrow.png")
 			]
 		], Response::HTTP_OK);
 	}
