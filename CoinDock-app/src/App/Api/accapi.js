@@ -7,11 +7,11 @@ const accapi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     account: build.query({
       query: () => ({
-        url: `/v1/users/${getUserId()}/accounts/profile`,
-        method: "put",
-      }),
-      providesTags: ["accountDetails"],
-    }),
+        url:`/v1/users/${getUserId()}/`,
+        method: "get",
+       }),
+      providesTags: ['accountDetails']
+  }),
 
     currencyfilter: build.query({
       query: () => ({

@@ -3,7 +3,7 @@ import { useAccountData } from 'App/Api/accapi';
 import { useNavigate } from "react-router-dom";
 import Password from 'Shared/Password/Password';
 import { passwordValidation } from 'Shared/Password/Password';
-function Apassword () {
+function Accountpassword () {
   const [formErrors, setformErrors] = useState({});
   const initialValues = {
     password: '',
@@ -70,4 +70,4 @@ function Apassword () {
       </div>
   )
 }
-export default Apassword
+export default Accountpassword

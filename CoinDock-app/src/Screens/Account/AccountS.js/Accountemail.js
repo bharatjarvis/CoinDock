@@ -3,7 +3,7 @@ import { useAccount } from "App/Api/accapi";
 import Email from "Shared/Form/Email/Email";
 import { useAccountData } from 'App/Api/accapi';
 import { emailValidation } from 'Shared/Form/Email/Email';
-function Aemail () {
+function Accountemail () {
   const { data: account}= useAccount();
   const accountDetails =account?.data?.results?.user || {};
   const [formErrors, setformErrors] = useState({});
@@ -63,4 +63,4 @@ function Aemail () {
       </div>
   )
 }
-export default Aemail
+export default Accountemail

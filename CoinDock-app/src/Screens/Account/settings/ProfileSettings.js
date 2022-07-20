@@ -1,5 +1,6 @@
 import React from "react";
 import "../Account.css"
+import moment from "moment";
 import { useAccount } from "App/Api/accapi";
 import { FaEdit } from 'react-icons/fa';
 import { FaArrowLeft} from 'react-icons/fa';
@@ -12,7 +13,6 @@ function ProfileSettings (){
   const { data: account}= useAccount();
   const accountDetails = account?.data?.results?.user || {};
     const navigate = useNavigate();
- console.log(accountDetails);
  const fields =[
   {
     label:'Name',
@@ -30,14 +30,9 @@ function ProfileSettings (){
      type:'edit'
     },
 ]
-const dateStr = accountDetails.date_of_birth
-const formatDate =(dateStr)=> {
-  const [year, month, day] = dateStr.split('-');
-  let newDate = `${day}-${month}-${year}`;
-  return newDate
-};
-const formattedDate = formatDate(dateStr);
-console.log(formattedDate);
+
+const date = moment(accountDetails.date_of_birth).format("DD-MM-YYYY");
+
     const handleProfileName =() =>{
         navigate("/profile-name")
     }
@@ -65,7 +60,7 @@ console.log(formattedDate);
                field.fieldKey === 'dateofbirth' ?
                 <Card className="cd-cardstyle bg-light mb-3">
                   <Card.Body className="d-flex justify-content-between">
-                    {field.label}:{formattedDate}
+                    {field.label}:{date}
                     <span type ="submit" onClick={() => {handleProfileDob()}}><FaEdit /></span>
                     </Card.Body>
                 </Card>

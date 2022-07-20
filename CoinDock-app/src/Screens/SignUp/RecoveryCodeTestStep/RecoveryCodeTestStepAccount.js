@@ -29,7 +29,7 @@ function RecoveryCodeTestStepAccount() {
     try {
       await recoveryTestCodes({ userId: 1, ...formValues }).unwrap();
 
-      navigate("/dashboard");
+      navigate("/account");
     } catch (error) {
       if (error.status === 400) {
         setButtonPopup(true);

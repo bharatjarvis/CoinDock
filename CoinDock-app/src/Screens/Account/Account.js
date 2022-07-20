@@ -22,7 +22,6 @@ const handleCardSystem=()=>{
   navigate('/system-settings')
 }
 
-console.log(account)
  const accordianBasedAccountDetails = [
    {
      label:'Profile settings',
@@ -41,7 +40,7 @@ console.log(account)
  const handleLogoutClick = async () => {
   try {
     await logout().unwrap();
-    navigate("/");
+    navigate("/login");
   } catch (e) {
   }
 };
