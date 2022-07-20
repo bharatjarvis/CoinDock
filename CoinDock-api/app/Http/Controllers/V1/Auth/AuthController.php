@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 class AuthController extends AccessTokenController
 {
     use BuildPassportTokens;
-    
+
     /**
      * Login
      */
@@ -32,7 +32,6 @@ class AuthController extends AccessTokenController
                 'message' => 'Login Successfull.',
                 'results' => [
                     'user' => UserResource::make($user)->resolve(),
-                    info($response['access_token'])
                 ]
             ],
             Response::HTTP_OK,
@@ -60,7 +59,7 @@ class AuthController extends AccessTokenController
     public function refresh(Request $request)
     {
         $response = $this->requestRefreshGrant($request);
-       
+
         return response(['message' => 'Refreshed token successfully'], Response::HTTP_OK, [
             'Access-Token' => $response['access_token'],
             'Refresh-Token' => $response['refresh_token'],

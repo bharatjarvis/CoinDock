@@ -39,6 +39,7 @@ const wallet = baseApi.injectEndpoints({
     }),
     coins: build.query({
       query: () => {
+        console.log("check");
         return {
           url: `/v1/coins/accepted-crypto`,
 

@@ -32,8 +32,6 @@ function Dashboard() {
   // if (isError || isEmpty(low?.data?.results)) {
   //   return null;
   // }
-  console.log(primary);
-  console.log(top);
   return (
     <React.Fragment>
       <div className="container p-20">
@@ -58,7 +56,7 @@ function Dashboard() {
             <Cards
               name={top?.data?.results?.heading}
               value={top?.data?.results?.coin_name}
-              logo={top?.data?.results?.img_path}
+              logo={top?.data?.results?.image_path}
             />
           )}
 
@@ -66,7 +64,7 @@ function Dashboard() {
             <Cards
               name={low?.data?.results?.heading}
               value={low?.data?.results?.coin_name}
-              logo={low?.data?.results?.img_path}
+              logo={low?.data?.results?.image_path}
             />
           )}
         </div>
