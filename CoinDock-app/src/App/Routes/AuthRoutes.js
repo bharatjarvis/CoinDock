@@ -15,8 +15,8 @@ import SystemSettings from "Screens/Account/settings/SystemSettings";
 import ProfileName from "Screens/Account/Profile/ProfileName";
 import DateofBirth from "Screens/Account/Profile/DateOfBirth";
 import Country from "Screens/Account/Profile/Country";
-import Aemail from "Screens/Account/AccountS.js/Aemail";
-import Apassword from "Screens/Account/AccountS.js/Apassword";
+import Aemail from "Screens/Account/AccountS.js/Accountemail";
+import Apassword from "Screens/Account/AccountS.js/Accountpassword";
 import Primary from "Screens/Account/System.js/Primary";
 import Secondary from "Screens/Account/System.js/Secondary";
 const AuthRoutes = (props) => {
