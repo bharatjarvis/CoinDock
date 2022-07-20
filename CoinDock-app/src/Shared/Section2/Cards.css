@@ -75,7 +75,7 @@
 
 .card-single {
   display: flex;
-  position: relative;
+
   width: 250px;
 
   height: 130px;
@@ -84,7 +84,7 @@
 
   background: #feffff;
 
-  padding: 2rem;
+  /* padding: 2rem; */
 
   border: 1px solid #def2f1;
 
@@ -93,7 +93,6 @@
   align-items: flex-end;
 
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-  font-family: Roboto, Helvetica, Arial, sans-serif;
 
   cursor: pointer;
 
@@ -115,6 +114,6 @@
   position: absolute;
   height: 50px;
   width: 50px;
-  bottom: 95px;
-  left: 12px;
+  bottom: 12px;
+  margin-right: 170px;
 }
