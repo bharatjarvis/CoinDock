@@ -30,43 +30,40 @@ class handleCoins extends Command
     public function handle()
     {
         //fetching coins from API
-        $AssetsUrl = config('assets.coin_api.base_path') . config('assets.coin_api.assets_path');
-        $assets = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
-            ->get($AssetsUrl);
-        $assetArray = collect(json_decode($assets));
+        $assetsUrl = config('coin.coin.api_url') . config('coin.coin.api_url.assets_path');
+        $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_url.key')])
+            ->get($assetsUrl);
+        $assetArray = collect(json_decode($response));
 
         //Coins that we are accepting
         $acceptedAssets = array_keys(config('assets.accepted_coins'));
+
+        $defaultCoin = config('assets.default_coin');
 
         // // //Inserting Coins That we have fetched from the Api
         foreach ($assetArray->lazy(100) as $asset) {
             Coin::updateOrCreate([
                 'coin_id' => $asset->asset_id], [
                 'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
-                'is_crypto' => $asset->type_is_crypto
+                'is_crypto' => $asset->type_is_crypto,
+                'status' => $asset->name == $acceptedAssets ? true : false,
+                'is_default' => $asset->name == $defaultCoin ? true : false
             ]);
-
-            Coin::whereIn('name', $acceptedAssets)->update(['status' => 1]);
         }
-
-        $coins = Coin::all();
-
 
         // //Inserting Image paths for Coins
-        $assetImagesUrl = config('assets.coin_api.base_path') . config('assets.coin_api.asset_images');
-        $assetImages = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
+        $assetImagesUrl = config('coin.coin.api_url.base_path') . config('coin.coin.api_url.asset_images');
+        $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_url.key')])
             ->get($assetImagesUrl);
-        $assetImagesArray = json_decode($assetImages);
+        $assetImagesArray = json_decode($response);
 
-        foreach ($assetImagesArray as $image){
-            foreach ($coins as $coin){
-                if($coin->coin_id == $image->asset_id){
-                    $coin->update(['img_path'=>$image->url]);
-                }
+        foreach ($assetImagesArray as $image) {
+            if($coin = Coin::whereCoinId($image->asset_id)->first()){
+                $coin->update(['img_path'=>$image->url]);
             }
         }
-        
-        $this->info('Coins Updated ');
+
+        $this->info('Coins updated');
         return Command::SUCCESS;
     }
 }

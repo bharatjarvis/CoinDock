@@ -153,13 +153,13 @@ class User extends Authenticatable
                     $primaryCurrency = $this->setting->primary_currency;
 
                     $baseURL = config('coin.coin.api_url') . config('coin.coin.exchange_url');
-                    
+
                     $baseURLIdReplaced = str_replace(
                         ['{from}', '{to}'],
                         [$key, $primaryCurrency],
                         $baseURL
                     );
-                    
+
 
                     try {
                         $response = Http::withHeaders([
@@ -321,7 +321,7 @@ class User extends Authenticatable
         {
             $walletBalanceInUSD = $this->wallets()->sum('balance');
             $baseUrl = config('coin.coin.api_url');
-            $exchangeURL = $baseUrl . config('coin.coin.usd_to_Btc');
+            $exchangeURL = $baseUrl . config('coin.coin.usd_to_btc');
             try {
                 $usdToBtC = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($exchangeURL)['rate'];
             } catch (\Throwable $th) {
@@ -364,7 +364,7 @@ class User extends Authenticatable
             $walletCoinIds = $this->wallets()->pluck('coin_id');
             $coins = Coin::select(['coin_id', 'name'])->whereIn('id', $walletCoinIds)->get();
             $baseUrl = config('coin.coin.api_url');
-            $currencyURL = $baseUrl . config('coin.coin.top_performer');
+            $currencyURL = $baseUrl . config('coin.coin.crypto_to_usd');
             $topPerformerBal = PHP_INT_MIN;
             $coinName = null;
             $shortName = null;
@@ -394,7 +394,7 @@ class User extends Authenticatable
             $walletCoinIds = $this->wallets()->pluck('coin_id');
             $coins = Coin::select(['coin_id', 'name'])->whereIn('id', $walletCoinIds)->get();
             $baseUrl = config('coin.coin.api_url');
-            $currencyURL = $baseUrl . config('coin.coin.top_performer');
+            $currencyURL = $baseUrl . config('coin.coin.crypto_to_usd');
             $lowPerformerBal = PHP_INT_MAX;
             $coinName = null;
             $shortName = null;
