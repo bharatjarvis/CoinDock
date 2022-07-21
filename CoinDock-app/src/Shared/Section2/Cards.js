@@ -31,7 +31,9 @@ const Cards = ({ name, value, logo }) => {
     //     </div>
     //   </div>
     // </Card>
-    <Card className="card-single">
+    // <div className="container">
+    //   <div className="row">
+    <Card className="card-individual">
       <Card className="coinperformance-inside-card">
         {/* {logo ? ( */}
         <img src={logo} alt="coin_logo" className="cd_coin_logo_name"></img>
@@ -40,6 +42,8 @@ const Cards = ({ name, value, logo }) => {
       <p className="cd-coin-name">{name}</p>
       <p className="cd-coin-value">{value} </p>
     </Card>
+    //   </div>
+    // </div>
   );
 };
 export default Cards;

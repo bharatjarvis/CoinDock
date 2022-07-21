@@ -23,39 +23,47 @@ function Dashboard() {
   console.log(primary?.data?.results?.img_url);
   return (
     <React.Fragment>
-      <div className="container p-20">
-        <div className="cd-performance-wrap justify-content-space-between">
-          {total && (
-            <Cards
-              name={total?.data?.results?.heading}
-              value={total?.data?.results?.balance}
-              logo={total?.data?.results?.img_url}
-            />
-          )}
+      <div className="container p-2">
+        <div className="container cd-performance-wrap justify-content-space-between">
+        <div className="col-md-12">
+          <div className="row m-1">
+              <div className="col-md-3">{total && (
+              <Cards
+                name={total?.data?.results?.heading}
+                value={total?.data?.results?.balance}
+                logo={total?.data?.results?.img_url}
+              />
+            )}</div>
+              <div className="col-md-3">{primary && (
+              <Cards
+                name={primary?.data?.results?.heading}
+                value={primary?.data?.results?.balance.toFixed(2)}
+                logo={primary?.data?.results?.img_url}
+              />
+            )}</div>
+              <div className="col-md-3">{top && (
+              <Cards
+                name={top?.data?.results?.heading}
+                value={top?.data?.results?.coin_name}
+                logo={top?.data?.results?.image_path}
+              />
+            )}</div>
+              <div className="col-md-3">{low && (
+              <Cards
+                name={low?.data?.results?.heading}
+                value={low?.data?.results?.coin_name}
+                logo={low?.data?.results?.image_path}
+              />
+            )}</div>
 
-          {primary && (
-            <Cards
-              name={primary?.data?.results?.heading}
-              value={primary?.data?.results?.balance.toFixed(2)}
-              logo={primary?.data?.results?.img_url}
-            />
-          )}
 
-          {top && (
-            <Cards
-              name={top?.data?.results?.heading}
-              value={top?.data?.results?.coin_name}
-              logo={top?.data?.results?.image_path}
-            />
-          )}
 
-          {low && (
-            <Cards
-              name={low?.data?.results?.heading}
-              value={low?.data?.results?.coin_name}
-              logo={low?.data?.results?.image_path}
-            />
-          )}
+
+
+
+
+            </div>
+          </div>
         </div>
         <div className="container justify-content-center">
           <div class="row">
