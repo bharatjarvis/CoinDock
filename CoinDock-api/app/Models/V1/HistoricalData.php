@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class HistoricalData extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'coin_id',
+        'coin_date',
+        'rate_close'
+    ];
 }
