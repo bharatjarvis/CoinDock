@@ -36,12 +36,12 @@ class handleWalletBalance extends Command
             $coinName = $wallet->coin->name;
 
             //Fetching balance from basepath
-            $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_url.key')])
+            $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])
             ->get($baseUrl);
             $coins = $wallet->coins($response,$coinName);
 
             //converting balance to USD
-            $balanceInUsd = $wallet->cryptoToUsd($coinName);
+            $balanceInUsd = $wallet->cryptoToUsd();
 
 
             //Updating Wallet

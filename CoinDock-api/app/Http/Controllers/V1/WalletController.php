@@ -10,18 +10,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class WalletController extends Controller
 {
-    public function create(User $user, AddWalletRequest $request){
-        $wallet = new Wallet();
-        $walletId = $request->wallet_id;
-        
-        $walletCheck = $wallet->whereWalletId($walletId)->first();
-        if ($walletCheck) {
+    public function create(User $user, AddWalletRequest $request)
+    {
+
+        if ($user->wallets()->whereWalletId($request->wallet_id)->exists()) {
             return response([
                 'message' => 'Wallet Already Added'
             ], Response::HTTP_BAD_REQUEST);
         }
-        
-        else if(!$wallet->addWallet($user ,$request)){
+
+        if(!Wallet::addWallet($user, $request)){
             return response([
                 'message'=>'Wallet Cannot be added '
             ],Response::HTTP_BAD_REQUEST);

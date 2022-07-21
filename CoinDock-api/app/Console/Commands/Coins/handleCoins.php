@@ -31,7 +31,7 @@ class handleCoins extends Command
     {
         //fetching coins from API
         $assetsUrl = config('coin.coin.api_url') . config('coin.coin.api_url.assets_path');
-        $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_url.key')])
+        $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])
             ->get($assetsUrl);
         $assetArray = collect(json_decode($response));
 
@@ -52,8 +52,8 @@ class handleCoins extends Command
         }
 
         // //Inserting Image paths for Coins
-        $assetImagesUrl = config('coin.coin.api_url.base_path') . config('coin.coin.api_url.asset_images');
-        $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_url.key')])
+        $assetImagesUrl = config('coin.coin.api_url') . config('coin.coin.api_url.asset_images');
+        $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])
             ->get($assetImagesUrl);
         $assetImagesArray = json_decode($response);
 

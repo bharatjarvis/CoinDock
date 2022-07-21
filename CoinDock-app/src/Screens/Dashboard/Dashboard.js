@@ -14,13 +14,15 @@ import { useTotalCurrency } from "App/Api/CoinPerformence/coinperformance";
 import { Card } from "react-bootstrap";
 import { isEmpty, isError } from "lodash";
 import Loading from "Shared/Loading/Loading";
+import DownArrow from "Shared/images/downarrow.png";
+import UpArrow from "Shared/images/uparrow.png";
+
 function Dashboard() {
   const { data: total } = useTotalCurrency();
   const { data: primary } = usePrimaryCurrency();
   const { data: top } = useTopperformer();
   const { data: low } = useLowperformer();
-  console.log(top?.data?.results?.image_path);
-  console.log(primary?.data?.results?.img_url);
+
   return (
     <React.Fragment>
       <div className="container p-20">
@@ -44,8 +46,8 @@ function Dashboard() {
           {top && (
             <Cards
               name={top?.data?.results?.heading}
-              value={top?.data?.results?.coin_name}
-              logo={top?.data?.results?.image_path}
+              value={top?.data?.results?.coin_name.replace()}
+              logo={UpArrow}
             />
           )}
 
@@ -53,7 +55,7 @@ function Dashboard() {
             <Cards
               name={low?.data?.results?.heading}
               value={low?.data?.results?.coin_name}
-              logo={low?.data?.results?.image_path}
+              logo={DownArrow}
             />
           )}
         </div>

@@ -30,16 +30,13 @@ class Wallet extends Model
     ];
 
     //wallet creation
-    public function WalletCreate($userId, $walletId, $userCoinId, $coins, $balanceInUsd)
+    public function walletCreate($userId, $walletId, $userCoinId)
     {
-        $this->create([
+        return $this->create([
             'user_id' => $userId,
             'wallet_id' => $walletId,
             'coin_id' => $userCoinId,
-            'coins' => $coins,
-            'balance' => $balanceInUsd
         ]);
-        return true;
     }
 
     public function user()
@@ -85,7 +82,7 @@ class Wallet extends Model
 
         foreach ($coinList as $coinKey => $coinData) {
             if ($coinName == $coinKey) {
-                $basePath = Arr::get($coinData, $coinKey.'bal_path');
+                $basePath = Arr::get($coinData, 'bal_path');
                 if ($coinName == 'Expanse' || $coinName == 'MOAC') {
                     return $basePath;
                 }
@@ -96,16 +93,16 @@ class Wallet extends Model
     }
 
     //Converting every crypto currency into USD
-    public function cryptoToUsd($coin)
+    public function cryptoToUsd()
     {
         $assetsConfig = config('assets.accepted_coins');
-        $assetShortName = $assetsConfig[$coin]['coin_id'];
+        $assetShortName = $assetsConfig[$this->coin->name]['coin_id'];
 
-        $cryptConversionBasePath = config('coin.coin.api_url.base_path') . config('coin.coin_api.crypto_to_usd');
+        $cryptConversionBasePath = config('coin.coin.api_url') . config('coin.coin.crypto_to_usd');
         $cryptConversionPath = str_replace('{id}', $assetShortName, $cryptConversionBasePath);
 
         try {
-            $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_url.key')])
+            $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])
                 ->get($cryptConversionPath)['rate'];
         } catch (\Throwable $th) {
             throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
@@ -115,13 +112,14 @@ class Wallet extends Model
     }
 
     //Fetching number of coins through the Response
-    public function totalCoins($response, $coin)
+    public function totalCoins($response)
     {
+        $coin = $this->coin->name;
+
         $responseArray = json_decode($response, true);
         $responseArrayKeys = array_keys($responseArray);
 
         switch ($coin) {
-
             case 'Expanse'||'MOAC':
                 return Arr::get($response,'balance');
             case 'Aion':
@@ -153,17 +151,19 @@ class Wallet extends Model
     }
 
     //Adding Wallet for Particular User
-    public function addWallet(User $user, Request $request)
+    public static function addWallet(User $user, Request $request)
     {
         $walletId = $request->wallet_id;
 
         $userCoin = $request->coin;
         $userCoinId = Coin::whereName($userCoin)->first()?->id;
 
-        $balanceInUsd = $this->cryptoToUsd($userCoin);
-        $basePath = $this->basePath($userCoinId, $walletId);
-        $response = Http::get($basePath);
+        $wallet = self::walletCreate($user->id, $walletId, $userCoinId);
 
+        $balanceInUsd = $wallet->cryptoToUsd();
+        $basePath = $wallet->basePath();
+
+        $response = Http::get($basePath);
 
         if ($userCoin == 'Expanse') {
             $response = Http::post($basePath, ['addr' => $walletId, 'options' => ['balance']]);
@@ -171,13 +171,14 @@ class Wallet extends Model
             $response = Http::post($basePath, ['addr' => $walletId, 'options' => ['balance']]);
         }
 
-        if ($this->isJson($response)) {
-            $coins = $this->totalCoins($response, $userCoin);
+        if ($wallet->isJson($response)) {
+            $coins = $wallet->totalCoins($response);
             if (is_numeric($coins)) {
                 if ($userCoin == 'Expanse') {
-                    return $this->WalletCreate($user->id, $walletId, $userCoinId, $coins, $response['balanceUSD']);
+                    return $wallet->update(['balance' => $response['balanceUSD'],
+                    'coins' => $coins]);
                 }
-                return $this->WalletCreate($user->id, $walletId, $userCoinId, $coins, $balanceInUsd * $coins);
+                return $wallet->update(['balance' => $balanceInUsd * $coins, 'coins' => $coins]);
             }
         }
         return true;
