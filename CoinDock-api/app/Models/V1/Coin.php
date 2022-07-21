@@ -27,6 +27,11 @@ class Coin extends Model
         return $this->hasMany(Wallet::class);
     }
 
+    public function historicaldata()
+    {
+        return $this->hasMany(HistoricalData::class);
+    }
+
 
     //Conversions that we are accepting
     public static function currencyConversions()
