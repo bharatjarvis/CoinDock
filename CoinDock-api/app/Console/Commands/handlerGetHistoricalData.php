@@ -2,11 +2,14 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\ApiKeyException;
 use App\Models\V1\HistoricalData;
 use App\Models\V1\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpFoundation\Response;
 
 class handlerGetHistoricalData extends Command
 {
@@ -29,12 +32,32 @@ class handlerGetHistoricalData extends Command
      *
      * @return int
      */
-    public function handle(){
-        $acceptedCoins = config('coin.accepted_coins');
-        foreach($acceptedCoins as $acceptedCoin){
-            $this->handleCoinData($acceptedCoin);
+
+    
+
+    public function historicalData(string $coinId, string $range, string $startDate, string $endDate): array
+    {
+        $baseURL = config('coin.coin.api_url') . config('coin.coin.realtime_url');
+        $baseURLIdReplaced = str_replace(
+            ['{coin1}', '{range}', '{start_date}', '{end_date}'],
+            [$coinId, $range, $startDate, $endDate],
+            $baseURL
+        );
+
+        try {
+            $response = Http::withHeaders(
+                ['X-CoinAPI-Key' => config('coin.coin.api_key')]
+                )->get($baseURLIdReplaced);
+            return json_decode($response);
+        } catch (\Throwable $th) {
+            throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
         }
-        echo " Data Fetched for all coins";
+    }
+
+    public function handle(){
+        $encryptionKeys = config('coin.keys');
+        $encryptionKeys= explode(',',$encryptionKeys);
+        echo collect($encryptionKeys);
     }
 
     
