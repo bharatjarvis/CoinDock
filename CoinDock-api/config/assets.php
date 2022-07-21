@@ -159,13 +159,6 @@ return [
         ]
     ],
 
-    'coin_api' => [
-        'base_path' => env('COINAPI_URL'),
-        'key' => env('COINAPI_KEY'),
-        'assets_path' => '/assets',
-        'asset_images' => '/assets/icons/BTC',
-        'crypto_usd'=>'/exchangerate/{id}/USD'  
-
-    ]
+    'default_coin' => env('DEFAULT_COIN', 'BTC')
 
 ];

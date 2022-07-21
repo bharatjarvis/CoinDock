@@ -15,11 +15,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RecoveryKeyController extends Controller
 {
-    public function random()
+    public function random(User $user)
     {
         return response(
             [
-                'result' => Arr::random(
+                'results' => Arr::random(
                     range(1, config('random_keys.recovery.block_length')),
                     config('random_keys.recovery.test_block_length'),
                 ),
@@ -37,7 +37,7 @@ class RecoveryKeyController extends Controller
 
         $recovery = new RecoveryKey();
         $recoveryKey = $recovery->store($user,$request);
-        
+
         return response(
             [
                 'message' => 'Recovery codes created successfully',
@@ -50,7 +50,7 @@ class RecoveryKeyController extends Controller
         );
     }
 
-    
+
     public function download(User $user)
     {
         $recovery = new RecoveryKey();
@@ -83,5 +83,5 @@ class RecoveryKeyController extends Controller
         return $recoveryKey->recoveryKeys($user, $request);
     }
 
-    
+
 }

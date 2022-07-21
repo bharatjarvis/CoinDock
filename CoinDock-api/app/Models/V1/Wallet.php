@@ -64,10 +64,10 @@ class Wallet extends Model
     {
         $satsToCoins = config('assets.accepted_coins');
 
-        return ($satsToCoins[$coin]['sats_to_crypt'] * $sathosis);
+        return Arr::get($satsToCoins, $coin.'sats_to_crypt') * $sathosis;
     }
 
-    //function to check whether the response is in json or not 
+    //function to check whether the response is in json or not
     public function isJson($string)
     {
         json_decode($string);
@@ -75,26 +75,24 @@ class Wallet extends Model
     }
 
     //getting basePath for for checking Wallet Balance
-    public function basePath($userCoinId, $walletId)
+    public function basePath()
     {
-        $userCoinName = Coin::whereId($userCoinId)->first()?->name;
+        $coinName = $this->coin->name;
 
         $coinList = config('assets.accepted_coins');
-        $coinKeys =  array_keys($coinList);
 
         $basePath = '';
 
-        foreach ($coinKeys as $coin) {
-            if ($userCoinName == $coin) {
-                $basePath  = config('assets.accepted_coins');
-                $basePath = $basePath[$coin]['bal_path'];
-                if ($userCoinName == 'Expanse' || $userCoinName == 'MOAC') {
+        foreach ($coinList as $coinKey => $coinData) {
+            if ($coinName == $coinKey) {
+                $basePath = Arr::get($coinData, $coinKey.'bal_path');
+                if ($coinName == 'Expanse' || $coinName == 'MOAC') {
                     return $basePath;
                 }
             }
         }
 
-        return $basePath = str_replace('{id}', $walletId, $basePath);
+        return str_replace('{id}', $this->wallet_id, $basePath);
     }
 
     //Converting every crypto currency into USD
@@ -103,11 +101,11 @@ class Wallet extends Model
         $assetsConfig = config('assets.accepted_coins');
         $assetShortName = $assetsConfig[$coin]['coin_id'];
 
-        $cryptConversionBasePath = config('assets.coin_api.base_path') . config('assets.coin_api.crypto_usd');
+        $cryptConversionBasePath = config('coin.coin.api_url.base_path') . config('coin.coin_api.crypto_to_usd');
         $cryptConversionPath = str_replace('{id}', $assetShortName, $cryptConversionBasePath);
 
         try {
-            $response = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
+            $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_url.key')])
                 ->get($cryptConversionPath)['rate'];
         } catch (\Throwable $th) {
             throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
@@ -123,7 +121,7 @@ class Wallet extends Model
         $responseArrayKeys = array_keys($responseArray);
 
         switch ($coin) {
-            
+
             case 'Expanse'||'MOAC':
                 return Arr::get($response,'balance');
             case 'Aion':

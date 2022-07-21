@@ -3,7 +3,7 @@
 namespace App\Http\Resources\V1;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Currency\Util\CurrencySymbolUtil;
+use Currency\Util\CurrencySymbolUtil; 
 
 class UserResource extends JsonResource
 {

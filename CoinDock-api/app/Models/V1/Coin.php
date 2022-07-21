@@ -4,6 +4,7 @@ namespace App\Models\V1;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Exceptions\ApiKeyException;
@@ -69,7 +70,6 @@ class Coin extends Model
     //get the primary currency value
     public function getPrimaryCurrency():float
     {
-        //$from= 'BTC';
         $user = Auth::user();
         $grouped = $this->defaultCoin();
         $from = Coin::whereIsDefault(1)->first()?->coin_id;
@@ -84,7 +84,7 @@ class Coin extends Model
         return $this->wallets()->whereUserId($user->id)
             ->whereCoinId($this->id)
             ->sum('balance');
-        
+
 
     }
 

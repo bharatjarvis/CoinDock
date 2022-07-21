@@ -1,0 +1,70 @@
+.text-danger {
+  font-size: 12px;
+  margin-bottom: 0px;
+}
+.condition {
+  color: black;
+
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 160%;
+}
+.form-control {
+  outline: none;
+  box-shadow: none;
+}
+.form-control:focus {
+  outline: none;
+  box-shadow: none;
+  border: 1px solid #0b5ed7;
+}
+
+.container > form {
+  width: 70%;
+  border: 1px solid #dfdfdf;
+  padding: 20px;
+  border-radius: 5px;
+  background: #fff;
+}
+
+.line {
+  width: 118px;
+  height: 2px;
+  margin-top: 45px;
+  background: #c4c4c4;
+  margin-bottom: 45 px;
+}
+.para {
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 160%;
+
+  color: #000000;
+}
+.cd-lock-image {
+  width: 55px;
+
+  left: 22px;
+  top: 83px;
+
+  margin-top: 1cm;
+}
+.cd-account-heading {
+  position: absolute;
+  width: 252px;
+  height: 29px;
+  left: 22px;
+  top: 32px;
+
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 160%;
+
+  color: #000000;
+}

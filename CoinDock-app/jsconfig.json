@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "src": ["./src/*"],
+      "crypto": ["./node_modules/crypto-js"]
+    }
+  },
+  "include": ["src"]
+}

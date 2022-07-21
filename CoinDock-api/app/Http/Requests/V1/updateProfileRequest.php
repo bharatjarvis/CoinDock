@@ -26,6 +26,7 @@ class UpdateProfileRequest extends FormRequest
         return [
 
             'first_name' => 'string|max:45',
+            'date_of_birth'=>'date_format:d-m-Y',
             'last_name' => 'string|max:45',
             'country' => 'string',
             'title' => 'string',

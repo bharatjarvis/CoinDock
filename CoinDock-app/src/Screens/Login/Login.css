@@ -1,0 +1,11 @@
+.content {
+  height: 100%;
+  width: 100%;
+  padding: 43px;
+}
+
+.cd-login-error {
+  color: red;
+  font-size: 18px;
+  text-align: center;
+}
