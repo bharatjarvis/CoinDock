@@ -2,19 +2,30 @@ import { useCoinCard } from "App/Api/coincardapi";
 import React from "react";
 import LinesEllipsis from "react-lines-ellipsis";
 
+import { PlusCircle } from "react-bootstrap-icons";
+import { openPopup } from "Screens/AddWallet/AddWalletSlice";
+import { useDispatch } from "react-redux";
 import "./Wallet.css";
 
 const Wallet = () => {
   const { data: coincard, isLoading, isError } = useCoinCard();
+  const dispatch = useDispatch();
 
   if (isLoading || isError) {
     return null;
   }
 
   return (
-    <div class="cd-wallet-card cd-pagetitle mt-5000 container">
-      <div class="card p-3">
-        <h6>Wallets</h6>
+    <div className="cd-wallet-card cd-pagetitle mt-5000 container">
+      <div className="card p-3">
+        <div
+          className="cd-row-space-between"
+          style={{ display: "flex", width: "100%" }}
+        >
+          <h6>Wallets</h6>
+          <PlusCircle size={30} onClick={() => dispatch(openPopup())} />
+        </div>
+
         {Object.values(coincard?.data?.results ?? {}).map((value) => {
           return (
             <div className="card-block">

@@ -3,23 +3,19 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\Controller;
-use App\Models\V1\{User, Signup};
+use App\Models\V1\User;
 
 class SignupController extends Controller
 {
     public function info(User $user)
     {
-        //$signUp = Signup::find($user->id);
-
-        $signUp = Signup::whereUserId($user->id)->get()->first();
-
         $result = [
             'step_1_completed' => false,
             'step_2_completed' => false,
             'step_3_completed' => false,
         ];
 
-        $stepCount = $signUp->step_count;
+        $stepCount = $user->signup->step_count;
 
         if ($stepCount == 0) {
             return response(

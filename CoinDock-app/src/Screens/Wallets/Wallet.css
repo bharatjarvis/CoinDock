@@ -22,3 +22,8 @@
   border-radius: 1rem;
   box-shadow: 0rem 0.25rem 1.25rem 0rem; */
 }
+
+.cd-row-space-between {
+  justify-content: space-between;
+  align-items: center;
+}

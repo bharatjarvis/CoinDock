@@ -72,7 +72,7 @@ class Coin extends Model
     {
         $user = Auth::user();
         $grouped = $this->defaultCoin();
-        $from = Coin::whereIsDefault(1)->first()?->coin_id;
+        $from = config('assets.default_coin');
         $to = $user->setting->whereUserId($user->id)->first()?->primary_currency;
         return $this->priceConversion($from, $to, $grouped);
     }
@@ -94,7 +94,7 @@ class Coin extends Model
         $user = Auth::user();
         $grouped = $this->getSecondaryCurrency();
         $from = $user->setting->whereUserId($user->id)->first()?->secondary_currency;
-        $to = Coin::whereIsDefault(1)->first()?->coin_id;
+        $to = config('assets.default_coin');
         return $this->priceConversion($from, $to, $grouped);
     }
 }

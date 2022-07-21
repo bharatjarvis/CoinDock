@@ -31,7 +31,7 @@ Route::group(['prefix' => 'users'], function () {
 Route::middleware('auth:api')
     ->prefix('users')
     ->group(function () {
-        Route::get('/titles', [UserController::class, 'usersTitles']);
+        Route::get('/titles', [UserController::class, 'userTitles']);
 
         Route::group(['prefix' => '{user}', 'middleware' => 'can:index,user'], function () {
 

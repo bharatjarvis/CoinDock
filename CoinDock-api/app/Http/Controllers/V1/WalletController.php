@@ -21,12 +21,12 @@ class WalletController extends Controller
 
         if(!Wallet::addWallet($user, $request)){
             return response([
-                'message'=>'Wallet Cannot be added '
+                'message' => 'Wallet Cannot be added'
             ],Response::HTTP_BAD_REQUEST);
         }
 
         return response([
-            'message'=>'Wallet Added Successfully '
+            'message' => 'Wallet Added Successfully'
         ],Response::HTTP_OK);
     }
 }

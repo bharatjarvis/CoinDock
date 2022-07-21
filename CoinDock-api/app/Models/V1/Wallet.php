@@ -175,8 +175,10 @@ class Wallet extends Model
             $coins = $wallet->totalCoins($response);
             if (is_numeric($coins)) {
                 if ($userCoin == 'Expanse') {
-                    return $wallet->update(['balance' => $response['balanceUSD'],
-                    'coins' => $coins]);
+                    return $wallet->update([
+                        'balance' => $response['balanceUSD'],
+                        'coins' => $coins
+                    ]);
                 }
                 return $wallet->update(['balance' => $balanceInUsd * $coins, 'coins' => $coins]);
             }
@@ -186,6 +188,6 @@ class Wallet extends Model
 
     public function coin()
     {
-        return $this->belongsTo('App\Models\V1\Coin', 'coin_id', 'id');
+        return $this->belongsTo(Coin::class, 'coin_id', 'id');
     }
 }
