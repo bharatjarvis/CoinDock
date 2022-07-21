@@ -425,4 +425,10 @@ class User extends Authenticatable
         {
             return $this->hasOne(Setting::class, 'user_id', 'id');
         }
+
+        public function userHistoricalData()
+        {
+            return $this->hasMany(HistoricalData::class);
+        }
+
 }
