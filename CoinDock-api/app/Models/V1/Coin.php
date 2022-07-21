@@ -32,14 +32,14 @@ class Coin extends Model
     //Conversions that we are accepting
     public static function currencyConversions()
     {
-        return self::whereStatusAndIsCrypto(1,0)->get();
+        return self::whereStatusAndIsCrypto(1,0)->orderBy('name','asc')->get();
     }
 
 
     //showing crypto coins that we are accepting
     public static function acceptedCryptoCoins()
     {
-        return self::whereStatusAndIsCrypto(1,1)->get();
+        return self::whereStatusAndIsCrypto(1,1)->orderBy('name','asc')->get();
     }
 
 
@@ -68,32 +68,32 @@ class Coin extends Model
     }
 
     //get the primary currency value
-    public function getPrimaryCurrency(): float
+    public function getPrimaryCurrency():float
     {
-        $from= 'USD';
         $user = Auth::user();
-        $grouped = $this->getSecondaryCurrency();
-        //$from = Coin::whereIsDefault(1)->first()?->coin_id;
+        $grouped = $this->defaultCoin();
+        $from = Coin::whereIsDefault(1)->first()?->coin_id;
         $to = $user->setting->whereUserId($user->id)->first()?->primary_currency;
         return $this->priceConversion($from, $to, $grouped);
     }
 
 
-    //get secondary currency value
-    public function getSecondaryCurrency(): float
-    {
+    //Get Secondary Currency
+    public function getSecondaryCurrency():float{
         $user = Auth::user();
         return $this->wallets()->whereUserId($user->id)
             ->whereCoinId($this->id)
             ->sum('balance');
+
+
     }
 
     //Coin Default Value
-    public function defaultCoin(): float
+    public function defaultCoin():float
     {
         $user = Auth::user();
-        $grouped = $this->getSecondaryCurrency($user);
-        $from = $user->setting->whereUserId($user->id)->first()?->primary_currency;
+        $grouped = $this->getSecondaryCurrency();
+        $from = $user->setting->whereUserId($user->id)->first()?->secondary_currency;
         $to = Coin::whereIsDefault(1)->first()?->coin_id;
         return $this->priceConversion($from, $to, $grouped);
     }

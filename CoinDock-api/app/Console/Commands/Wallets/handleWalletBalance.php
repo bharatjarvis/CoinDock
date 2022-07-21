@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands\Wallets;
 
-use App\Models\V1\Coin;
 use App\Models\V1\Wallet;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
@@ -31,23 +30,22 @@ class handleWalletBalance extends Command
     public function handle()
     {
         $wallets = Wallet::all();
-        foreach ($wallets as $wallet){
+        foreach ($wallets->lazy(100) as $wallet) {
 
-            $baseUrl = $wallet->basePath($wallet->coin_id,$wallet->wallet_id);
-            $coinName = Coin::whereId($wallet->coin_id)->first();
-            $coinName = $coinName->name;
+            $baseUrl = $wallet->basePath();
+            $coinName = $wallet->coin->name;
 
             //Fetching balance from basepath
-            $response = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
+            $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])
             ->get($baseUrl);
             $coins = $wallet->coins($response,$coinName);
 
             //converting balance to USD
-            $balanceInUsd = $wallet->cryptoToUsd($coinName);
+            $balanceInUsd = $wallet->cryptoToUsd();
 
 
-            //Updating Wallet 
-            $wallet->balance=($coins*$balanceInUsd);
+            //Updating Wallet
+            $wallet->balance= $coins * $balanceInUsd;
             $wallet->coins = $coins;
             $wallet->save();
 
@@ -58,4 +56,3 @@ class handleWalletBalance extends Command
 
     }
 }
-

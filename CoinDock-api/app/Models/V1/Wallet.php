@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -29,16 +30,13 @@ class Wallet extends Model
     ];
 
     //wallet creation
-    public function WalletCreate($userId, $walletId, $userCoinId, $coins, $balanceInUsd)
+    public function walletCreate($userId, $walletId, $userCoinId)
     {
-        $this->create([
+        return $this->create([
             'user_id' => $userId,
             'wallet_id' => $walletId,
             'coin_id' => $userCoinId,
-            'coins' => $coins,
-            'balance' => $balanceInUsd
         ]);
-        return true;
     }
 
     public function user()
@@ -63,10 +61,10 @@ class Wallet extends Model
     {
         $satsToCoins = config('assets.accepted_coins');
 
-        return ($satsToCoins[$coin]['sats_to_crypt'] * $sathosis);
+        return Arr::get($satsToCoins, $coin.'sats_to_crypt') * $sathosis;
     }
 
-    //function to check whether the response is in json or not 
+    //function to check whether the response is in json or not
     public function isJson($string)
     {
         json_decode($string);
@@ -74,40 +72,38 @@ class Wallet extends Model
     }
 
     //getting basePath for for checking Wallet Balance
-    public function basePath($userCoinId, $walletId)
+    public function basePath()
     {
-        $userCoinName = Coin::whereId($userCoinId)->first()?->name;
+        $coinName = $this->coin->name;
 
         $coinList = config('assets.accepted_coins');
-        $coinKeys =  array_keys($coinList);
 
         $basePath = '';
 
-        foreach ($coinKeys as $coin) {
-            if ($userCoinName == $coin) {
-                $basePath  = config('assets.accepted_coins');
-                $basePath = $basePath[$coin]['bal_path'];
-                if ($userCoinName == 'Expanse') {
+        foreach ($coinList as $coinKey => $coinData) {
+            if ($coinName == $coinKey) {
+                $basePath = Arr::get($coinData, 'bal_path');
+                if ($coinName == 'Expanse' || $coinName == 'MOAC') {
                     return $basePath;
                 }
             }
         }
 
-        return $basePath = str_replace('{id}', $walletId, $basePath);
+        return str_replace('{id}', $this->wallet_id, $basePath);
     }
 
     //Converting every crypto currency into USD
-    public function cryptoToUsd($coin)
+    public function cryptoToUsd()
     {
         $assetsConfig = config('assets.accepted_coins');
-        $assetShortName = $assetsConfig[$coin]['coin_id'];
+        $assetShortName = $assetsConfig[$this->coin->name]['coin_id'];
 
-        $cryptConversionBasePath = config('assets.coin_api.base_path') . config('assets.coin_api.crypto_usd');
+        $cryptConversionBasePath = config('coin.coin.api_url') . config('coin.coin.crypto_to_usd');
         $cryptConversionPath = str_replace('{id}', $assetShortName, $cryptConversionBasePath);
 
         try {
-            $response = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
-            ->get($cryptConversionPath)['rate'];
+            $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])
+                ->get($cryptConversionPath)['rate'];
         } catch (\Throwable $th) {
             throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
         }
@@ -116,14 +112,26 @@ class Wallet extends Model
     }
 
     //Fetching number of coins through the Response
-    public function totalCoins($response, $coin)
+    public function totalCoins($response)
     {
+        $coin = $this->coin->name;
+
         $responseArray = json_decode($response, true);
         $responseArrayKeys = array_keys($responseArray);
 
-        if ($coin == 'Expanse') {
-            return $response['balance'];
+        switch ($coin) {
+            case 'Expanse'||'MOAC':
+                return Arr::get($response,'balance');
+            case 'Aion':
+                return Arr::get(Arr::get(Arr::get($response,'content'),0),'balance');
+            case 'PLSR':
+                return Arr::get(Arr::get(Arr::get($response,'data'),2),4);
+            case 'NEOX':
+                return Arr::get(Arr::get(Arr::get($response,'data'),1),4);
+            default:
+                break;
         }
+
         foreach ($responseArrayKeys as $jsonKey) {
             if ($jsonKey == 'balance' || $jsonKey == 'data' || $jsonKey == 'result') {
 
@@ -143,29 +151,34 @@ class Wallet extends Model
     }
 
     //Adding Wallet for Particular User
-    public function addWallet(User $user, Request $request)
+    public static function addWallet(User $user, Request $request)
     {
         $walletId = $request->wallet_id;
 
         $userCoin = $request->coin;
         $userCoinId = Coin::whereName($userCoin)->first()?->id;
 
-        $balanceInUsd = $this->cryptoToUsd($userCoin);
+        $wallet = self::walletCreate($user->id, $walletId, $userCoinId);
 
-        $basePath = $this->basePath($userCoinId, $walletId);
+        $balanceInUsd = $wallet->cryptoToUsd();
+        $basePath = $wallet->basePath();
+
         $response = Http::get($basePath);
 
         if ($userCoin == 'Expanse') {
             $response = Http::post($basePath, ['addr' => $walletId, 'options' => ['balance']]);
+        } elseif ($userCoin == 'MOAC') {
+            $response = Http::post($basePath, ['addr' => $walletId, 'options' => ['balance']]);
         }
 
-        if ($this->isJson($response)) {
-            $coins = $this->totalCoins($response, $userCoin);
+        if ($wallet->isJson($response)) {
+            $coins = $wallet->totalCoins($response);
             if (is_numeric($coins)) {
                 if ($userCoin == 'Expanse') {
-                    return $this->WalletCreate($user->id, $walletId, $userCoinId, $coins, $response['balanceUSD']);
+                    return $wallet->update(['balance' => $response['balanceUSD'],
+                    'coins' => $coins]);
                 }
-                return $this->WalletCreate($user->id, $walletId, $userCoinId, $coins, $balanceInUsd * $coins);
+                return $wallet->update(['balance' => $balanceInUsd * $coins, 'coins' => $coins]);
             }
         }
         return true;

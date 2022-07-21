@@ -119,7 +119,17 @@ return [
         ],
         'PLSR'=>[
             'coin_id' => 'PLSR',
-            'bal_path' => 'https://mainnet-api.theoan.com/aion/dashboard/getAccountDetails?accountAddress={id}',
+            'bal_path' => 'https://explorer.pulsarcoin.org/ext/getaddresstxs/{id}/0/50/internal',
+            'img_path' => ''
+        ],
+        'NEOX'=>[
+            'coin_id' => 'NEOX',
+            'bal_path' => 'https://explorer.neoxa.net/ext/getaddresstxs/{id}/0/50/internal',
+            'img_path' => ''
+        ],
+        'MOAC'=>[
+            'coin_id' => 'MOAC',
+            'bal_path' => 'https://explorer.moac.io/web3relay',
             'img_path' => ''
         ],
         'US Dollar' => [
@@ -149,13 +159,6 @@ return [
         ]
     ],
 
-    'coin_api' => [
-        'base_path' => env('COINAPI_URL'),
-        'key' => env('COINAPI_KEY'),
-        'assets_path' => '/assets',
-        'asset_images' => '/assets/icons/BTC',
-        'crypto_usd'=>'/exchangerate/{id}/USD'  
-
-    ]
+    'default_coin' => env('DEFAULT_COIN', 'BTC')
 
 ];

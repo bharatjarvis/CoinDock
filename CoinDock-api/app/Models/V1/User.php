@@ -131,7 +131,7 @@ class User extends Authenticatable
         }
         public function chartData(ChartRequest $request): array
         {
-            $filter_by = $request->filter_by;
+            $filterBy = $request->filter_by;
             $wallets = $this->wallets()->select(['coin_id', 'coins'])
                 ->get()
                 ->mapToGroups(function ($wallet) {
@@ -140,13 +140,13 @@ class User extends Authenticatable
                     return $coins->sum();
                 })->toArray();
 
-            if ($filter_by == null || $filter_by == 'coins') {
+            if ($filterBy == null || $filterBy == 'coins') {
                 return $wallets;
             }
 
             $result = [];
 
-            if ($filter_by == 'currency') {
+            if ($filterBy == 'currency') {
 
                 foreach ($wallets as $key => $value) {
 
@@ -166,7 +166,6 @@ class User extends Authenticatable
                             'X-CoinAPI-Key' => config('coin.coin.api_key')
                         ])->get($baseURLIdReplaced)['rate'];
                     } catch (\Throwable $th) {
-
                         throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
                     }
 
@@ -322,7 +321,7 @@ class User extends Authenticatable
         {
             $walletBalanceInUSD = $this->wallets()->sum('balance');
             $baseUrl = config('coin.coin.api_url');
-            $exchangeURL = $baseUrl . config('coin.coin.usd_to_Btc');
+            $exchangeURL = $baseUrl . config('coin.coin.usd_to_btc');
             try {
                 $usdToBtC = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($exchangeURL)['rate'];
             } catch (\Throwable $th) {
@@ -365,7 +364,7 @@ class User extends Authenticatable
             $walletCoinIds = $this->wallets()->pluck('coin_id');
             $coins = Coin::select(['coin_id', 'name'])->whereIn('id', $walletCoinIds)->get();
             $baseUrl = config('coin.coin.api_url');
-            $currencyURL = $baseUrl . config('coin.coin.top_performer');
+            $currencyURL = $baseUrl . config('coin.coin.crypto_to_usd');
             $topPerformerBal = PHP_INT_MIN;
             $coinName = null;
             $shortName = null;
@@ -395,7 +394,7 @@ class User extends Authenticatable
             $walletCoinIds = $this->wallets()->pluck('coin_id');
             $coins = Coin::select(['coin_id', 'name'])->whereIn('id', $walletCoinIds)->get();
             $baseUrl = config('coin.coin.api_url');
-            $currencyURL = $baseUrl . config('coin.coin.top_performer');
+            $currencyURL = $baseUrl . config('coin.coin.crypto_to_usd');
             $lowPerformerBal = PHP_INT_MAX;
             $coinName = null;
             $shortName = null;
