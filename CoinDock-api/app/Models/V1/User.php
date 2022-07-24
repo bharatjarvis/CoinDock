@@ -10,9 +10,7 @@ use App\Http\Requests\V1\ChartRequest;
 use App\Models\V1\{Signup, Setting};
 use App\Models\V1\{Coin};
 use App\Http\Requests\V1\CreateUserRequest;
-use App\Http\Requests\V1\updatePasswordRequest;
 use App\Http\Requests\V1\UpdateProfileRequest;
-use App\Http\Resources\V1\UserResource;
 use App\Http\Requests\V1\GraphRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -156,8 +154,6 @@ class User extends Authenticatable
                         [$key, $primaryCurrency],
                         $baseURL
                     );
-                    
-
                     try {
                         $response = Http::withHeaders([
                             'X-CoinAPI-Key' => config('coin.coin.api_key')

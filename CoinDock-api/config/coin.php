@@ -14,15 +14,6 @@ return[
         'filter_url'=> '/exchangerate/history/periods'
     ],
     
-    'accepted_coins'=>[
-
-        'BTC','ETH','ETC','RVN','FIRO','FLUX','ERG',
-
-        'CLO','BTCZ','LTC','TON','DASH','AE','EXP','VTC',
-
-        'CFX','EGEM','GRLC','AION','UBQ'
-
-    ],
 
     'keys'=>env('COINAPI_KEY_LIST')
 
