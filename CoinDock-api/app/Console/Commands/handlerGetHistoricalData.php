@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Console\Commands;
+use Illuminate\Support\Str;
 
 use App\Exceptions\ApiKeyException;
 use App\Models\V1\Coin;
@@ -65,23 +66,26 @@ class handlerGetHistoricalData extends Command
         foreach($responses as $response) {    
             HistoricalData::updateOrCreate([
                 'coin_id' => $acceptedCoin,
-                'coin_date' => $response->time_period_end,
+                'coin_date' => Str::substr($response->time_period_end,0,10),
+                'time' => Str::substr($response->time_period_end,11,8),
                 'rate_close' => $response->rate_close,
             ]);
         }
         echo "base case completed";
         for($i=0;$i<=91;$i++){
             $lastRow = DB::table('historical_data')->orderBy('id', 'DESC')->first();
-            $lastRowDate = substr($lastRow->coin_date, 0, strpos($lastRow->coin_date, ".0000000Z"));
+            $lastRowDate = $lastRow->coin_date.'T'.$lastRow->time;
             $responses = json_decode($this->historicalData( $acceptedCoin, $range, $lastRowDate, $endDate,$encryptionKey));
             foreach($responses as $response) {    
                 HistoricalData::updateOrCreate([
                     'coin_id' => $acceptedCoin,
-                    'coin_date' => $response->time_period_end,
+                    'coin_date' => Str::substr($response->time_period_end,0,10),
+                    'time' =>Str::substr($response->time_period_end,11,8),
                     'rate_close' => $response->rate_close,
                 ]);
             }
-            $count++;        
+            $count++;    
+            echo "\n dONE ".$acceptedCoin." ".$count;    
         }
         echo "\n Data Fetched Successfully for ".$acceptedCoin;
     }

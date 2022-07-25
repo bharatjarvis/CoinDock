@@ -1,17 +1,13 @@
 <?php
 
 namespace App\Console\Commands;
-
-use App\Exceptions\ApiKeyException;
 use App\Models\V1\Coin;
+use Illuminate\Support\Str;
 use App\Models\V1\HistoricalData;
-
 use App\Console\Commands\handlerGetHistoricalData;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
-use Symfony\Component\HttpFoundation\Response;
+
 
 class Hourlydata extends Command
 {
@@ -39,7 +35,8 @@ class Hourlydata extends Command
         foreach($responses as $response) {    
             HistoricalData::updateOrCreate([
                 'coin_id' => $acceptedCoin,
-                'coin_date' => $response->time_period_end,
+                'coin_date' => Str::substr($response->time_period_end,0,10),
+                'time' => Str::substr($response->time_period_end,11,8),
                 'rate_close' => $response->rate_close,
             ]);
         }

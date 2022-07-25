@@ -11,7 +11,8 @@ class HistoricalData extends Model
     protected $fillable = [
         'coin_id',
         'coin_date',
-        'rate_close'
+        'time',
+        'rate_close',
     ];
 
 
@@ -24,6 +25,5 @@ class HistoricalData extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 
 }

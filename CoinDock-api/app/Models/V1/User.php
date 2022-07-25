@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models\V1;
-
+use Illuminate\Support\Str;
 use App\Enums\V1\TimePeriod;
 use App\Enums\V1\UserStatus;
 use App\Enums\V1\UserType;
@@ -209,18 +209,7 @@ class User extends Authenticatable
         }
 
 
-        public function graphData(string $range, string $startDate, string $endDate, string $coinId): array
-        {
-            $result = [];
-            $coinIds = $this->getCoinId($coinId);
-            foreach ($coinIds as $coinId) {
-                $response = $this->historicalData($coinId, $range, $startDate, $endDate);
-                $result[$coinId] = array_column($response, 'rate_close', 'time_period_end');
-            }
-            return $result;
-        }
-
-        public function graph(GraphRequest $request): array
+        public function graph(GraphRequest $request)
         {
             $coinId = Arr::get($request, 'coin_id');
 
@@ -229,12 +218,13 @@ class User extends Authenticatable
             }
 
             $timePeriod = $request->range;
+            
             $endDate = str_replace(' ', 'T', Carbon::now()->toDateTimeString());
             switch ($timePeriod) {
                 case TimePeriod::Day:
                     $range = '1HRS';
                     $startDate = str_replace(' ', 'T', Carbon::now()->subDay(1)->toDateTimeString());
-                    return $this->graphData($range, $startDate, $endDate, $coinId);
+                    return $this->dbDay($range, $startDate, $endDate, $coinId);
 
                 case TimePeriod::Weekly:
                     $range = '1DAY';
@@ -284,6 +274,32 @@ class User extends Authenticatable
                     return $this->graphData($range, $startDate, $endDate, $coinId);
             }
         }
+
+
+        public function dbDay(string $range, string $startDate, string $endDate, string $coinId)
+        {
+            $dbData = HistoricalData::select(['rate_close','coin_date','time'])->whereCoinId($coinId)->where('coin_date','=',Str::substr($endDate,0,10))->get();
+            $result = [];
+            foreach($dbData as $data){
+                array_push($result,[$data->coin_date.'T'.$data->time=>$data->rate_close]);
+            }
+            return $result;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         public function recoveryKeys()
         {
