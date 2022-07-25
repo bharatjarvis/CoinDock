@@ -178,6 +178,7 @@ function SignUP(props) {
                     onChange={handleChange}
                     defaultValue={formValues.country}
                     formErrors={formErrors}
+                    emptyPlaceHolder={true}
                     options={(
                       countryfilter?.data?.results?.countries ?? []
                     ).map((value) => ({

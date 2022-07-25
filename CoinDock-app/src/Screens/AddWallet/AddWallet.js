@@ -114,6 +114,7 @@ function AddWallet() {
               return { label: value.name, value: value.name };
             })}
             formErrors={formErrors}
+            emptyPlaceHolder={true}
           />
 
           <WalletName

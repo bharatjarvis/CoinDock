@@ -1,5 +1,5 @@
 import baseApi from "./api";
-
+import { getUserId } from "App/Auth/helper";
 const signup = baseApi.injectEndpoints({
   endpoints: (build) => ({
     postRegister: build.mutation({
@@ -29,10 +29,23 @@ const signup = baseApi.injectEndpoints({
         return response;
       },
     }),
+    signupsteps: build.query({
+      query: (params) => {
+        return {
+          url: `/v1/users/${getUserId()}/signup/info`,
+
+          method: "get",
+        };
+      },
+      providesTags: ["signupsteps"],
+    }),
   }),
 });
 
 export default signup;
 
 export const { usePostRegisterMutation } = signup;
-export const { usePrefetch: useSignupPrefetch } = signup;
+export const {
+  usePrefetch: useSignupPrefetch,
+  useSignupstepsQuery: useSignupSteps,
+} = signup;

@@ -30,7 +30,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleWare) =>
     getDefaultMiddleWare({
       serializableCheck: false,
-    }).concat([thunk, baseApi.middleware, auth.middleware, logger]),
+    }).concat([thunk, baseApi.middleware, auth.middleware]),
 });
 
 setupListeners(store.dispatch);

@@ -42,7 +42,7 @@ const Select = ({
         defaultValue={value}
         onBlur={handleFocus}
       >
-        {emptyPlaceHolder && <option />}
+        {emptyPlaceHolder && <option hidden={true} />}
         {options.map(({ value, label }, index) => {
           return (
             <option value={value} key={index} onInput={handleInput}>

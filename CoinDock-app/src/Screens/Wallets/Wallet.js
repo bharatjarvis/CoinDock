@@ -1,6 +1,7 @@
 import { useCoinCard } from "App/Api/coincardapi";
 import React from "react";
-import LinesEllipsis from "react-lines-ellipsis";
+
+import EllipseNumber from "Shared/EllipeseText";
 
 import "./Wallet.css";
 
@@ -33,7 +34,13 @@ const Wallet = () => {
                   </div>
                   <div className="col-md-2">
                     <div className="photo-box">
-                      <h6 className="text-end">{value?.BTC_coin}</h6>
+                      <EllipseNumber
+                        component="h6"
+                        text={value?.BTC_coin?.toString() ?? ""}
+                        className="text-end"
+                        maxLetters={4}
+                      />
+
                       <p className="mb-2 text-muted text-end">BTC</p>
                     </div>
                   </div>
@@ -48,13 +55,17 @@ const Wallet = () => {
                       <h6 className="text-end">
                         {value?.primary_currency.toFixed(2)}
                       </h6>
-                      <p className="mb-2 text-muted text-end">INR</p>
+                      <p className="mb-2 text-muted text-end">
+                        {value?.primary_currency_code}
+                      </p>
                     </div>
                   </div>
                   <div className="col-md-2">
                     <div className="photo-box">
                       <h6 className="text-end">{value?.secondary_currency}</h6>
-                      <p className="mb-2 text-muted text-end">USD</p>
+                      <p className="mb-2 text-muted text-end">
+                        {value?.secondary_currency_code}
+                      </p>
                     </div>
                   </div>
                 </div>

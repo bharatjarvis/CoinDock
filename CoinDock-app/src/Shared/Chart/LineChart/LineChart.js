@@ -57,6 +57,13 @@ export const options = {
         display: false,
       },
     },
+    y: {
+      grid: {
+        display: true,
+
+        borderDash: [5, 5],
+      },
+    },
   },
 };
 
@@ -80,23 +87,21 @@ export function LineChart() {
       return value;
     }
   );
-  const labels = sortBy(
-    uniq(
-      linedata?.reduce((prev, current, array) => {
-        const label = Object.keys(current?.[1] ?? {}).map((value) => {
-          // if (
-          //   rangefilter.find(
-          //     (value) => value.value.toString() === range.toString()
-          //   ).key === "Day"
-          // ) {
-          //   return moment(value).format("DD-MM-YY, hh");
-          // }
-          return moment(value).format("DD-MM-YY");
-        });
+  const labels = uniq(
+    linedata?.reduce((prev, current, array) => {
+      const label = Object.keys(current?.[1] ?? {}).map((value) => {
+        if (
+          rangefilter?.find(
+            (value) => value.value.toString() === range.toString()
+          )?.key === "Day"
+        ) {
+          return moment(value).format("DD-MM-YY, hh");
+        }
+        return moment(value).format("DD-MM-YY");
+      });
 
-        return [...prev, ...label];
-      }, [])
-    )
+      return [...prev, ...label];
+    }, [])
   );
 
   const allDatas =
