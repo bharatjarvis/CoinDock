@@ -36,9 +36,9 @@ class CoinController extends Controller
                 'results' => $coins
             ],
             Response::HTTP_OK
-        ); 
+        );
     }
-    
+
 
     /**
      * Show the form for creating a new resource.
@@ -49,12 +49,12 @@ class CoinController extends Controller
     {
 
         $coin = Coin::create([
-        'name'=>$request->name,
-        'coin_id'=>$request->coin_id,
-        'is_crypto'=>$request->is_crypto,
-        'status'=>$request->status,
-        'is_default'=>$request->is_default,
-        'img_path'=>$request->img_path
+            'name'=>$request->name,
+            'coin_id'=>$request->coin_id,
+            'is_crypto'=>$request->is_crypto,
+            'status'=>$request->status,
+            'is_default'=>$request->is_default,
+            'img_path'=>$request->img_path
         ]);
 
         $coin->save();

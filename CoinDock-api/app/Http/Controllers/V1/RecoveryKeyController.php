@@ -9,7 +9,6 @@ use App\Http\Resources\V1\RecoveryCodeResource;
 use App\Models\V1\{User, RecoveryKey};
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -35,8 +34,7 @@ class RecoveryKeyController extends Controller
     public function create(User $user, CreateRecoveryKeyRequest $request)
     {
 
-        $recovery = new RecoveryKey();
-        $recoveryKey = $recovery->store($user,$request);
+        $recoveryKey = RecoveryKey::store($user,$request);
 
         return response(
             [
@@ -53,9 +51,9 @@ class RecoveryKeyController extends Controller
 
     public function download(User $user)
     {
-        $recovery = new RecoveryKey();
+        $recoveryKey = $user->recoveryKey()->latest()->first();
 
-        $data = $recovery->download($user);
+        $data = $recoveryKey->download();
         $pdf = Pdf::loadview('myPDF', $data);
         $now = Carbon::now()->format('Y-m-d');
 
@@ -80,8 +78,26 @@ class RecoveryKeyController extends Controller
             );
         }
 
-        return $recoveryKey->recoveryKeys($user, $request);
-    }
+        if($recoveryKey->recoveryKeys($request)) {
+            return response(
+                [
+                    'message' => 'Recovery codes matched successfully',
+                    'result' => [
+                        'completed' => 4,
+                    ],
+                ],
+                Response::HTTP_OK
+            );
+        }
 
+        return response(
+            [
+                'error' => [
+                    'message' => __("recovery-code.attempt-{$user->recovery_attempts}"),
+                ],
+            ],
+            Response::HTTP_BAD_REQUEST
+        );
+    }
 
 }

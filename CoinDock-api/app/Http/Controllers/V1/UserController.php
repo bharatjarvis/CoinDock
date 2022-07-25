@@ -3,15 +3,11 @@
 namespace App\Http\Controllers\V1;
 
 use App\Http\Controllers\V1\Auth\BuildPassportTokens;
-use App\Http\Requests\V1\CreateUserRequest;
-use App\Http\Requests\V1\updateProfileRequest;
+use App\Http\Requests\V1\{CreateUserRequest, updateProfileRequest};
 use App\Http\Resources\V1\UserResource;
-use App\Models\V1\Coin;
-use App\Models\V1\User;
-use Illuminate\Support\Facades\Http;
+use App\Models\V1\{Coin, User};
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Storage;
 
 class UserController extends AccessTokenController
 {
@@ -24,8 +20,7 @@ class UserController extends AccessTokenController
 	 */
 	public function create(CreateUserRequest $request)
 	{
-		$user = new User();
-		$userData = $user->store($request);
+		User::store($request);
 
 		$response = $this->requestPasswordGrant($request);
 
@@ -49,7 +44,7 @@ class UserController extends AccessTokenController
       return response([
         'message' => 'success',
         'results' => [
-          'user' => new UserResource($user->show($user))
+          'user' => new UserResource($user)
         ]
       ]);
 
@@ -58,18 +53,18 @@ class UserController extends AccessTokenController
 
 	public function updateProfile(User $user, updateProfileRequest $request)
 	{
-		$updatedUser = $user->updateProfile($user, $request);
+		$user->updateProfile($request);
 
 		return response([
 			'message' => 'Updated successfully',
 			'results' => [
-				'user' => new UserResource($updatedUser)
+				'user' => new UserResource($user)
 			]
 		], Response::HTTP_OK);
 	}
 
 	//list of user titles
-	public function usersTitles()
+	public function userTitles()
 	{
 
 		return response([
@@ -105,7 +100,7 @@ class UserController extends AccessTokenController
 		}
 		$totalPrimaryCurrency = $user->totalPrimaryCurrency();
 
-		$imagePath = Coin::where('coin_id', $totalPrimaryCurrency['coin_name'])->first()->img_path;
+		$imagePath = Coin::where('coin_id', $totalPrimaryCurrency['coin_name'])->first()?->img_path;
 		return response([
 			'message' => 'success',
 			'results' => [
