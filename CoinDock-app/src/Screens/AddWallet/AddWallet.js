@@ -69,7 +69,6 @@ function AddWallet() {
   const handleSubmit = async () => {
     // e.preventDefault();
     const { errors, isValid } = handleValidation(formValues);
-    console.log(formValues);
 
     if (!isValid) {
       setformErrors(errors);
@@ -111,7 +110,7 @@ function AddWallet() {
             label="Coin*"
             value={formValues.coin}
             options={(coins?.data?.results?.coins ?? []).map((value) => {
-              return { label: value.name, value: value.name };
+              return { label: value.coin_id, value: value.coin_id };
             })}
             formErrors={formErrors}
             emptyPlaceHolder={true}

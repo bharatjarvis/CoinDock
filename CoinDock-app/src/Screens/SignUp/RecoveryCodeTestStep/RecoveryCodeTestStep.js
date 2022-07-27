@@ -11,7 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import "./RecoveryCodeTest.css";
 import Popup from "Shared/Popup/Popup";
-import { ArrowBarLeft } from "react-bootstrap-icons";
+import { BoxArrowInLeft } from "react-bootstrap-icons";
 
 function RecoveryCodeTestStep() {
   const [buttonPopup, setButtonPopup] = useState(false);
@@ -108,13 +108,13 @@ function RecoveryCodeTestStep() {
                 <div className="p-3" />
                 <div className="row cd-row-space-between">
                   <div className="col-md-4 cd-width-unset">
-                    <ArrowBarLeft
+                    <BoxArrowInLeft
                       size={40}
                       color={"#4461fc"}
                       onClick={() => {
                         navigate("/recovery-codes");
                       }}
-                    ></ArrowBarLeft>
+                    />
                     <i class="bi bi-arrow-bar-left"></i>
                   </div>
 

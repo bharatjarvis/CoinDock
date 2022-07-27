@@ -13,11 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('wallets', function (Blueprint $table) {
-            $table->decimal('balance',10,2)->change();
-            $table->string('name')->nullable()->change();
-            $table->double('coins',10)->nullable()->after('wallet_id');
-
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('title')->nullable()->change();
         });
     }
 
@@ -28,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('wallets', function (Blueprint $table) {
-            $table->dropColumn(['name','coins','balance']);
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('title')->change();
         });
     }
 };
