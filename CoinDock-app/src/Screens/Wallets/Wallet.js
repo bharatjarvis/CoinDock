@@ -27,9 +27,9 @@ function Wallet() {
           <PlusCircle size={30} onClick={() => dispatch(openPopup())} />
         </div>
 
-        {Object.values(coincard?.data?.results ?? {}).map((value) => {
+        {Object.values(coincard?.data?.results ?? {}).map((value, index) => {
           return (
-            <div className="card-block" key={value.id}>
+            <div className="card-block" key={index}>
               <div className="col-md-12 card p-3">
                 <div className="row">
                   <div className="col-md-2">
