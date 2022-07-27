@@ -22,7 +22,7 @@ import { useSignupSteps } from "App/Api/signup";
 const AuthRoutes = (props) => {
   const isAuthenticated = useIsAuthenticated();
   const { data: signupsteps } = useSignupSteps();
-  console.log(signupsteps);
+
   if (!isAuthenticated) {
     return <React.Fragment />;
   }

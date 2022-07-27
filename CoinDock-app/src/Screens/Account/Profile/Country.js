@@ -12,7 +12,6 @@ function Country() {
     country: accountDetails.country,
   };
   const { data: countryfilter } = useCountry();
-  console.log('...from countries',countryfilter);
   const [formValues, setformValues] = useState(initialValues);
   const [isValid, setValid] = useState(false);
   const [filter, setFilter] = useState({});

@@ -74,12 +74,12 @@ function Dashboard() {
                 </div>
               </div>
               <div className="container justify-content-center">
-                <div class="row">
-                  <div class="col-md-7">
+                <div className="row">
+                  <div className="col-md-7">
                     <LineChart />
                   </div>
-                  <div class="col-md-1"></div>
-                  <div class="col-md-4">
+                  <div className="col-md-1"></div>
+                  <div className="col-md-4">
                     <PieChart />
                   </div>
                 </div>

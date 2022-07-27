@@ -25,7 +25,6 @@ function SignUP(props) {
   const [refresh] = useRefresh();
   const [buttonPopup, setButtonPopup] = useState(false);
   const { data: countryfilter } = useCountry();
-  console.log("....from signup", countryfilter);
   const [register] = usePostRegisterMutation();
   const [isValid, setValid] = useState(false);
   const initialValues = {

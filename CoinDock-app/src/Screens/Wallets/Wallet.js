@@ -48,7 +48,7 @@ const Wallet = () => {
                       <EllipseNumber
                         component="h6"
                         text={value?.BTC_coin?.toString() ?? ""}
-                        className="text-end"
+                        classnames="text-end"
                         maxLetters={4}
                       />
 
@@ -56,7 +56,7 @@ const Wallet = () => {
                     </div>
                   </div>
                   <div className="col-md-2">
-                    <div class="photo-box">
+                    <div className="photo-box">
                       <h6 className="text-end">{value?.number_of_coins}</h6>
                       <p className="mb-2 text-muted text-end">Coins</p>
                     </div>

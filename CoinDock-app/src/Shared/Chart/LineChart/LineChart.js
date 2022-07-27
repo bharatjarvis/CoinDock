@@ -79,8 +79,6 @@ export function LineChart() {
   const { data: coinfilter } = useCoinFilter();
   const { data: coinshortname } = useCoinShortName();
 
-  console.log(coinfilter);
-
   const linedata = Object.entries(line?.data?.results ?? {});
   const rangefilter = Object.values(filter?.data?.results ?? {}).map(
     (value) => {

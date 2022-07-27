@@ -27,11 +27,5 @@ function Popup(props) {
     <React.Fragment />
   );
 }
-Popup.propTypes = {
-  trigger: propTypes.function,
-  buttonLable: propTypes.string,
-  disabled: propTypes.boolean,
-  children: propTypes.element,
-};
 
 export default Popup;

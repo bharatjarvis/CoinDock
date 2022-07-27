@@ -9,11 +9,9 @@ const EllipseNumber = ({
 }) => {
   const initalMount = useRef(true);
   const [isCallaped, setIsCollapesed] = useState(initialStrink);
-  console.log(text);
+
   const [displayText, setDisplayText] = useState(text);
-  useEffect(() => {
-    console.log(displayText);
-  }, [displayText]);
+  useEffect(() => {}, [displayText]);
   const handleCollapse = useCallback(() => {
     setDisplayText((initialText) => {
       if (!isCallaped) return text;
