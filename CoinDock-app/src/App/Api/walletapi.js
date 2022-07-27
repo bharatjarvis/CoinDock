@@ -1,5 +1,4 @@
 import { getUserId } from "App/Auth/helper";
-import { store } from "App/Reducers";
 import baseApi from "./api";
 
 const wallet = baseApi.injectEndpoints({

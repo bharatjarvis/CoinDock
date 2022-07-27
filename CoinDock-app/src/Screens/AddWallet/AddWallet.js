@@ -10,23 +10,12 @@ import { walletnameValidation } from "Shared/Form/WalletFields/WalletName";
 import WalletName from "Shared/Form/WalletFields/WalletName";
 import { countryValidation } from "Shared/Form/Select/Select";
 import { useAddWalletMutation, useCoins } from "App/Api/walletapi";
-import { useNavigate } from "react-router-dom";
-import {
-  useLowperformer,
-  usePrimaryCurrency,
-  useTopperformer,
-  useTotalCurrency,
-} from "App/Api/CoinPerformence/coinperformance";
-import { useLineChart } from "App/Api/linechartapi";
-import { usePieChart } from "App/Api/piechartapi";
-import { useCoinCard } from "App/Api/coincardapi";
 
 function AddWallet() {
   const open = useSelector((state) => state.addwallet.open);
 
   const { data: coins } = useCoins();
 
-  const navigate = useNavigate();
   const [wallet] = useAddWalletMutation();
 
   const dispatch = useDispatch();

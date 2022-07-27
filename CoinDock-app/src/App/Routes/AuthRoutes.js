@@ -18,10 +18,8 @@ import Accountemail from "Screens/Account/AccountS.js/Accountemail";
 import Accountpassword from "Screens/Account/AccountS.js/Accountpassword";
 import Primary from "Screens/Account/System.js/Primary";
 import Secondary from "Screens/Account/System.js/Secondary";
-import { useSignupSteps } from "App/Api/signup";
 const AuthRoutes = (props) => {
   const isAuthenticated = useIsAuthenticated();
-  const { data: signupsteps } = useSignupSteps();
 
   if (!isAuthenticated) {
     return <React.Fragment />;
