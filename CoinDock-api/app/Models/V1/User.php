@@ -2,28 +2,17 @@
 
 namespace App\Models\V1;
 
-use App\Enums\V1\TimePeriod;
-use App\Enums\V1\UserStatus;
-use App\Enums\V1\UserType;
+use App\Enums\V1\{TimePeriod, UserStatus, UserType};
 use App\Exceptions\ApiKeyException;
 use App\Http\Requests\V1\ChartRequest;
-use App\Models\V1\{Signup, Setting};
-use App\Models\V1\{Coin};
-use App\Http\Requests\V1\CreateUserRequest;
-use App\Http\Requests\V1\updatePasswordRequest;
-use App\Http\Requests\V1\UpdateProfileRequest;
-use App\Http\Resources\V1\UserResource;
-use App\Http\Requests\V1\GraphRequest;
+use App\Models\V1\{Signup, Setting, Wallet};
+use App\Http\Requests\V1\{CreateUserRequest, UpdateProfileRequest, GraphRequest};
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\{Arr, Collection, Hash, Facades\Http};
 use Laravel\Passport\HasApiTokens;
-use Carbon\Carbon;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
-use App\Models\V1\Wallet;
 use Symfony\Component\HttpFoundation\Response;
 
 class User extends Authenticatable
@@ -200,8 +189,8 @@ class User extends Authenticatable
         public function getCoinId($coinId): array|collection
         {
             if ($coinId != 'Coins') {
-                return $this->wallets->map(function ($wallet) use ($coinId) {
-                    return $wallet->coin()->whereCoinId($coinId)->first();
+                return $this->wallets->filter(function ($wallet) use ($coinId) {
+                    return $wallet->coin->coin_id == $coinId;
                 })->unique('coin_id')->pluck('coin_id')->filter();
             }
             return $this->uniqueCoins()->pluck('coin_id')->toArray();

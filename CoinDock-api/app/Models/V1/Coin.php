@@ -2,11 +2,8 @@
 
 namespace App\Models\V1;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Database\Eloquent\{Factories\HasFactory, Model};
+use Illuminate\Support\Facades\{Auth, Http};
 use App\Exceptions\ApiKeyException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -47,8 +44,8 @@ class Coin extends Model
     public function countCoins()
     {
         $user = Auth::user();
-        return $this->wallets()->whereUserId($user->id)
-            ->whereCoinId($this->id)
+        return $this->wallets()
+            ->whereUserId($user->id)
             ->sum('coins');
     }
 
@@ -82,7 +79,6 @@ class Coin extends Model
     public function getSecondaryCurrency():float{
         $user = Auth::user();
         return $this->wallets()->whereUserId($user->id)
-            ->whereCoinId($this->id)
             ->sum('balance');
 
 

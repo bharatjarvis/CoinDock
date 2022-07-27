@@ -2,17 +2,14 @@
 
 namespace App\Models\V1;
 
-use App\Exceptions\ApiKeyException;
-use App\Exceptions\WalletCreationException;
+use App\Exceptions\{ApiKeyException, WalletCreationException};
 use App\Models\V1\{User, Coin};
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use Illuminate\Support\{Arr, Facades\DB, Str};
 use Symfony\Component\HttpFoundation\Response;
 
 class Wallet extends Model
