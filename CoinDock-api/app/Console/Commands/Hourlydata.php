@@ -34,9 +34,8 @@ class Hourlydata extends Command
         $responses = json_decode($handleGetHistoricalData->historicalData($acceptedCoin, $range, $startDate, $endDate, $encryptionKey));
         foreach($responses as $response) {    
             HistoricalData::updateOrCreate([
+                'coin_date' => substr($response->time_period_end, 0, strpos($response->time_period_end, ".0000000Z")),], [
                 'coin_id' => $acceptedCoin,
-                'coin_date' => Str::substr($response->time_period_end,0,10),
-                'time' => Str::substr($response->time_period_end,11,8),
                 'rate_close' => $response->rate_close,
             ]);
         }

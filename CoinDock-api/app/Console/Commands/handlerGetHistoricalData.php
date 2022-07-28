@@ -65,20 +65,20 @@ class handlerGetHistoricalData extends Command
         $responses = json_decode($this->historicalData($acceptedCoin, $range, $startDate, $endDate, $encryptionKey));
         foreach($responses as $response) {    
             HistoricalData::updateOrCreate([
+                'coin_date' => substr($response->time_period_end, 0, strpos($response->time_period_end, ".0000000Z")),], [
                 'coin_id' => $acceptedCoin,
-                'coin_date' => substr($response->time_period_end, 0, strpos($response->time_period_end, ".0000000Z")),
                 'rate_close' => $response->rate_close,
             ]);
         }
-        echo "base case completed";
+        echo "Base Case Completed";
         for($i=0;$i<=91;$i++){
             $lastRow = DB::table('historical_data')->orderBy('id', 'DESC')->first();
-            $lastRowDate = $lastRow->coin_date.'T'.$lastRow->time;
+            $lastRowDate = $lastRow->coin_date;
             $responses = json_decode($this->historicalData( $acceptedCoin, $range, $lastRowDate, $endDate,$encryptionKey));
             foreach($responses as $response) {    
                 HistoricalData::updateOrCreate([
+                    'coin_date' => substr($response->time_period_end, 0, strpos($response->time_period_end, ".0000000Z")),], [
                     'coin_id' => $acceptedCoin,
-                    'coin_date' => substr($response->time_period_end, 0, strpos($response->time_period_end, ".0000000Z")),
                     'rate_close' => $response->rate_close,
                 ]);
             }
