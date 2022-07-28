@@ -11,7 +11,6 @@ class HistoricalData extends Model
     protected $fillable = [
         'coin_id',
         'coin_date',
-        'time',
         'rate_close',
     ];
 

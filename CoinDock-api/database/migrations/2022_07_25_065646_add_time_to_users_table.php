@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::table('historical_data', function (Blueprint $table) {
             //
             $table->string('time')->after('coin_date');;
+            $table->dropColumn('time');
         });
     }
 
@@ -27,7 +28,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('historical_data', function (Blueprint $table) {
-            //
+           
         });
     }
 };

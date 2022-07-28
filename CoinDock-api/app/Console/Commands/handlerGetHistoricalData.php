@@ -66,8 +66,7 @@ class handlerGetHistoricalData extends Command
         foreach($responses as $response) {    
             HistoricalData::updateOrCreate([
                 'coin_id' => $acceptedCoin,
-                'coin_date' => Str::substr($response->time_period_end,0,10),
-                'time' => Str::substr($response->time_period_end,11,8),
+                'coin_date' => substr($response->time_period_end, 0, strpos($response->time_period_end, ".0000000Z")),
                 'rate_close' => $response->rate_close,
             ]);
         }
@@ -79,13 +78,12 @@ class handlerGetHistoricalData extends Command
             foreach($responses as $response) {    
                 HistoricalData::updateOrCreate([
                     'coin_id' => $acceptedCoin,
-                    'coin_date' => Str::substr($response->time_period_end,0,10),
-                    'time' =>Str::substr($response->time_period_end,11,8),
+                    'coin_date' => substr($response->time_period_end, 0, strpos($response->time_period_end, ".0000000Z")),
                     'rate_close' => $response->rate_close,
                 ]);
             }
             $count++;    
-            echo "\n dONE ".$acceptedCoin." ".$count;    
+            echo "\n DONE ".$acceptedCoin." ".$count;    
         }
         echo "\n Data Fetched Successfully for ".$acceptedCoin;
     }
