@@ -11,7 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\{Arr, Collection, Hash, Facades\Http};
+use Illuminate\Support\{Arr, Collection, Facades\Hash, Facades\Http};
 use Laravel\Passport\HasApiTokens;
 use Symfony\Component\HttpFoundation\Response;
 
