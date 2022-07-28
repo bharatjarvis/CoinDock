@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models\V1;
+
 use Illuminate\Support\Str;
 use App\Enums\V1\TimePeriod;
 use App\Enums\V1\UserStatus;
@@ -26,421 +27,459 @@ use Symfony\Component\HttpFoundation\Response;
 
 class User extends Authenticatable
 {
-        use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
-        /**
-         * The attributes that are mass assignable.
-         *
-         * @var array<int, string>
-         */
-        protected $fillable = [
-            'first_name',
-            'last_name',
-            'type',
-            'date_of_birth',
-            'country',
-            'email',
-            'password',
-            'status',
-            'recovery_attempts',
-            'title'
-        ];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'first_name',
+        'last_name',
+        'type',
+        'date_of_birth',
+        'country',
+        'email',
+        'password',
+        'status',
+        'recovery_attempts',
+        'title'
+    ];
 
-        /**
-         * The attributes that should be hidden for serialization.
-         *
-         * @var array<int, string>
-         */
-        protected $hidden = ['password', 'remember_token'];
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = ['password', 'remember_token'];
 
-        /**
-         * The attributes that should be cast.
-         *
-         * @var array<string, string>
-         */
-        protected $casts = [
-            'email_verified_at' => 'datetime',
-        ];
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
 
-        protected $table = 'users';
+    protected $table = 'users';
 
-        /**
-         * @param string $value
-         *
-         * @return void
-         */
-        public function setPasswordAttribute($value)
-        {
-            $this->attributes['password'] = Hash::make($value);
+    /**
+     * @param string $value
+     *
+     * @return void
+     */
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = Hash::make($value);
+    }
+
+    //User Titles
+    public static function titles()
+    {
+        return ['Mr.', 'Ms.', 'Mrs.', 'Mx.'];
+    }
+
+    public static function countries()
+    {
+        return config('countries.countries');
+    }
+
+    public function recoveryKey()
+    {
+        return $this->hasOne(RecoveryKey::class);
+    }
+
+    public function store(CreateUserRequest $request): self
+    {
+        $user = $this::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'type' => UserType::User,
+            'date_of_birth' => $request->date_of_birth,
+            'country' => $request->country,
+            'email' => $request->email,
+            'password' => $request->password,
+            'status' => UserStatus::Active,
+            'title' => $request->title,
+
+        ]);
+
+        //Adding default Currency settings for user
+        Setting::create([
+            'user_id' => $user->id,
+            'primary_currency' => config('countries.default_country.currency'),
+            'secondary_currency' => 'USD'
+        ]);
+
+        // REGISTRATION STATUS UPDATION -  STEP:1
+        $signup = $this->signUp;
+        if ($signup) {
+            $signup->step_count += 1;
+            $signup->save();
         }
 
-        //User Titles
-        public static function titles()
-        {
-            return ['Mr.', 'Ms.', 'Mrs.', 'Mx.'];
+        Signup::create(['step_count' => 1, 'user_id' => $user->id]);
+
+        return $user;
+    }
+
+    public function chartData(ChartRequest $request): array
+    {
+        $filterBy = $request->filter_by;
+        $wallets = $this->wallets()->select(['coin_id', 'coins'])
+            ->get()
+            ->mapToGroups(function ($wallet) {
+                return [$wallet->coin->coin_id => $wallet->coins];
+            })->map(function ($coins) {
+                return $coins->sum();
+            })->toArray();
+
+        if ($filterBy == null || $filterBy == 'coins') {
+            return $wallets;
         }
 
-        public static function countries()
-        {
-            return config('countries.countries');
-        }
+        $result = [];
 
-        public function recoveryKey()
-        {
-            return $this->hasOne(RecoveryKey::class);
-        }
+        if ($filterBy == 'currency') {
 
-        public function store(CreateUserRequest $request): self
-        {
-            $user = $this::create([
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'type' => UserType::User,
-                'date_of_birth' => $request->date_of_birth,
-                'country' => $request->country,
-                'email' => $request->email,
-                'password' => $request->password,
-                'status' => UserStatus::Active,
-                'title' => $request->title,
+            foreach ($wallets as $key => $value) {
 
-            ]);
+                $primaryCurrency = $this->setting->primary_currency;
 
-            //Adding default Currency settings for user
-            Setting::create([
-                'user_id' => $user->id,
-                'primary_currency' => config('countries.default_country.currency'),
-                'secondary_currency' => 'USD'
-            ]);
+                $baseURL = config('coin.coin.api_url') . config('coin.coin.exchange_url');
 
-            // REGISTRATION STATUS UPDATION -  STEP:1
-            $signup = $this->signUp;
-            if ($signup) {
-                $signup->step_count += 1;
-                $signup->save();
-            }
-
-            Signup::create(['step_count' => 1, 'user_id' => $user->id]);
-
-            return $user;
-        }
-
-        public function chartData(ChartRequest $request): array
-        {
-            $filterBy = $request->filter_by;
-            $wallets = $this->wallets()->select(['coin_id', 'coins'])
-                ->get()
-                ->mapToGroups(function ($wallet) {
-                    return [$wallet->coin->coin_id => $wallet->coins];
-                })->map(function ($coins) {
-                    return $coins->sum();
-                })->toArray();
-
-            if ($filterBy == null || $filterBy == 'coins') {
-                return $wallets;
-            }
-
-            $result = [];
-
-            if ($filterBy == 'currency') {
-
-                foreach ($wallets as $key => $value) {
-
-                    $primaryCurrency = $this->setting->primary_currency;
-
-                    $baseURL = config('coin.coin.api_url') . config('coin.coin.exchange_url');
-                    
-                    $baseURLIdReplaced = str_replace(
-                        ['{from}', '{to}'],
-                        [$key, $primaryCurrency],
-                        $baseURL
-                    );
-                    try {
-                        $response = Http::withHeaders([
-                            'X-CoinAPI-Key' => config('coin.coin.api_key')
-                        ])->get($baseURLIdReplaced)['rate'];
-                    } catch (\Throwable $th) {
-                        throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
-                    }
-
-                    $primaryBalance = $response * $wallets[$key];
-
-                    $result[$key] = $primaryBalance;
+                $baseURLIdReplaced = str_replace(
+                    ['{from}', '{to}'],
+                    [$key, $primaryCurrency],
+                    $baseURL
+                );
+                try {
+                    $response = Http::withHeaders([
+                        'X-CoinAPI-Key' => config('coin.coin.api_key')
+                    ])->get($baseURLIdReplaced)['rate'];
+                } catch (\Throwable $th) {
+                    throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
                 }
-            }
 
-            return $result;
-        }
+                $primaryBalance = $response * $wallets[$key];
 
-        public function historicalData(string $coinId, string $range, string $startDate, string $endDate): array
-        {
-            $baseURL = config('coin.coin.api_url') . config('coin.coin.realtime_url');
-
-            $baseURLIdReplaced = str_replace(
-                ['{coin1}', '{range}', '{start_date}', '{end_date}'],
-                [$coinId, $range, $startDate, $endDate],
-                $baseURL
-            );
-
-            try {
-                $response = Http::withHeaders(
-                    ['X-CoinAPI-Key' => config('coin.coin.api_key')]
-                )->get($baseURLIdReplaced);
-                return json_decode($response);
-            } catch (\Throwable $th) {
-
-                throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
+                $result[$key] = $primaryBalance;
             }
         }
 
+        return $result;
+    }
 
-        public function getCoinId($coinId): array|collection
-        {
-            if ($coinId != 'Coins') {
-                return $this->wallets->map(function ($wallet) use ($coinId) {
-                    return $wallet->coin()->whereCoinId($coinId)->first();
-                })->unique('coin_id')->pluck('coin_id')->filter();
-            }
-            return $this->uniqueCoins()->pluck('coin_id')->toArray();
+    public function historicalData(string $coinId, string $range, string $startDate, string $endDate): array
+    {
+        $baseURL = config('coin.coin.api_url') . config('coin.coin.realtime_url');
+
+        $baseURLIdReplaced = str_replace(
+            ['{coin1}', '{range}', '{start_date}', '{end_date}'],
+            [$coinId, $range, $startDate, $endDate],
+            $baseURL
+        );
+
+        try {
+            $response = Http::withHeaders(
+                ['X-CoinAPI-Key' => config('coin.coin.api_key')]
+            )->get($baseURLIdReplaced);
+            return json_decode($response);
+        } catch (\Throwable $th) {
+
+            throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+
+    public function getCoinId($coinId): array|collection
+    {
+        if ($coinId != 'Coins') {
+            return $this->wallets->map(function ($wallet) use ($coinId) {
+                return $wallet->coin()->whereCoinId($coinId)->first();
+            })->unique('coin_id')->pluck('coin_id')->filter();
+        }
+        return $this->uniqueCoins()->pluck('coin_id')->toArray();
+    }
+
+    public function uniqueCoins(): collection
+    {
+        return $this->wallets->map(fn ($wallet) => $wallet->coin)->unique('coin_id');
+    }
+
+
+    public function graph(GraphRequest $request)
+    {
+        $coinId = Arr::get($request, 'coin_id');
+
+        if (is_null($coinId)) {
+            $coinId = 'All';
         }
 
-        public function uniqueCoins(): collection
-        {
-            return $this->wallets->map(fn ($wallet) => $wallet->coin)->unique('coin_id');
-        }
+        $timePeriod = $request->range;
 
+        $endDate = str_replace(' ', 'T', Carbon::now()->toDateTimeString());
 
-        public function graph(GraphRequest $request)
-        {
-            $coinId = Arr::get($request, 'coin_id');
+        switch ($timePeriod) {
+            case TimePeriod::Day:
+                $range = '1HRS';
+                $startDate = str_replace(' ', 'T', Carbon::now()->subDay(1)->toDateTimeString());
+                return $this->dbDay($range, $startDate, $endDate, $coinId);
 
-            if (is_null($coinId)) {
-                $coinId = 'All';
-            }
+            case TimePeriod::Weekly:
+                $range = '1DAY';
+                $startDate = str_replace(' ', 'T', Carbon::now()->subDay(6)->toDateTimeString());
+                return $this->weekly($range, $startDate, $endDate, $coinId);
 
-            $timePeriod = $request->range;
-            
-            $endDate = str_replace(' ', 'T', Carbon::now()->toDateTimeString());
-            switch ($timePeriod) {
-                case TimePeriod::Day:
-                    $range = '1HRS';
-                    $startDate = str_replace(' ', 'T', Carbon::now()->subDay(1)->toDateTimeString());
-                    return $this->dbDay($range, $startDate, $endDate, $coinId);
+            case TimePeriod::Monthly:
+                $range = '7DAY';
+                $startDate = str_replace(' ', 'T', Carbon::now()->subMonth(1)->toDateTimeString());
+                $allWeeklyData = $this->weekly($range, $startDate, $endDate, $coinId);
+                $weekData = array_chunk($allWeeklyData, 7);
+                $result = [];
+                $presentDate = Carbon::now();
+                $weeks = [];
+                $weeks = Arr::prepend($weeks, $presentDate->format('d-m-Y'));
+                for($i=0;$i<count($weekData)-1;$i++){
+                    $weekSub = $presentDate->subDays(7)->format('d-m-Y');
+                    array_push($weeks,$weekSub);                    
+                }
+                $weekData = array_reverse($weekData);
+                for($i=0;$i<count($weeks);$i++){
+                    $result[$weeks[$i]] = array_sum($weekData[$i])/7;
+                }
+                return $result;
 
-                case TimePeriod::Weekly:
-                    $range = '1DAY';
-                    $startDate = str_replace(' ', 'T', Carbon::now()->subDay(6)->toDateTimeString());
-                    return $this->graphData($range, $startDate, $endDate, $coinId);
+            case TimePeriod::Yearly:
+                $range = '7DAY';
+                $startDate = str_replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString());
+                $response = $this->graphData($range, $startDate, $endDate, $coinId);
+                $result = [];
+                $newCoinData = [];
 
-                case TimePeriod::Monthly:
-                    $range = '7DAY';
-                    $startDate = str_replace(' ', 'T', Carbon::now()->subMonth(1)->toDateTimeString());
-                    return $this->graphData($range, $startDate, $endDate, $coinId);
+                foreach ($response as $coinId => $coinData) {
+                    foreach ($coinData as $date => $price) {
+                        array_push($newCoinData, [
+                            'date' => Carbon::parse($date)->format('Y-m'),
+                            'price' => $price
+                        ]);
+                    }
+                    $dates = array_unique(array_column($newCoinData, 'date'));
 
-                case TimePeriod::Yearly:
-                    $range = '7DAY';
-                    $startDate = str_replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString());
-                    $response = $this->graphData($range, $startDate, $endDate, $coinId);
-                    $result = [];
-                    $newCoinData = [];
-
-                    foreach ($response as $coinId => $coinData) {
-                        foreach ($coinData as $date => $price) {
-                            array_push($newCoinData, [
-                                'date' => Carbon::parse($date)->format('Y-m'),
-                                'price' => $price
-                            ]);
-                        }
-                        $dates = array_unique(array_column($newCoinData, 'date'));
-
-                        $finalResult = [];
-                        foreach ($dates as $date) {
-                            $count = 0;
-                            $sum = 0;
-                            foreach ($newCoinData as $response) {
-                                if ($response['date'] == $date) {
-                                    $count++;
-                                    $sum += $response['price'];
-                                }
+                    $finalResult = [];
+                    foreach ($dates as $date) {
+                        $count = 0;
+                        $sum = 0;
+                        foreach ($newCoinData as $response) {
+                            if ($response['date'] == $date) {
+                                $count++;
+                                $sum += $response['price'];
                             }
-                            $avg = $sum / $count;
-                            $finalResult[$date] = $avg;
                         }
-                        $result[$coinId] = $finalResult;
+                        $avg = $sum / $count;
+                        $finalResult[$date] = $avg;
                     }
-                    return $result;
-                default:
-                    $range = '1HRS';
-                    $startDate = str_replace(' ', 'T', Carbon::now()->subDay(1)->toDateTimeString());
-                    return $this->graphData($range, $startDate, $endDate, $coinId);
+                    $result[$coinId] = $finalResult;
+                }
+                return $result;
+            default:
+                $range = '1HRS';
+                $startDate = str_replace(' ', 'T', Carbon::now()->subDay(1)->toDateTimeString());
+                return $this->graphData($range, $startDate, $endDate, $coinId);
+        }
+    }
+
+
+    public function dbDay(string $range, string $startDate, string $endDate, string $coinId)
+    {
+        $dailyData = HistoricalData::select(['rate_close', 'coin_date'])->whereCoinId($coinId)
+            ->whereBetween('coin_date', [$startDate, $endDate])
+            ->get();
+        $result = [];
+        foreach ($dailyData as $data) {
+            $result[$data['coin_date']] = $data['rate_close'];
+        }
+        return $result;
+    }
+
+    public function weekly(string $range, string $startDate, string $endDate, string $coinId)
+    {
+        $response = HistoricalData::select(['rate_close', 'coin_date'])->whereCoinId($coinId)
+            ->whereBetween('coin_date', [$startDate, $endDate])
+            ->get();
+        $result = [];
+        $newCoinData = [];
+        foreach ($response as $data) {
+            array_push($newCoinData, [
+                'date' => Carbon::parse($data['coin_date'])->format('Y-m-d'),
+                'price' => $data['rate_close']
+            ]);
+        }
+        $date = array_unique(array_column($newCoinData, 'date'));
+        $dates = [];
+        foreach ($date as $id => $value) {
+            array_push($dates, $value);
+        }
+        $finalResult = [];
+        foreach ($dates as $date) {
+            $count = 0;
+            $sum = 0;
+            foreach ($newCoinData as $response) {
+                if ($response['date'] == $date) {
+                    $count++;
+                    $sum += $response['price'];
+                }
             }
+            $avg = $sum / $count;
+            $finalResult[$date] = $avg;
+        }
+        return $finalResult;
+    }
+
+
+
+
+    public function recoveryKeys()
+    {
+        return $this->hasMany(RecoveryKey::class, 'user_id', 'id');
+    }
+
+    public function signUp()
+    {
+        return $this->hasOne(Signup::class);
+    }
+
+    public function updateProfile(User $user, UpdateProfileRequest $request)
+    {
+        $data = $request->all();
+        $settings = $user->setting();
+
+        $user->update($data);
+
+        if ($request->primary_currency || $request->secondary_currency) {
+            $settings->update($data);
         }
 
+        return $user;
+    }
 
-        public function dbDay(string $range, string $startDate, string $endDate, string $coinId)
-        {
-            $dbData = HistoricalData::select(['rate_close','coin_date','time'])->whereCoinId($coinId)->where('coin_date','=',Str::substr($endDate,0,10))->get();
-            $result = [];
-            foreach($dbData as $data){
-                array_push($result,[$data->coin_date.'T'.$data->time=>$data->rate_close]);
-            }
-            return $result;
+
+    public function totalDefault()
+    {
+        $walletBalanceInUSD = $this->wallets()->sum('balance');
+        $baseUrl = config('coin.coin.api_url');
+        $exchangeURL = $baseUrl . config('coin.coin.usd_to_Btc');
+        try {
+            $usdToBtC = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($exchangeURL)['rate'];
+        } catch (\Throwable $th) {
+
+            throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
         }
 
+        return $usdToBtC * $walletBalanceInUSD;
+    }
 
+    public function totalPrimaryCurrency(): array
+    {
+        $userSetting = $this->setting;
+        $primaryCurrency = $userSetting->primary_currency;
+        $baseUrl = config('coin.coin.api_url');
+        $currencyURL = $baseUrl . config('coin.coin.primary_currency');
+        $currency = str_replace('{id}', $primaryCurrency, $currencyURL);
 
+        try {
+            $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency)['rate'];
+        } catch (\Throwable $th) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-        public function recoveryKeys()
-        {
-            return $this->hasMany(RecoveryKey::class, 'user_id', 'id');
+            throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
         }
+        $balanceInUsd = $this->wallets
+            ->mapToGroups(function ($wallet) {
+                return ['balance' => $wallet->balance];
+            })
+            ->map(function ($e) {
+                return $e->sum();
+            });
+        return [
+            'coin_name' => $primaryCurrency,
+            'balance'  => $response * $balanceInUsd['balance'],
+        ];
+    }
 
-        public function signUp()
-        {
-            return $this->hasOne(Signup::class);
-        }
-
-        public function updateProfile(User $user, UpdateProfileRequest $request)
-        {
-            $data = $request->all();
-            $settings = $user->setting();
-
-            $user->update($data);
-
-            if ($request->primary_currency || $request->secondary_currency) {
-                $settings->update($data);
-            }
-
-            return $user;
-        }
-
-
-        public function totalDefault()
-        {
-            $walletBalanceInUSD = $this->wallets()->sum('balance');
-            $baseUrl = config('coin.coin.api_url');
-            $exchangeURL = $baseUrl . config('coin.coin.usd_to_Btc');
+    public function topPerformer(): array
+    {
+        $walletCoinIds = $this->wallets()->pluck('coin_id');
+        $coins = Coin::select(['coin_id', 'name'])->whereIn('id', $walletCoinIds)->get();
+        $baseUrl = config('coin.coin.api_url');
+        $currencyURL = $baseUrl . config('coin.coin.top_performer');
+        $topPerformerBal = PHP_INT_MIN;
+        $coinName = null;
+        $shortName = null;
+        foreach ($coins as $coin) {
+            $currency = str_replace('{id}', $coin->coin_id, $currencyURL);
             try {
-                $usdToBtC = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($exchangeURL)['rate'];
+                $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
+                if ($response['rate'] > $topPerformerBal) {
+                    $topPerformerBal = $response['rate'];
+                    $shortName = $response['asset_id_base'];
+                    $coinName  = Coin::whereCoinId($shortName)->first()?->name;
+                }
             } catch (\Throwable $th) {
 
                 throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
             }
-
-            return $usdToBtC * $walletBalanceInUSD;
         }
+        return [
+            'balance' => $topPerformerBal,
+            'coin_name' => $coinName,
+            'coin_id' =>  $shortName
+        ];
+    }
 
-        public function totalPrimaryCurrency(): array
-        {
-            $userSetting = $this->setting;
-            $primaryCurrency = $userSetting->primary_currency;
-            $baseUrl = config('coin.coin.api_url');
-            $currencyURL = $baseUrl . config('coin.coin.primary_currency');
-            $currency = str_replace('{id}', $primaryCurrency, $currencyURL);
-
+    public function lowPerformer(): array
+    {
+        $walletCoinIds = $this->wallets()->pluck('coin_id');
+        $coins = Coin::select(['coin_id', 'name'])->whereIn('id', $walletCoinIds)->get();
+        $baseUrl = config('coin.coin.api_url');
+        $currencyURL = $baseUrl . config('coin.coin.top_performer');
+        $lowPerformerBal = PHP_INT_MAX;
+        $coinName = null;
+        $shortName = null;
+        foreach ($coins as $coin) {
+            $currency = str_replace('{id}', $coin->coin_id, $currencyURL);
             try {
-                $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency)['rate'];
+                $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
+                if ($response['rate'] < $lowPerformerBal) {
+                    $lowPerformerBal = $response['rate'];
+                    $shortName = $response['asset_id_base'];
+                    $coinName  = Coin::whereCoinId($shortName)->first()?->name;
+                }
             } catch (\Throwable $th) {
 
                 throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
             }
-            $balanceInUsd = $this->wallets
-                ->mapToGroups(function ($wallet) {
-                    return ['balance' => $wallet->balance];
-                })
-                ->map(function ($e) {
-                    return $e->sum();
-                });
-            return [
-                'coin_name' => $primaryCurrency,
-                'balance'  => $response * $balanceInUsd['balance'],
-            ];
         }
+        return [
+            'balance' => $lowPerformerBal,
+            'coin_name' => $coinName,
+            'coin_id' => $shortName
+        ];
+    }
 
-        public function topPerformer(): array
-        {
-            $walletCoinIds = $this->wallets()->pluck('coin_id');
-            $coins = Coin::select(['coin_id', 'name'])->whereIn('id', $walletCoinIds)->get();
-            $baseUrl = config('coin.coin.api_url');
-            $currencyURL = $baseUrl . config('coin.coin.top_performer');
-            $topPerformerBal = PHP_INT_MIN;
-            $coinName = null;
-            $shortName = null;
-            foreach ($coins as $coin) {
-                $currency = str_replace('{id}', $coin->coin_id, $currencyURL);
-                try {
-                    $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
-                    if ($response['rate'] > $topPerformerBal) {
-                        $topPerformerBal = $response['rate'];
-                        $shortName = $response['asset_id_base'];
-                        $coinName  = Coin::whereCoinId($shortName)->first()?->name;
-                    }
-                } catch (\Throwable $th) {
+    public function wallets()
+    {
+        return $this->hasMany(Wallet::class, 'user_id', 'id');
+    }
 
-                    throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
-                }
-            }
-            return [
-                'balance' => $topPerformerBal,
-                'coin_name' => $coinName,
-                'coin_id' =>  $shortName
-            ];
-        }
+    public function setting()
+    {
+        return $this->hasOne(Setting::class, 'user_id', 'id');
+    }
 
-        public function lowPerformer(): array
-        {
-            $walletCoinIds = $this->wallets()->pluck('coin_id');
-            $coins = Coin::select(['coin_id', 'name'])->whereIn('id', $walletCoinIds)->get();
-            $baseUrl = config('coin.coin.api_url');
-            $currencyURL = $baseUrl . config('coin.coin.top_performer');
-            $lowPerformerBal = PHP_INT_MAX;
-            $coinName = null;
-            $shortName = null;
-            foreach ($coins as $coin) {
-                $currency = str_replace('{id}', $coin->coin_id, $currencyURL);
-                try {
-                    $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($currency);
-                    if ($response['rate'] < $lowPerformerBal) {
-                        $lowPerformerBal = $response['rate'];
-                        $shortName = $response['asset_id_base'];
-                        $coinName  = Coin::whereCoinId($shortName)->first()?->name;
-                    }
-                } catch (\Throwable $th) {
-
-                    throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
-                }
-            }
-            return [
-                'balance' => $lowPerformerBal,
-                'coin_name' => $coinName,
-                'coin_id' => $shortName
-            ];
-        }
-
-        public function wallets()
-        {
-            return $this->hasMany(Wallet::class, 'user_id', 'id');
-        }
-
-        public function setting()
-        {
-            return $this->hasOne(Setting::class, 'user_id', 'id');
-        }
-
-        public function userHistoricalData()
-        {
-            return $this->hasMany(HistoricalData::class);
-        }
-
+    public function userHistoricalData()
+    {
+        return $this->hasMany(HistoricalData::class);
+    }
 }
