@@ -236,54 +236,42 @@ class User extends Authenticatable
             case TimePeriod::Monthly:
                 $range = '7DAY';
                 $startDate = str_replace(' ', 'T', Carbon::now()->subMonth(1)->toDateTimeString());
-                $allWeeklyData = $this->weekly($range, $startDate, $endDate, $coinId);
-                $weekData = array_chunk($allWeeklyData, 7);
-                $result = [];
-                $presentDate = Carbon::now();
-                $weeks = [];
-                $weeks = Arr::prepend($weeks, $presentDate->format('d-m-Y'));
-                for($i=0;$i<count($weekData)-1;$i++){
-                    $weekSub = $presentDate->subDays(7)->format('d-m-Y');
-                    array_push($weeks,$weekSub);                    
-                }
-                $weekData = array_reverse($weekData);
-                for($i=0;$i<count($weeks);$i++){
-                    $result[$weeks[$i]] = array_sum($weekData[$i])/7;
-                }
-                return $result;
+                return $this->monthly($range, $startDate, $endDate,$coinId);
+                
+                
 
             case TimePeriod::Yearly:
                 $range = '7DAY';
                 $startDate = str_replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString());
-                $response = $this->graphData($range, $startDate, $endDate, $coinId);
+                return $this->yearly($range, $startDate, $endDate, $coinId);
                 $result = [];
                 $newCoinData = [];
 
-                foreach ($response as $coinId => $coinData) {
-                    foreach ($coinData as $date => $price) {
-                        array_push($newCoinData, [
-                            'date' => Carbon::parse($date)->format('Y-m'),
-                            'price' => $price
-                        ]);
-                    }
-                    $dates = array_unique(array_column($newCoinData, 'date'));
+                // foreach($response as $coinId => $coinData) {
+                //     foreach ($coinData as $date => $price) {
+                //         array_push($newCoinData, [
+                //             'date' => Carbon::parse($date)->format('Y-m'),
+                //             'price' => $price
+                //         ]);
+                //     }
+                //     $dates = array_unique(array_column($newCoinData, 'date'));
 
-                    $finalResult = [];
-                    foreach ($dates as $date) {
-                        $count = 0;
-                        $sum = 0;
-                        foreach ($newCoinData as $response) {
-                            if ($response['date'] == $date) {
-                                $count++;
-                                $sum += $response['price'];
-                            }
-                        }
-                        $avg = $sum / $count;
-                        $finalResult[$date] = $avg;
-                    }
-                    $result[$coinId] = $finalResult;
-                }
-                return $result;
+                //     $finalResult = [];
+                //     foreach ($dates as $date) {
+                //         $count = 0;
+                //         $sum = 0;
+                //         foreach ($newCoinData as $response) {
+                //             if ($response['date'] == $date) {
+                //                 $count++;
+                //                 $sum += $response['price'];
+                //             }
+                //         }
+                //         $avg = $sum / $count;
+                //         $finalResult[$date] = $avg;
+                //     }
+                //     $result[$coinId] = $finalResult;
+                // }
+                // return $result;
             default:
                 $range = '1HRS';
                 $startDate = str_replace(' ', 'T', Carbon::now()->subDay(1)->toDateTimeString());
@@ -336,6 +324,35 @@ class User extends Authenticatable
             $finalResult[$date] = $avg;
         }
         return $finalResult;
+    }
+
+    public function monthly(string $range, string $startDate, string $endDate, string $coinId){
+
+        $allWeeklyData=$this->weekly($range, $startDate, $endDate, $coinId);
+        $weekData = array_chunk($allWeeklyData, 7);
+        $result = [];
+                $presentDate = Carbon::now();
+                $weeks = [];
+                $weeks = Arr::prepend($weeks, $presentDate->format('d-m-Y'));
+                for($i=0;$i<count($weekData)-1;$i++){
+                    $weekSub = $presentDate->subDays(7)->format('d-m-Y');
+                    array_push($weeks,$weekSub);                    
+                }
+                $weekData = array_reverse($weekData);
+                for($i=0;$i<count($weeks);$i++){
+                    $result[$weeks[$i]] = array_sum($weekData[$i])/7;
+                }
+                return $result;
+    }
+
+    public function yearly($range, $startDate, $endDate, $coinId){
+        $response = HistoricalData::select(['rate_close', 'coin_date'])->whereCoinId($coinId)
+        ->whereBetween('coin_date', [$startDate, $endDate])
+        ->get();
+        $months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+         
+        return $this->monthly($range, $startDate, $endDate,$coinId);
+
     }
 
 
