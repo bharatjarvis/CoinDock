@@ -89,52 +89,6 @@ function Header() {
         <AddWallet />
       </div>
     </React.Fragment>
-    // <div className="myContainer">
-    //   <Navbar
-    //     id="navbar"
-    //     className="cd-app-header cd-header-dimensions"
-    //     expand="lg"
-    //   >
-    //     <Navbar.Brand href="/">
-    //       <img
-    //         className="cd-logo-image"
-    //         id="logo"
-    //         src={Logo2}
-    //         alt="Company Name"
-    //       />
-    //     </Navbar.Brand>
-    //     <Navbar.Brand href="/dasboard">CoinDock</Navbar.Brand>
-    //     <Navbar.Toggle
-    //       className="custom-toggler"
-    //       aria-controls="basic-navbar-nav"
-    //     />
-    //     <Navbar.Collapse id="basic-navbar-nav">
-    //       <Nav className="ml-auto">
-    //         <Nav.Link
-    //           id="nav-links"
-    //           className="cd-navbar-background-color"
-    //           href="/cleaning-services"
-    //         >
-    //           Profile
-    //         </Nav.Link>
-    //         <hr></hr>
-    //         <Nav.Link className="cd-navbar-background-color" href="#link">
-    //           Profile
-    //         </Nav.Link>
-    //         <hr></hr>
-
-    //         <Nav.Link className="cd-navbar-background-color" href="#link">
-    //           Account
-    //         </Nav.Link>
-    //         <hr></hr>
-
-    //         <Nav.Link className="cd-navbar-background-color" href="#link">
-    //           Logout
-    //         </Nav.Link>
-    //       </Nav>
-    //     </Navbar.Collapse>
-    //   </Navbar>
-    // </div>
   );
 }
 

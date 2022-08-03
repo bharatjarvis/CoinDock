@@ -56,7 +56,6 @@ function AddWallet() {
     };
   };
   const handleSubmit = async () => {
-    // e.preventDefault();
     const { errors, isValid } = handleValidation(formValues);
 
     if (!isValid) {

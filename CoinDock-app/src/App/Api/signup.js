@@ -25,9 +25,6 @@ const signup = baseApi.injectEndpoints({
           re_enter_password: reenterpassword,
         },
       }),
-      transformResponse: (response) => {
-        return response;
-      },
     }),
     signupsteps: build.query({
       query: (params) => {

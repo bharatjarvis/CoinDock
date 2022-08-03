@@ -4,13 +4,7 @@ import baseApi from "./api";
 const wallet = baseApi.injectEndpoints({
   endpoints: (build) => ({
     addWallet: build.mutation({
-      query: ({
-        coin,
-        walletname,
-        wallet_id,
-
-        ...data
-      }) => ({
+      query: ({ coin, walletname, wallet_id, ...data }) => ({
         url: `/v1/users/${getUserId()}/add-wallet`,
         method: "post",
         data: {
@@ -32,19 +26,14 @@ const wallet = baseApi.injectEndpoints({
         "lowperformer",
         "coincard",
       ],
-      transformResponse: (response) => {
-        return response;
-      },
     }),
     coins: build.query({
       query: () => {
         return {
           url: `/v1/coins/accepted-crypto`,
-
           method: "get",
         };
       },
-
       providesTags: ["coins"],
     }),
   }),

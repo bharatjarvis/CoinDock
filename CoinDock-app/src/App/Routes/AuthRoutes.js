@@ -24,23 +24,6 @@ const AuthRoutes = (props) => {
   if (!isAuthenticated) {
     return <React.Fragment />;
   }
-  // if (signupsteps?.data?.results?.step_details?.step_1_completed) {
-  //   return (
-  //     <Routes>
-  //       <Route path="/recovery-codes" element={<RecoveryCodeBoxStep />} />
-  //     </Routes>
-  //   );
-  // }
-  // if (signupsteps?.data?.results?.step_details?.step_2_completed) {
-  //   <Routes>
-  //     <Route path="/recovery-test" element={<RecoveryCodeTestStep />} />
-  //   </Routes>;
-  // }
-  // if (signupsteps?.data?.results?.step_details?.step_3_completed) {
-  //   <Routes>
-  //     <Route path="/dashboard" element={<Dashboard />} />
-  //   </Routes>;
-  // }
   return (
     <Routes>
       <Route path="/account" element={<Account />} />
