@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\HistoricalData;
+namespace App\Console\Commands\historicalData;
 
 use App\Exceptions\ApiKeyException;
 use Illuminate\Support\Str;
@@ -12,17 +12,17 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 
 
-class handlerGetHistoricalData extends Command
+class HandleHistoricalData extends Command
 {
     /**
      * The name and signature of the console command.
-     *
+     * 
+     * if yearly-data option is true -- fetching Yearly data otherwise hourly data 
+     * 
      * @var string
      */
-    /* isYearlyData is passed as an argument to classify the data for fetching 
-    the information. */
 
-    protected $signature = 'history:coins 
+    protected $signature = 'historicalData:fetch 
                             {--yearly-data : Option for} ';
 
     /**
@@ -30,7 +30,7 @@ class handlerGetHistoricalData extends Command
      *
      * @var string
      */
-    protected $description = 'Handler to get the Historical Data for a Year and Daily Information';
+    protected $description = 'Handles Hourly and Yearly data for all accepted coins';
 
 
     protected $xApiKey;
