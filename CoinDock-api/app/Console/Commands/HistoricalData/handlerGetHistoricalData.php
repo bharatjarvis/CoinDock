@@ -3,8 +3,6 @@
 namespace App\Console\Commands\historicalData;
 
 use Illuminate\Support\Str;
-
-use App\Exceptions\ApiKeyException;
 use App\Models\V1\Coin;
 use App\Models\V1\HistoricalData;
 use Illuminate\Console\Command;
@@ -86,7 +84,6 @@ class handlerGetHistoricalData extends Command
 
     public function handleCoinData(string $coinId)
     {
-
         $endDate = Str::replace(' ', 'T', Carbon::now()->toDateTimeString());
         $startDate = 'True'==$this->argument('isYearlyData') ? Str::replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString()) : Str::replace(' ', 'T', Carbon::now()->subHour(1)->toDateTimeString());
         
