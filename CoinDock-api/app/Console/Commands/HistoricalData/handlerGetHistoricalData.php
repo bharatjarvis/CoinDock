@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\HistoricalData;
 
 use Illuminate\Support\Str;
-
-use App\Exceptions\ApiKeyException;
 use App\Models\V1\Coin;
 use App\Models\V1\HistoricalData;
 use Illuminate\Console\Command;
@@ -86,10 +84,8 @@ class handlerGetHistoricalData extends Command
 
     public function handleCoinData(string $coinId)
     {
-        $startDate = $this->argument('isHourlyData') ? Str::replace(' ', 'T', Carbon::now()->subHour(1)->toDateTimeString()) : Str::replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString());
-
         $endDate = Str::replace(' ', 'T', Carbon::now()->toDateTimeString());
-        $startDate = 'True'==$this->argument('isHourlyData') ? Str::replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString()) : Str::replace(' ', 'T', Carbon::now()->subHour(1)->toDateTimeString());
+        $startDate = 'True'==$this->argument('isYearlyData') ? Str::replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString()) : Str::replace(' ', 'T', Carbon::now()->subHour(1)->toDateTimeString());
         
         $responses = json_decode($this->historicalData($coinId, $startDate, $endDate), true);
         
