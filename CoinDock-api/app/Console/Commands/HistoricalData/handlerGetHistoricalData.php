@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\historicalData;
 
 use Illuminate\Support\Str;
 
@@ -63,7 +63,7 @@ class handlerGetHistoricalData extends Command
             [$coinId, $this->range, $startDate, $endDate, $limit],
             $baseURL
         );
-      
+        info($baseURLIdReplaced);
         $response = Http::withHeaders(['X-CoinAPI-Key' => $this->xApiKey])->get($baseURLIdReplaced);
         
         $responseLimit = Arr::first(Arr::get($response->headers(), 'x-ratelimit-remaining', null));
@@ -86,10 +86,9 @@ class handlerGetHistoricalData extends Command
 
     public function handleCoinData(string $coinId)
     {
-        $startDate = $this->argument('isHourlyData') ? Str::replace(' ', 'T', Carbon::now()->subHour(1)->toDateTimeString()) : Str::replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString());
 
         $endDate = Str::replace(' ', 'T', Carbon::now()->toDateTimeString());
-        $startDate = 'True'==$this->argument('isHourlyData') ? Str::replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString()) : Str::replace(' ', 'T', Carbon::now()->subHour(1)->toDateTimeString());
+        $startDate = 'True'==$this->argument('isYearlyData') ? Str::replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString()) : Str::replace(' ', 'T', Carbon::now()->subHour(1)->toDateTimeString());
         
         $responses = json_decode($this->historicalData($coinId, $startDate, $endDate), true);
         
