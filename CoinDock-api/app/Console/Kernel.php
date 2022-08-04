@@ -16,9 +16,9 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('coins:handle')->monthly()->runInBackground()->withoutOverlapping();
 
-        $schedule->command('history:coins')->yearly()->runInBackground()->withoutOverlapping();
+        $schedule->command('history:coins')->hourly()->runInBackground()->withoutOverlapping();
 
-        $schedule->command('data:hourly')->hourly()->runInBackground()->withoutOverlapping();
+        $schedule->command('history:coins --yearly-data')->yearly()->runInBackground()->withoutOverlapping();
 
     }
 

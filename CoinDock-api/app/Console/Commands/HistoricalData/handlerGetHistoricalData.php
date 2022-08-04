@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\HistoricalData;
 
+use App\Exceptions\ApiKeyException;
 use Illuminate\Support\Str;
 use App\Models\V1\Coin;
 use App\Models\V1\HistoricalData;
@@ -21,7 +22,8 @@ class handlerGetHistoricalData extends Command
     /* isYearlyData is passed as an argument to classify the data for fetching 
     the information. */
 
-    protected $signature = 'history:coins {isYearlyData} {--isYearlyData} ';
+    protected $signature = 'history:coins 
+                            {--yearly-data : Option for} ';
 
     /**
      * The console command description.
@@ -31,7 +33,7 @@ class handlerGetHistoricalData extends Command
     protected $description = 'Handler to get the Historical Data for a Year and Daily Information';
 
 
-    protected string $xApiKey;
+    protected $xApiKey;
 
     protected array $encryptionKeys;
 
@@ -40,9 +42,8 @@ class handlerGetHistoricalData extends Command
     public function __construct()
     {
         parent::__construct($this->name);
-
         $this->encryptionKeys = explode(',', config('coin.keys'));
-        $this->xApiKey = current($this->encryptionKeys);
+        $this->xApiKey = trim(current($this->encryptionKeys));
     }
 
     /**
@@ -61,20 +62,17 @@ class handlerGetHistoricalData extends Command
             [$coinId, $this->range, $startDate, $endDate, $limit],
             $baseURL
         );
-      
+     
         $response = Http::withHeaders(['X-CoinAPI-Key' => $this->xApiKey])->get($baseURLIdReplaced);
-        
-        $responseLimit = Arr::first(Arr::get($response->headers(), 'x-ratelimit-remaining', null));
-       
-        info($responseLimit);
-        if ($responseLimit <= 0) {
-            info($responseLimit);
-            info($this->xApiKey);
-            $this->xApiKey = next($this->encryptionKeys);
 
-            if(count($this->encryptionKeys) == array_search($this->xApiKey, $this->encryptionKeys) + 1) {
-                $this->xApiKey = current($this->encryptionKeys);
+        $responseLimit = Arr::first(Arr::get($response->headers(), 'x-ratelimit-remaining', null));
+    
+        if ($responseLimit <= 0) {
+            if($this->xApiKey == Arr::last($this->encryptionKeys)){
+                throw new ApiKeyException(Arr::get($response,'error', ''));
             }
+            
+            $this->xApiKey = trim(next($this->encryptionKeys));
             
             return $this->historicalData($coinId, $startDate, $endDate);
         }
@@ -85,11 +83,10 @@ class handlerGetHistoricalData extends Command
     public function handleCoinData(string $coinId)
     {
         $endDate = Str::replace(' ', 'T', Carbon::now()->toDateTimeString());
-        $startDate = 'True'==$this->argument('isYearlyData') ? Str::replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString()) : Str::replace(' ', 'T', Carbon::now()->subHour(1)->toDateTimeString());
-        
+        $startDate = $this->option('yearly-data') ? Str::replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString()) : Str::replace(' ', 'T', Carbon::now()->subHour(1)->toDateTimeString());
         $responses = json_decode($this->historicalData($coinId, $startDate, $endDate), true);
-        
-        foreach ($responses as $response){
+
+        foreach (collect($responses)->lazy(100) as $response){
             HistoricalData::updateOrCreate([
                 'coin_date' => substr(Arr::get($response, 'time_period_end'), 0, strpos(Arr::get($response, 'time_period_end'), ".0000000Z")),
                 'coin_id' => $coinId,
@@ -103,15 +100,15 @@ class handlerGetHistoricalData extends Command
 
     public function handle()
     {
-
+        $started = Carbon::now();
         $coins = Coin::select('coin_id')->whereIsCryptoAndStatus(1, 1);
 
         foreach($coins->lazy(10) as $coin) {
             $this->handleCoinData($coin->coin_id);
         }
         
-        $this->info($this->getUsages());
-    
-        $this->info("Coins fetched successfully");
+        $ended = Carbon::now()->diffInSeconds($started);
+
+        $this->info("Coins fetched successfully in {$ended} sec ");
     }
 }
