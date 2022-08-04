@@ -27,6 +27,7 @@ class AuthController extends AccessTokenController
 
         $response = $this->requestPasswordGrant($request);
         $user = User::whereEmail($request->email)->first();
+        info($response['access_token'],);
         return response(
             [
                 'message' => 'Login Successfull.',

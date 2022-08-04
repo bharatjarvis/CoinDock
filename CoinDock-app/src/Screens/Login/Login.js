@@ -11,9 +11,9 @@ import { useLogin } from "App/Api/auth";
 import "Shared/Password/Password.css";
 import { requiredValidation } from "Shared/Validation/requiredValidation";
 
-
 import { Link } from "react-router-dom";
 import Email from "Shared/Form/Email/Email.js";
+import { useSignupSteps } from "App/Api/signup";
 function Login() {
   let navigate = useNavigate();
   const [login, loginOptions] = useLogin();
@@ -21,6 +21,7 @@ function Login() {
   const [formValues, setformValues] = useState(initialValues);
   const [formErrors, setformErrors] = useState({});
   const [displayErrorMessage, setDisplayErrorMessage] = useState(false);
+  const { data: signupsteps } = useSignupSteps();
 
   const [isValid, setValid] = useState(false);
 

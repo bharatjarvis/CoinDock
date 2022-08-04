@@ -11,9 +11,7 @@ import { useTopperformer } from "App/Api/CoinPerformence/coinperformance";
 import { useLowperformer } from "App/Api/CoinPerformence/coinperformance";
 import { usePrimaryCurrency } from "App/Api/CoinPerformence/coinperformance";
 import { useTotalCurrency } from "App/Api/CoinPerformence/coinperformance";
-import { Card } from "react-bootstrap";
-import { isEmpty, isError } from "lodash";
-import Loading from "Shared/Loading/Loading";
+
 import DownArrow from "Shared/images/downarrow.jpg";
 import UpArrow from "Shared/images/uparrow.png";
 
@@ -58,7 +56,7 @@ function Dashboard() {
                   {top && (
                     <Cards
                       name={top?.data?.results?.heading}
-                      value={top?.data?.results?.coin_name.replace()}
+                      value={top?.data?.results?.coin_name}
                       logo={UpArrow}
                     />
                   )}

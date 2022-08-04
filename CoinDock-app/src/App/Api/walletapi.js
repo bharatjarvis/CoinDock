@@ -33,9 +33,6 @@ const wallet = baseApi.injectEndpoints({
         "lowperformer",
         "coincard",
       ],
-      transformResponse: (response) => {
-        return response;
-      },
     }),
     coins: build.query({
       query: () => {

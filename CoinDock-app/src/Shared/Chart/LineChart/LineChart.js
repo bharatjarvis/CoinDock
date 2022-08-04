@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { React, useState } from "react";
 import moment from "moment";
 import Loading from "Shared/Loading/Loading";
 import "./LineChart.css";
@@ -79,7 +79,7 @@ export function LineChart() {
   const { data: coinfilter } = useCoinFilter();
   const { data: coinshortname } = useCoinShortName();
 
-  console.log(coinfilter);
+
 
   const linedata = Object.entries(line?.data?.results ?? {});
   const rangefilter = Object.values(filter?.data?.results ?? {}).map(

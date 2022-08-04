@@ -13,6 +13,7 @@ const linechartapi = baseApi.injectEndpoints({
           method: "get",
         };
       },
+
       providesTags: ["linechart"],
     }),
     filter: build.query({

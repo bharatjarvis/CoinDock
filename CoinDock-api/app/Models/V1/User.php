@@ -24,6 +24,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use App\Models\V1\Wallet;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class User extends Authenticatable
@@ -199,7 +200,7 @@ class User extends Authenticatable
 
         public function getCoinId($coinId): array|collection
         {
-            if ($coinId != 'Coins') {
+            if (Str::lower($coinId) != 'coins') {
                 return $this->wallets->map(function ($wallet) use ($coinId) {
                     return $wallet->coin()->whereCoinId($coinId)->first();
                 })->unique('coin_id')->pluck('coin_id')->filter();
