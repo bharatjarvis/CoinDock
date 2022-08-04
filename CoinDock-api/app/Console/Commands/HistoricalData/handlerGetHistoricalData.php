@@ -10,9 +10,8 @@ use App\Models\V1\HistoricalData;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Symfony\Component\HttpFoundation\Response;
+
 
 class handlerGetHistoricalData extends Command
 {
@@ -21,14 +20,17 @@ class handlerGetHistoricalData extends Command
      *
      * @var string
      */
-    protected $signature = 'history:coins';
+    /* isYearlyData is passed as an argument to classify the data for fetching 
+    the information. */
+
+    protected $signature = 'history:coins {isYearlyData} {--isYearlyData} ';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Handler to get the Historical Data for a Year and Daily Information';
 
 
     protected string $xApiKey;
@@ -84,8 +86,11 @@ class handlerGetHistoricalData extends Command
 
     public function handleCoinData(string $coinId)
     {
+        $startDate = $this->argument('isHourlyData') ? Str::replace(' ', 'T', Carbon::now()->subHour(1)->toDateTimeString()) : Str::replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString());
+
         $endDate = Str::replace(' ', 'T', Carbon::now()->toDateTimeString());
-        $startDate = Str::replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString());
+        $startDate = 'True'==$this->argument('isHourlyData') ? Str::replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString()) : Str::replace(' ', 'T', Carbon::now()->subHour(1)->toDateTimeString());
+        
         $responses = json_decode($this->historicalData($coinId, $startDate, $endDate), true);
         
         foreach ($responses as $response){
@@ -102,6 +107,7 @@ class handlerGetHistoricalData extends Command
 
     public function handle()
     {
+
         $coins = Coin::select('coin_id')->whereIsCryptoAndStatus(1, 1);
 
         foreach($coins->lazy(10) as $coin) {
