@@ -2,7 +2,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import { baseApi } from "../Api";
 import { combineReducers } from "redux";
 import thunk from "redux-thunk";
-import { logger } from "redux-logger";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import auth from "App/Api/auth";
 import { authReducer } from "App/Auth/reducers";

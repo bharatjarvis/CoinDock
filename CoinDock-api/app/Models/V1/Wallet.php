@@ -2,14 +2,14 @@
 
 namespace App\Models\V1;
 
-use App\Exceptions\ApiKeyException;
+use App\Exceptions\{ApiKeyException, WalletCreationException};
 use App\Models\V1\{User, Coin};
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
+use Illuminate\Support\{Arr, Facades\DB, Str};
 use Symfony\Component\HttpFoundation\Response;
 
 class Wallet extends Model
@@ -152,33 +152,40 @@ class Wallet extends Model
     //Adding Wallet for Particular User
     public static function addWallet(User $user, Request $request)
     {
-        $walletId = $request->wallet_id;
+        try{
+            DB::beginTransaction();
+            $walletId = $request->wallet_id;
 
-        $acceptedCoin = $request->coin;
-        $coinId = Coin::whereCoinId($acceptedCoin)->first()?->id;
+            $acceptedCoin = $request->coin;
+            $coinId = Coin::whereCoinId($acceptedCoin)->first()?->id;
 
-        $wallet = self::walletCreate($user->id, $walletId, $coinId);
+            $wallet = self::walletCreate($user->id, $walletId, $coinId);
 
-        $balanceInUsd = $wallet->cryptoToUsd();
-        $basePath = $wallet->basePath();
+            $balanceInUsd = $wallet->cryptoToUsd();
+            $basePath = $wallet->basePath();
 
-        $response = Http::get($basePath);
+            $response = Http::get($basePath);
 
-        if ($acceptedCoin == 'EXP' || $acceptedCoin == 'MOAC' ) {
-            $response = Http::post($basePath, ['addr' => $walletId, 'options' => ['balance']]);
-        }
-
-        if ($wallet->isJson($response)) {
-            $coins = $wallet->totalCoins($response);
-            if (is_numeric($coins)) {
-                if ($acceptedCoin == 'EXP') {
-                    return $wallet->update([
-                        'balance' => $response['balanceUSD'],
-                        'coins' => $coins
-                    ]);
-                }
-                return $wallet->update(['balance' => $balanceInUsd * $coins, 'coins' => $coins]);
+            if ($acceptedCoin == 'EXP' || $acceptedCoin == 'MOAC' ) {
+                $response = Http::post($basePath, ['addr' => $walletId, 'options' => ['balance']]);
             }
+
+            if ($wallet->isJson($response)) {
+                $coins = $wallet->totalCoins($response);
+                if (is_numeric($coins)) {
+                    if ($acceptedCoin == 'EXP') {
+                        return $wallet->update([
+                            'balance' => $response['balanceUSD'],
+                            'coins' => $coins
+                        ]);
+                    }
+                    return $wallet->update(['balance' => $balanceInUsd * $coins, 'coins' => $coins]);
+                }
+            }
+            DB::commit();
+        }catch(Exception $e) {
+            DB::rollBack();
+            throw new WalletCreationException('Unable to add wallet, please check wallet Id and wallet address');
         }
         return true;
     }

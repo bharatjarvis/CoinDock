@@ -1,30 +1,29 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import auth from "App/Api/auth";
-import { store } from "App/Reducers";
 import { authToken, getUserId } from "../helper";
 
 const reducer = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState: {
     userId: null,
-    token: null
+    token: null,
   },
-  reducers: {
-  },
+  reducers: {},
   extraReducers: (build) => {
-
-    build.addMatcher(isAnyOf(auth.endpoints.login.matchFulfilled, auth.endpoints.refresh.matchFulfilled),(state, {payload}) => {
-      const token = authToken()
-      if(token){
-        state.userId = getUserId()
-        state.token = authToken()
+    build.addMatcher(
+      isAnyOf(
+        auth.endpoints.login.matchFulfilled,
+        auth.endpoints.refresh.matchFulfilled
+      ),
+      (state, { payload }) => {
+        const token = authToken();
+        if (token) {
+          state.userId = getUserId();
+          state.token = authToken();
+        }
       }
-    })
+    );
+  },
+});
 
-  }
-
-
-})
-
-
-export const {reducer: authReducer} = reducer
+export const { reducer: authReducer } = reducer;

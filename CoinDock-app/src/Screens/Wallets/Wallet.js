@@ -8,7 +8,7 @@ import { openPopup } from "Screens/AddWallet/AddWalletSlice";
 import { useDispatch } from "react-redux";
 import "./Wallet.css";
 
-const Wallet = () => {
+function Wallet() {
   const { data: coincard, isLoading, isError } = useCoinCard();
   const dispatch = useDispatch();
 
@@ -27,9 +27,9 @@ const Wallet = () => {
           <PlusCircle size={30} onClick={() => dispatch(openPopup())} />
         </div>
 
-        {Object.values(coincard?.data?.results ?? {}).map((value) => {
+        {Object.values(coincard?.data?.results ?? {}).map((value, index) => {
           return (
-            <div className="card-block">
+            <div className="card-block" key={index}>
               <div className="col-md-12 card p-3">
                 <div className="row">
                   <div className="col-md-2">
@@ -48,7 +48,7 @@ const Wallet = () => {
                       <EllipseNumber
                         component="h6"
                         text={value?.BTC_coin?.toString() ?? ""}
-                        className="text-end"
+                        classNames="text-end"
                         maxLetters={4}
                       />
 
@@ -56,7 +56,7 @@ const Wallet = () => {
                     </div>
                   </div>
                   <div className="col-md-2">
-                    <div class="photo-box">
+                    <div className="photo-box">
                       <h6 className="text-end">{value?.number_of_coins}</h6>
                       <p className="mb-2 text-muted text-end">Coins</p>
                     </div>
@@ -87,5 +87,5 @@ const Wallet = () => {
       </div>
     </div>
   );
-};
+}
 export default Wallet;

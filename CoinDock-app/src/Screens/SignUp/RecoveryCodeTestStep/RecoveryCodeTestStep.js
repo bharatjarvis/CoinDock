@@ -115,7 +115,7 @@ function RecoveryCodeTestStep() {
                         navigate("/recovery-codes");
                       }}
                     />
-                    <i class="bi bi-arrow-bar-left"></i>
+                    <i className="bi bi-arrow-bar-left"></i>
                   </div>
 
                   <div className="col-md-4 offset-md-4 cd-width-unset">

@@ -10,7 +10,6 @@ const coincardapi = baseApi.injectEndpoints({
         url: `/v1/users/${getUserId()}/coin-cards/`,
         method: "get",
       }),
-
       providesTags: ["coincard"],
     }),
 

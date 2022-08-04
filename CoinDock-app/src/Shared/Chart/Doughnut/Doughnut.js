@@ -4,7 +4,7 @@ import { Doughnut } from "react-chartjs-2";
 import { usePieChart } from "App/Api/piechartapi";
 import { usePieFilter } from "App/Api/piechartapi";
 import "./Doughnut.css";
-import { isEmpty, isError } from "lodash";
+import { isEmpty } from "lodash";
 import { Card } from "react-bootstrap";
 import Loading from "Shared/Loading/Loading";
 

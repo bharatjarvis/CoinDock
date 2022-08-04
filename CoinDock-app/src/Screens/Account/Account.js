@@ -1,6 +1,5 @@
 import React from "react";
 import "./Account.css";
-import { useAccount } from "App/Api/accapi";
 import { useNavigate } from "react-router-dom";
 import "Shared/common-styles/button.css";
 import { useLogout } from "App/Api/auth";
@@ -8,8 +7,6 @@ import "Shared/common-styles/common.css";
 import { Card } from "react-bootstrap";
 
 function Account() {
-  const { data: account } = useAccount();
-  const accountDetails = account?.data?.results?.user || {};
   const [logout] = useLogout();
   const navigate = useNavigate();
   const handleCardProfile = () => {
@@ -51,7 +48,7 @@ function Account() {
           {accordianBasedAccountDetails &&
             accordianBasedAccountDetails.map((item, id) => (
               <div key={id}>
-                {item.key == "profile" ? (
+                {item.key === "profile" ? (
                   <Card
                     type="submit"
                     className="cd-cardstyle bg-light mb-3"
@@ -61,7 +58,7 @@ function Account() {
                   >
                     <Card.Body>{item.label}</Card.Body>
                   </Card>
-                ) : item.key == "accounts" ? (
+                ) : item.key === "accounts" ? (
                   <Card
                     type="submit"
                     onClick={() => handleCardAccount()}
@@ -69,7 +66,7 @@ function Account() {
                   >
                     <Card.Body>{item.label}</Card.Body>
                   </Card>
-                ) : item.key == "system" ? (
+                ) : item.key === "system" ? (
                   <Card
                     onClick={() => handleCardSystem()}
                     className="cd-cardstyle bg-light mb-3"

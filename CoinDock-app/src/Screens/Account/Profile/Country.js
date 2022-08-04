@@ -7,15 +7,14 @@ import { countryValidation } from "Shared/Form/Select/Select";
 function Country() {
   const { data: account } = useAccount();
   const accountDetails = account?.data?.results?.user || {};
-  const [formErrors, setformErrors] = useState({});
+  const [, setformErrors] = useState({});
   const initialValues = {
     country: accountDetails.country,
   };
   const { data: countryfilter } = useCountry();
-  console.log('...from countries',countryfilter);
   const [formValues, setformValues] = useState(initialValues);
   const [isValid, setValid] = useState(false);
-  const [filter, setFilter] = useState({});
+  const [, setFilter] = useState({});
   const [getData] = useAccountData();
   const handleChanges = (e) => {
     const { name, value } = e.target;

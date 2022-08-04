@@ -33,7 +33,7 @@ const EllipseNumber = ({
   }, [initialStrink, maxLetters, text, handleCollapse]);
   return (
     <React.Fragment>
-      <Component onClick={handleCollapse} classNames={classNames}>
+      <Component onClick={handleCollapse} classnames={classNames}>
         {displayText}
         {!isCallaped && "..."}
       </Component>
