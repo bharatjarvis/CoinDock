@@ -20,7 +20,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('historicalData:fetch --yearly-data')->yearly()->runInBackground()->withoutOverlapping();
 
-        $schedule->command('historicalData:delete ')->yearly()->runInBackground()->withoutOverlapping();
+        $schedule->command('historicalData:purge ')->yearly()->runInBackground()->withoutOverlapping();
 
     }
 
