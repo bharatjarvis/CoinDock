@@ -56,24 +56,25 @@ class HandleHistoricalData extends Command
         $limit = config('coin.coin.limit');
 
         $baseURL = config('coin.coin.api_url') . config('coin.coin.realtime_url');
-        
+
         $baseURLIdReplaced = str_replace(
             ['{coin1}', '{range}', '{start_date}', '{end_date}', '{limit}'],
             [$coinId, $this->range, $startDate, $endDate, $limit],
             $baseURL
         );
-     
+
         $response = Http::withHeaders(['X-CoinAPI-Key' => $this->xApiKey])->get($baseURLIdReplaced);
 
         $responseLimit = Arr::first(Arr::get($response->headers(), 'x-ratelimit-remaining', null));
-    
+
+        info($responseLimit);
         if ($responseLimit <= 0) {
-            if($this->xApiKey == Arr::last($this->encryptionKeys)){
-                throw new ApiKeyException(Arr::get($response,'error', ''));
+            if ($this->xApiKey == Arr::last($this->encryptionKeys)) {
+                throw new ApiKeyException(Arr::get($response, 'error', ''));
             }
-            
+
             $this->xApiKey = trim(next($this->encryptionKeys));
-            
+
             return $this->historicalData($coinId, $startDate, $endDate);
         }
 
@@ -84,17 +85,23 @@ class HandleHistoricalData extends Command
     {
         $endDate = Str::replace(' ', 'T', Carbon::now()->toDateTimeString());
         $startDate = $this->option('yearly-data') ? Str::replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString()) : Str::replace(' ', 'T', Carbon::now()->subHour(1)->toDateTimeString());
+
         $responses = json_decode($this->historicalData($coinId, $startDate, $endDate), true);
 
-        foreach (collect($responses)->lazy(100) as $response){
-            HistoricalData::updateOrCreate([
+        $historicalData = array_map(function ($response) use ($coinId) {
+            return [
                 'coin_date' => substr(Arr::get($response, 'time_period_end'), 0, strpos(Arr::get($response, 'time_period_end'), ".0000000Z")),
                 'coin_id' => $coinId,
-            ], 
-            [ 'rate_close' => Arr::get($response, 'rate_close') ]
+                'rate_close' => Arr::get($response, 'rate_close')
+            ];
+        }, $responses, []);
+
+        HistoricalData::upsert(
+            $historicalData,
+            ['coin_date', 'coin_id'],
+            ['rate_close']
         );
-        }
-        
+
         $this->info("Data Fetched Successfully for {$coinId}");
     }
 
@@ -103,10 +110,10 @@ class HandleHistoricalData extends Command
         $started = Carbon::now();
         $coins = Coin::select('coin_id')->whereIsCryptoAndStatus(1, 1);
 
-        foreach($coins->lazy(10) as $coin) {
+        foreach ($coins->lazy(10) as $coin) {
             $this->handleCoinData($coin->coin_id);
         }
-        
+
         $ended = Carbon::now()->diffInSeconds($started);
 
         $this->info("Coins fetched successfully in {$ended} sec ");
