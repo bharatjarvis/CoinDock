@@ -18,31 +18,13 @@ import Accountemail from "Screens/Account/AccountS.js/Accountemail";
 import Accountpassword from "Screens/Account/AccountS.js/Accountpassword";
 import Primary from "Screens/Account/System.js/Primary";
 import Secondary from "Screens/Account/System.js/Secondary";
-import { useSignupSteps } from "App/Api/signup";
 const AuthRoutes = (props) => {
   const isAuthenticated = useIsAuthenticated();
-  const { data: signupsteps } = useSignupSteps();
-  console.log(signupsteps);
+
   if (!isAuthenticated) {
     return <React.Fragment />;
   }
-  // if (signupsteps?.data?.results?.step_details?.step_1_completed) {
-  //   return (
-  //     <Routes>
-  //       <Route path="/recovery-codes" element={<RecoveryCodeBoxStep />} />
-  //     </Routes>
-  //   );
-  // }
-  // if (signupsteps?.data?.results?.step_details?.step_2_completed) {
-  //   <Routes>
-  //     <Route path="/recovery-test" element={<RecoveryCodeTestStep />} />
-  //   </Routes>;
-  // }
-  // if (signupsteps?.data?.results?.step_details?.step_3_completed) {
-  //   <Routes>
-  //     <Route path="/dashboard" element={<Dashboard />} />
-  //   </Routes>;
-  // }
+
   return (
     <Routes>
       <Route path="/account" element={<Account />} />

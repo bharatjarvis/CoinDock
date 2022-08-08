@@ -1,7 +1,6 @@
 import React from "react";
-import { propTypes } from "react-bootstrap/esm/Image";
 import "./Popup.css";
-
+import PropTypes from "prop-types";
 function Popup(props) {
   const handleClick = () => {
     props.buttonOnclick?.();
@@ -28,10 +27,10 @@ function Popup(props) {
   );
 }
 Popup.propTypes = {
-  trigger: propTypes.function,
-  buttonLable: propTypes.string,
-  disabled: propTypes.boolean,
-  children: propTypes.element,
+  trigger: PropTypes.bool,
+  buttonLable: PropTypes.string,
+  disabled: PropTypes.bool,
+  children: PropTypes.element,
 };
 
 export default Popup;

@@ -30,7 +30,7 @@ class handleCoins extends Command
     public function handle()
     {
         //fetching coins from API
-        $assetsUrl = config('coin.coin.api_url') . config('coin.coin.api_url.assets_path');
+        $assetsUrl = config('coin.coin.api_url') . config('coin.coin.assets_path');
         $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])
             ->get($assetsUrl);
         $assetArray = collect(json_decode($response));
@@ -43,23 +43,26 @@ class handleCoins extends Command
         // // //Inserting Coins That we have fetched from the Api
         foreach ($assetArray->lazy(100) as $asset) {
             Coin::updateOrCreate([
-                'coin_id' => $asset->asset_id], [
-                'name' => ($asset->name == 'CFX') ? ('Conflux') : ($asset->name),
+                'coin_id' => $asset->asset_id
+            ], [
+                'name' => $asset->name == 'CFX' ? 'Conflux' : $asset->name,
                 'is_crypto' => $asset->type_is_crypto,
-                'status' => $asset->name == $acceptedAssets ? true : false,
-                'is_default' => $asset->name == $defaultCoin ? true : false
+                'status' => in_array($asset->asset_id, $acceptedAssets),
+                'is_default' => $asset->asset_id == $defaultCoin
             ]);
         }
 
         // //Inserting Image paths for Coins
-        $assetImagesUrl = config('coin.coin.api_url') . config('coin.coin.api_url.asset_images');
+        $assetImagesUrl = config('coin.coin.api_url') . config('coin.coin.asset_images');
         $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])
             ->get($assetImagesUrl);
         $assetImagesArray = json_decode($response);
 
         foreach ($assetImagesArray as $image) {
             if($coin = Coin::whereCoinId($image->asset_id)->first()){
-                $coin->update(['img_path'=>$image->url]);
+                $coin->update(
+                    ['img_path' => $image->url]
+                );
             }
         }
 

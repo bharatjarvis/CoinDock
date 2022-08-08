@@ -9,18 +9,17 @@ const EllipseNumber = ({
 }) => {
   const initalMount = useRef(true);
   const [isCallaped, setIsCollapesed] = useState(initialStrink);
-  console.log(text);
+
   const [displayText, setDisplayText] = useState(text);
-  useEffect(() => {
-    console.log(displayText);
-  }, [displayText]);
+  useEffect(() => {}, [displayText]);
   const handleCollapse = useCallback(() => {
     setDisplayText((initialText) => {
       if (!isCallaped) return text;
       const [beforeDecimal, afterDemial] = String(text).split(".");
-      return [beforeDecimal ?? null, afterDemial.substring(0, maxLetters)].join(
-        "."
-      );
+      return [
+        beforeDecimal ?? null,
+        afterDemial?.substring(0, maxLetters),
+      ].join(".");
     });
     setIsCollapesed((value) => !value);
   }, [maxLetters, text, isCallaped]);
@@ -34,7 +33,7 @@ const EllipseNumber = ({
   }, [initialStrink, maxLetters, text, handleCollapse]);
   return (
     <React.Fragment>
-      <Component onClick={handleCollapse} classNames={classNames}>
+      <Component onClick={handleCollapse} classnames={classNames}>
         {displayText}
         {!isCallaped && "..."}
       </Component>

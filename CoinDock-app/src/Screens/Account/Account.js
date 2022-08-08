@@ -9,26 +9,35 @@ import { Card } from "react-bootstrap";
 function Account() {
   const [logout] = useLogout();
   const navigate = useNavigate();
+  const handleCardProfile = () => {
+    navigate("/profile-settings");
+  };
+  const handleCardAccount = () => {
+    navigate("/account-settings");
+  };
+  const handleCardSystem = () => {
+    navigate("/system-settings");
+  };
 
   const accordianBasedAccountDetails = [
     {
       label: "Profile settings",
-      navigate: "/profile-settings",
+      key: "profile",
     },
     {
       label: "Account settings",
-      navigate: "/account-settings",
+      key: "accounts",
     },
     {
       label: "System settings",
-      navigate: "/system-settings",
+      key: "system",
     },
   ];
 
   const handleLogoutClick = async () => {
     try {
       await logout().unwrap();
-      navigate("/login");
+      navigate("/");
     } catch (e) {}
   };
   return (

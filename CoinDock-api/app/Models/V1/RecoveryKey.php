@@ -53,6 +53,8 @@ class RecoveryKey extends Model
             self::whereUserId($user->id)
                 ->whereNot('status', RecoveryKeyStatus::Used)
                 ->update(['status' => RecoveryKeyStatus::Used]);
+
+            $user->update(['recovery_attempts' => 0]);
         }
 
         $recoveryCode = self::whereUserId($user->id)
@@ -125,9 +127,8 @@ class RecoveryKey extends Model
         $maxAttemptCount = config('random_keys.recovery.attemps');
 
         if ($attemptCount < $maxAttemptCount) {
-            $this->user->update([
-                'recovery_attempts' => $attemptCount + 1,
-            ]);
+            $this->user->recovery_attempts = $attemptCount + 1;
+            $this->user->save();
         }
 
         return false;

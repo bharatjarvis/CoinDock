@@ -89,6 +89,7 @@ class RecoveryKeyController extends Controller
                 Response::HTTP_OK
             );
         }
+        $user->refresh();
 
         return response(
             [

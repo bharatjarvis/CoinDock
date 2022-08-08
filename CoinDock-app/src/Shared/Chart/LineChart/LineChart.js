@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { React, useState } from "react";
 import moment from "moment";
 import Loading from "Shared/Loading/Loading";
 import "./LineChart.css";
@@ -17,9 +17,8 @@ import {
   useCoinFilter,
   useLineChart,
   useLineFilter,
-  useCoinShortName,
 } from "App/Api/linechartapi";
-import { isEmpty, sortBy, uniq } from "lodash";
+import { isEmpty, uniq } from "lodash";
 import { Card } from "react-bootstrap";
 
 ChartJS.register(
@@ -77,9 +76,6 @@ export function LineChart() {
   } = useLineChart({ coin_id: coinid, range });
   const { data: filter } = useLineFilter();
   const { data: coinfilter } = useCoinFilter();
-  const { data: coinshortname } = useCoinShortName();
-
-  console.log(coinfilter);
 
   const linedata = Object.entries(line?.data?.results ?? {});
   const rangefilter = Object.values(filter?.data?.results ?? {}).map(

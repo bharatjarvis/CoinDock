@@ -20,7 +20,7 @@ class PieChartController extends Controller
             Response::HTTP_OK
         );
     }
-    
+
     public function filter(User $user)
     {
         return response(
@@ -29,6 +29,6 @@ class PieChartController extends Controller
                 'results' => ['coins','currency']
             ],
             Response::HTTP_OK
-        ); 
+        );
     }
 }

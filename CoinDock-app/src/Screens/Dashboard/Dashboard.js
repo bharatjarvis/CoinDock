@@ -11,9 +11,6 @@ import { useTopperformer } from "App/Api/CoinPerformence/coinperformance";
 import { useLowperformer } from "App/Api/CoinPerformence/coinperformance";
 import { usePrimaryCurrency } from "App/Api/CoinPerformence/coinperformance";
 import { useTotalCurrency } from "App/Api/CoinPerformence/coinperformance";
-import { Card } from "react-bootstrap";
-import { isEmpty, isError } from "lodash";
-import Loading from "Shared/Loading/Loading";
 import DownArrow from "Shared/images/downarrow.jpg";
 import UpArrow from "Shared/images/uparrow.png";
 
@@ -58,7 +55,7 @@ function Dashboard() {
                   {top && (
                     <Cards
                       name={top?.data?.results?.heading}
-                      value={top?.data?.results?.coin_name.replace()}
+                      value={top?.data?.results?.coin_name}
                       logo={UpArrow}
                     />
                   )}
@@ -74,12 +71,12 @@ function Dashboard() {
                 </div>
               </div>
               <div className="container justify-content-center">
-                <div class="row">
-                  <div class="col-md-7">
+                <div className="row">
+                  <div className="col-md-7">
                     <LineChart />
                   </div>
-                  <div class="col-md-1"></div>
-                  <div class="col-md-4">
+                  <div className="col-md-1"></div>
+                  <div className="col-md-4">
                     <PieChart />
                   </div>
                 </div>
