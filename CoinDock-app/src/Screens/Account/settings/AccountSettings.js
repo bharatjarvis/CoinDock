@@ -17,7 +17,6 @@ function AccountSettings() {
     {
       label: "Email",
       key: "email",
-      displayLabel: "Email",
     },
     {
       label: "Change Password",
@@ -59,10 +58,8 @@ function AccountSettings() {
           {field.displayLabel ? (
             <Card className="cd-cardstyle bg-light mb-3">
               <CardContent className="d-flex justify-content-between">
-                {field.label}:
-                {field.key == "email" ? (
-                  accountDetails.email
-                ) : field.key == "changepassword" ? (
+                {field.label}
+                {field.key == "changepassword" ? (
                   <span
                     type="submit"
                     style={{ float: "end" }}
@@ -84,7 +81,13 @@ function AccountSettings() {
                 ) : null}
               </CardContent>
             </Card>
-          ) : null}
+          ) : (
+            <Card className="cd-cardstyle bg-light mb-3">
+              <CardContent className="d-flex justify-content-between">
+                {field.label} : {accountDetails.email}
+              </CardContent>
+            </Card>
+          )}
         </div>
       ))}
     </>
