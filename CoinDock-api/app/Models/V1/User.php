@@ -210,12 +210,12 @@ class User extends Authenticatable
     }
 
 
-    public function graph(GraphRequest $request)
+    public function graph(GraphRequest $request,User $user)
     {
         $coinId = Arr::get($request, 'coin_id');
 
         if (is_null($coinId)) {
-            $coinId = 'All';
+            $coinId = 'Coins';
         }
 
         $timePeriod = $request->range;
@@ -226,26 +226,65 @@ class User extends Authenticatable
             case TimePeriod::Day:
                 $range = '1HRS';
                 $startDate = str_replace(' ', 'T', Carbon::now()->subDay(1)->toDateTimeString());
-                return $this->dbDay($range, $startDate, $endDate, $coinId);
+                if($coinId=='Coins'){
+                    $userCoins = Wallet::select('coin_id')->whereUserId($this->id)->get()->pluck('coin_id');
+                    $coinIds = Coin::find($userCoins)->pluck('coin_id');
+                    $res = [];
+                    foreach($coinIds as $coinId){
+                        array_push($res,[$coinId=>$this->dbDay($range, $startDate, $endDate, $coinId)]);
+                    }
+                    return $res;
+                }
+                
+                return [$coinId=>$this->dbDay($range, $startDate, $endDate, $coinId)];
 
             case TimePeriod::Weekly:
                 $range = '1DAY';
                 $startDate = str_replace(' ', 'T', Carbon::now()->subDay(6)->toDateTimeString());
-                return $this->weekly($range, $startDate, $endDate, $coinId);
+                if($coinId=='Coins'){
+                    $userCoins = Wallet::select('coin_id')->whereUserId($this->id)->get()->pluck('coin_id');
+                    $coinIds = Coin::find($userCoins)->pluck('coin_id');
+                    $res = [];
+                    foreach($coinIds as $coinId){
+                        array_push($res,[$coinId=>$this->weekly($range, $startDate, $endDate, $coinId)]);
+                    }
+                    return $res;
+                }
+                return [$coinId=>$this->weekly($range, $startDate, $endDate, $coinId)];
 
             case TimePeriod::Monthly:
                 $range = '7DAY';
                 $startDate = str_replace(' ', 'T', Carbon::now()->subMonth(1)->toDateTimeString());
-                return $this->monthly($range, $startDate, $endDate, $coinId);
+                if($coinId=='Coins'){
+                    $userCoins = Wallet::select('coin_id')->whereUserId($this->id)->get()->pluck('coin_id');
+                    $coinIds = Coin::find($userCoins)->pluck('coin_id');
+                    $res = [];
+                    foreach($coinIds as $coinId){
+                        array_push($res,[$coinId=>$this->monthly($range, $startDate, $endDate, $coinId)]);
+                    }
+                    return $res;
+                }
+                return [$coinId=>$this->monthly($range, $startDate, $endDate, $coinId)];
 
             case TimePeriod::Yearly:
                 $range = '7DAY';
                 $startDate = str_replace(' ', 'T', Carbon::now()->subYear(1)->toDateTimeString());
-                return $this->yearly($range, $startDate, $endDate, $coinId);
+                if($coinId=='Coins'){
+                    $userCoins = Wallet::select('coin_id')->whereUserId($this->id)->get()->pluck('coin_id');
+                    $coinIds = Coin::find($userCoins)->pluck('coin_id');
+                    $res = [];
+                    foreach($coinIds as $coinId){
+                        array_push($res,[$coinId=>$this->yearly($range, $startDate, $endDate, $coinId)]);
+                    }
+                    return $res;
+                }
+                return [$coinId=>$this->yearly($range, $startDate, $endDate, $coinId)];
+
+
             default:
                 $range = '1HRS';
                 $startDate = str_replace(' ', 'T', Carbon::now()->subDay(1)->toDateTimeString());
-                return $this->dbDay($range, $startDate, $endDate, $coinId);
+                return [$coinId=>$this->dbDay($range, $startDate, $endDate, $coinId)];
         }
     }
 
@@ -255,10 +294,12 @@ class User extends Authenticatable
         $dailyData = HistoricalData::select(['rate_close', 'coin_date'])->whereCoinId($coinId)
             ->whereBetween('coin_date', [$startDate, $endDate])
             ->get();
+        $final = [];
         $result = [];
         foreach ($dailyData as $data) {
             $result[$data['coin_date']] = $data['rate_close'];
         }
+        // $final[$coinId] = $result;
         return $result;
     }
 
@@ -268,6 +309,7 @@ class User extends Authenticatable
             ->whereBetween('coin_date', [$startDate, $endDate])
             ->get();
         $result = [];
+        $final = [];
         $newCoinData = [];
         foreach ($response as $data) {
             array_push($newCoinData, [
@@ -289,25 +331,30 @@ class User extends Authenticatable
             $avg = $sum / $count;
             $finalResult[$date] = $avg;
         }
+        // $final[$coinId] = $finalResult;
         return $finalResult;
     }
 
     public function monthly(string $range, string $startDate, string $endDate, string $coinId)
     {
         $allWeeklyData = $this->weekly($range, $startDate, $endDate, $coinId);
-        $weekData = array_chunk($allWeeklyData, 7);
+        $weekData = array_chunk($allWeeklyData, 7,true);
         $result = [];
         $presentDate = Carbon::now();
         $weeks = [];
+        $final = [];
         $weeks = Arr::prepend($weeks, $presentDate->format('d-m-Y'));
+        
         for ($i = 0; $i < count($weekData) - 1; $i++) {
             $weekSub = $presentDate->subDays(7)->format('d-m-Y');
             array_push($weeks, $weekSub);
         }
+
         $weekData = array_reverse($weekData);
         for ($i = 0; $i < count($weeks); $i++) {
             $result[$weeks[$i]] = array_sum($weekData[$i]) / 7;
         }
+        // $final[$coinId] = $result;
         return $result;
     }
 
@@ -336,8 +383,8 @@ class User extends Authenticatable
             $avg = $sum / $count;
             $finalResult[$date] = $avg;
         }
-        $result[$coinId] = $finalResult;
-        return $result;
+        //$result[$coinId] = $finalResult;
+        return $finalResult;
     }
 
 

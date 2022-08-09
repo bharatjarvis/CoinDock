@@ -39,7 +39,7 @@ class GraphController extends Controller
         return response(
             [
                 'message' => 'success',
-                'results' => $user->graph($request)
+                'results' => $user->graph($request,$user)
             ],
             Response::HTTP_OK
         );
