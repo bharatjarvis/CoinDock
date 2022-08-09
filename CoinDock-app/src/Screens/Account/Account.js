@@ -9,28 +9,22 @@ import { Card } from "react-bootstrap";
 function Account() {
   const [logout] = useLogout();
   const navigate = useNavigate();
-  const handleCardProfile = () => {
-    navigate("/profile-settings");
-  };
-  const handleCardAccount = () => {
-    navigate("/account-settings");
-  };
-  const handleCardSystem = () => {
-    navigate("/system-settings");
-  };
 
   const accordianBasedAccountDetails = [
     {
       label: "Profile settings",
       key: "profile",
+      navigate: "/profile-settings",
     },
     {
       label: "Account settings",
       key: "accounts",
+      navigate: "/account-settings",
     },
     {
       label: "System settings",
       key: "system",
+      navigate: "/system-settings",
     },
   ];
 
@@ -48,29 +42,12 @@ function Account() {
           {accordianBasedAccountDetails &&
             accordianBasedAccountDetails.map((item, id) => (
               <div key={id}>
-                {item.key === "profile" ? (
+                {item.navigate ? (
                   <Card
-                    type="submit"
                     className="cd-cardstyle bg-light mb-3"
                     onClick={() => {
-                      handleCardProfile();
+                      navigate(item.navigate);
                     }}
-                  >
-                    <Card.Body>{item.label}</Card.Body>
-                  </Card>
-                ) : item.key === "accounts" ? (
-                  <Card
-                    type="submit"
-                    onClick={() => handleCardAccount()}
-                    className="cd-cardstyle bg-light mb-3"
-                  >
-                    <Card.Body>{item.label}</Card.Body>
-                  </Card>
-                ) : item.key === "system" ? (
-                  <Card
-                    onClick={() => handleCardSystem()}
-                    className="cd-cardstyle bg-light mb-3"
-                    type="submit"
                   >
                     <Card.Body>{item.label}</Card.Body>
                   </Card>
