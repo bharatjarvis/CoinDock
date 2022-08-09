@@ -57,7 +57,7 @@ function AccountSettings() {
             <Card className="cd-cardstyle bg-light mb-3">
               <Card.Body className="d-flex justify-content-between">
                 {field.label}
-                {field.key == "changepassword" ? (
+                {field.key === "changepassword" ? (
                   <span
                     type="submit"
                     style={{ float: "end" }}
@@ -67,7 +67,7 @@ function AccountSettings() {
                   >
                     <FaEdit />
                   </span>
-                ) : field.key == "recoverycodes" ? (
+                ) : field.key === "recoverycodes" ? (
                   <button
                     onClick={() => {
                       navigate(field.navigate);
