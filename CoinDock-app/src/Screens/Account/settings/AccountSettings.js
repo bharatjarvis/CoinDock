@@ -1,14 +1,12 @@
 import React from "react";
 import "../Account.css";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import { Typography } from "@mui/material";
 import { FaArrowLeft } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import "../../../Shared/common-styles/button.css";
 import { useAccount } from "App/Api/accapi";
 import { useNavigate } from "react-router-dom";
 import { Card } from "react-bootstrap";
-import { CardContent } from "@mui/material";
+
 function AccountSettings() {
   const { data: account } = useAccount();
   const accountDetails = account?.data?.results?.user || {};
@@ -34,14 +32,14 @@ function AccountSettings() {
 
   return (
     <>
-      <ArrowBackIosIcon
+      <FaArrowLeft
         type="submit"
         style={{ maxWidth: 45, marginTop: "35px" }}
         onClick={() => {
           navigate("/account");
         }}
       />{" "}
-      <Typography
+      <h2
         style={{
           textAlign: "center",
           fontWeight: "lighter",
@@ -52,12 +50,12 @@ function AccountSettings() {
         variant="h4"
       >
         Account settings
-      </Typography>
+      </h2>
       {fields.map((field, id) => (
         <div className="cd-card1" key={id}>
           {field.displayLabel ? (
             <Card className="cd-cardstyle bg-light mb-3">
-              <CardContent className="d-flex justify-content-between">
+              <Card.Body className="d-flex justify-content-between">
                 {field.label}
                 {field.key == "changepassword" ? (
                   <span
@@ -79,13 +77,13 @@ function AccountSettings() {
                     Re-Generate
                   </button>
                 ) : null}
-              </CardContent>
+              </Card.Body>
             </Card>
           ) : (
             <Card className="cd-cardstyle bg-light mb-3">
-              <CardContent className="d-flex justify-content-between">
+              <Card.Body className="d-flex justify-content-between">
                 {field.label} : {accountDetails.email}
-              </CardContent>
+              </Card.Body>
             </Card>
           )}
         </div>
