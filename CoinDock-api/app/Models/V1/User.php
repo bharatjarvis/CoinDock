@@ -188,9 +188,9 @@ class User extends Authenticatable
 
         public function getCoinId($coinId): array|collection
         {
-           if (Str::lower($coinId) != 'coins') {
-                return $this->wallets->filter(function ($wallet) use ($coinId) {
-                    return $wallet->coin->coin_id == $coinId;
+           if ($coinId !== 'coins') {
+                return $this->wallets->map(function ($wallet) use ($coinId) {
+                    return $wallet->coin()->whereCoinId($coinId)->first();
                 })->unique('coin_id')->pluck('coin_id')->filter();
             }
             return $this->uniqueCoins()->pluck('coin_id')->toArray();
@@ -206,6 +206,7 @@ class User extends Authenticatable
         {
             $result = [];
             $coinIds = $this->getCoinId($coinId);
+
             foreach ($coinIds as $coinId) {
                 $response = $this->historicalData($coinId, $range, $startDate, $endDate);
                 $result[$coinId] = array_column($response, 'rate_close', 'time_period_end');
@@ -357,8 +358,7 @@ class User extends Authenticatable
                         $shortName = $response['asset_id_base'];
                         $coinName  = $coin->name;
                     }
-                } catch (\Throwable $th) {
-
+                }catch (\Throwable $th) {
                     throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
                 }
             }
