@@ -94,9 +94,6 @@ class Wallet extends Model
     //Converting every crypto currency into USD
     public function cryptoToUsd()
     {
-        // $assetsConfig = config('assets.accepted_coins');
-        // $assetShortName = $assetsConfig[$this->coin->coin_id]['coin_id'];
-
         $cryptConversionBasePath = config('coin.coin.api_url') . config('coin.coin.crypto_to_usd');
         $cryptConversionPath = str_replace('{id}', $this->coin->coin_id, $cryptConversionBasePath);
 
@@ -161,27 +158,26 @@ class Wallet extends Model
 
             $wallet = self::walletCreate($user->id, $walletId, $coinId);
 
-            $balanceInUsd = $wallet->cryptoToUsd();
             $basePath = $wallet->basePath();
 
-            $response = Http::get($basePath);
+            $response = Http::get($basePath)->throw();
 
             if ($acceptedCoin == 'EXP' || $acceptedCoin == 'MOAC' ) {
                 $response = Http::post($basePath, ['addr' => $walletId, 'options' => ['balance']]);
             }
 
-            if ($wallet->isJson($response)) {
-                $coins = $wallet->totalCoins($response);
-                if (is_numeric($coins)) {
-                    if ($acceptedCoin == 'EXP') {
-                        return $wallet->update([
-                            'balance' => $response['balanceUSD'],
-                            'coins' => $coins
-                        ]);
-                    }
-                    return $wallet->update(['balance' => $balanceInUsd * $coins, 'coins' => $coins]);
+            $coins = $wallet->totalCoins($response);
+            if (is_numeric($coins)) {
+                if ($acceptedCoin == 'EXP') {
+                    return $wallet->update([
+                        'balance' => $response['balanceUSD'],
+                        'coins' => $coins
+                    ]);
                 }
+                $balanceInUsd = $wallet->cryptoToUsd();
+                $wallet->update(['balance' => $balanceInUsd * $coins, 'coins' => $coins]);
             }
+
             DB::commit();
         }catch(Exception $e) {
             DB::rollBack();
