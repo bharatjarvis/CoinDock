@@ -25,19 +25,23 @@ use App\Http\Controllers\V1\{
 
 Route::group(['prefix' => 'users'], function () {
     Route::post('/', [UserController::class, 'create'])->name('users.create');
+    Route::get('{user}', [UserController::class, 'show'])->name('users.show');
 });
 
-Route::middleware('auth:api')
-    ->prefix('users')
+Route::
+ middleware('auth:api')     ->
+    prefix('users')
     ->group(function () {
-        Route::get('/titles', [UserController::class, 'usersTitles']);
+        Route::get('/titles', [UserController::class, 'userTitles']);
 
-        Route::group(['prefix' => '{user}', 'middleware' => 'can:index,user'], function () {
-            
+        Route::group(['prefix' => '{user}'
+         , 'middleware' => 'can:index,user'
+    ], function () {
+
             Route::prefix('coin-cards')->group(function(){
                     Route::get('/', [CoinCardController::class, 'index']);
                 });
-        
+
 
             Route::group(['prefix' => 'accounts'], function () {
 
@@ -50,12 +54,12 @@ Route::middleware('auth:api')
                 Route::put('/profile', [UserController::class, 'updateProfile']);
 
 
-                
+
             });
 
 
 
-            
+
 
 
 

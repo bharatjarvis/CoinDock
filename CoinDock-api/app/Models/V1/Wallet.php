@@ -2,14 +2,14 @@
 
 namespace App\Models\V1;
 
-use App\Exceptions\ApiKeyException;
+use App\Exceptions\{ApiKeyException, WalletCreationException};
 use App\Models\V1\{User, Coin};
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
+use Illuminate\Support\{Arr, Facades\DB, Str};
 use Symfony\Component\HttpFoundation\Response;
 
 class Wallet extends Model
@@ -30,16 +30,13 @@ class Wallet extends Model
     ];
 
     //wallet creation
-    public function WalletCreate($userId, $walletId, $userCoinId, $coins, $balanceInUsd)
+    public static function walletCreate($userId, $walletId, $userCoinId)
     {
-        $this->create([
+        return self::create([
             'user_id' => $userId,
             'wallet_id' => $walletId,
             'coin_id' => $userCoinId,
-            'coins' => $coins,
-            'balance' => $balanceInUsd
         ]);
-        return true;
     }
 
     public function user()
@@ -49,25 +46,24 @@ class Wallet extends Model
 
 
     //checking wheather the coin is float or int or scientific
-    public function coinCheck($coin, $coins)
+    public function coinCheck($coinShortCode, $coins)
     {
         $coinsString = (string)$coins;
-        if (!Str::contains($coinsString, 'E') && Str::contains($coinsString, '.') || $coins == 0) {
-            return $coins;
-        } else {
-            return $this->satoshiToCrypt($coin, $coinsString);
-        }
+
+        return (!Str::contains($coinsString, 'E') && Str::contains($coinsString, '.') || $coins == 0) ?
+            $coins :
+            $this->satoshiToCrypt($coinShortCode, $coinsString);
     }
 
     //converting Sathosis into Corresponding crypto coins
-    public function satoshiToCrypt($coin, $sathosis)
+    public function satoshiToCrypt($coinShortCode, $sathosis)
     {
-        $satsToCoins = config('assets.accepted_coins');
+        $accetedCoins = config('assets.accepted_coins');
 
-        return ($satsToCoins[$coin]['sats_to_crypt'] * $sathosis);
+        return Arr::get($accetedCoins, $coinShortCode.'sats_to_crypt') * $sathosis;
     }
 
-    //function to check whether the response is in json or not 
+    //function to check whether the response is in json or not
     public function isJson($string)
     {
         json_decode($string);
@@ -75,39 +71,34 @@ class Wallet extends Model
     }
 
     //getting basePath for for checking Wallet Balance
-    public function basePath($userCoinId, $walletId)
+    public function basePath()
     {
-        $userCoinName = Coin::whereId($userCoinId)->first()?->name;
+        $coinId = $this->coin->coin_id;
 
         $coinList = config('assets.accepted_coins');
-        $coinKeys =  array_keys($coinList);
 
         $basePath = '';
 
-        foreach ($coinKeys as $coin) {
-            if ($userCoinName == $coin) {
-                $basePath  = config('assets.accepted_coins');
-                $basePath = $basePath[$coin]['bal_path'];
-                if ($userCoinName == 'Expanse' || $userCoinName == 'MOAC') {
+        foreach ($coinList as $coinKey => $coinData) {
+            if ($coinId == $coinKey) {
+                $basePath = Arr::get($coinData, 'bal_path');
+                if ($coinId == 'EXP' || $coinId == 'MOAC') {
                     return $basePath;
                 }
             }
         }
 
-        return $basePath = str_replace('{id}', $walletId, $basePath);
+        return str_replace('{id}', $this->wallet_id, $basePath);
     }
 
     //Converting every crypto currency into USD
-    public function cryptoToUsd($coin)
+    public function cryptoToUsd()
     {
-        $assetsConfig = config('assets.accepted_coins');
-        $assetShortName = $assetsConfig[$coin]['coin_id'];
-
-        $cryptConversionBasePath = config('assets.coin_api.base_path') . config('assets.coin_api.crypto_usd');
-        $cryptConversionPath = str_replace('{id}', $assetShortName, $cryptConversionBasePath);
+        $cryptConversionBasePath = config('coin.coin.api_url') . config('coin.coin.crypto_to_usd');
+        $cryptConversionPath = str_replace('{id}', $this->coin->coin_id, $cryptConversionBasePath);
 
         try {
-            $response = Http::withHeaders(['X-CoinAPI-Key' => config('assets.coin_api.key')])
+            $response = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])
                 ->get($cryptConversionPath)['rate'];
         } catch (\Throwable $th) {
             throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
@@ -117,16 +108,17 @@ class Wallet extends Model
     }
 
     //Fetching number of coins through the Response
-    public function totalCoins($response, $coin)
+    public function totalCoins($response)
     {
+        $coinShortCode = $this->coin->coin_id;
+
         $responseArray = json_decode($response, true);
         $responseArrayKeys = array_keys($responseArray);
 
-        switch ($coin) {
-            
-            case 'Expanse'||'MOAC':
+        switch ($coinShortCode) {
+            case 'EXP'||'MOAC':
                 return Arr::get($response,'balance');
-            case 'Aion':
+            case 'AION':
                 return Arr::get(Arr::get(Arr::get($response,'content'),0),'balance');
             case 'PLSR':
                 return Arr::get(Arr::get(Arr::get($response,'data'),2),4);
@@ -140,7 +132,7 @@ class Wallet extends Model
             if ($jsonKey == 'balance' || $jsonKey == 'data' || $jsonKey == 'result') {
 
                 $coins = $responseArray[$jsonKey];
-                return $this->coinCheck($coin, $coins);
+                return $this->coinCheck($coinShortCode, $coins);
             } elseif ($jsonKey == 'confirmed') {
 
 
@@ -149,44 +141,53 @@ class Wallet extends Model
                 $confirmedResponseArray = json_decode($confirmedResponse, true);
 
                 $coins = $confirmedResponseArray['nanoErgs'];
-                return $this->coinCheck($coin, $coins);
+                return $this->coinCheck($coinShortCode, $coins);
             }
         }
     }
 
     //Adding Wallet for Particular User
-    public function addWallet(User $user, Request $request)
+    public static function addWallet(User $user, Request $request)
     {
-        $walletId = $request->wallet_id;
+        try{
+            DB::beginTransaction();
+            $walletId = $request->wallet_id;
 
-        $userCoin = $request->coin;
-        $userCoinId = Coin::whereName($userCoin)->first()?->id;
+            $acceptedCoin = $request->coin;
+            $coinId = Coin::whereCoinId($acceptedCoin)->first()?->id;
 
-        $balanceInUsd = $this->cryptoToUsd($userCoin);
-        $basePath = $this->basePath($userCoinId, $walletId);
-        $response = Http::get($basePath);
+            $wallet = self::walletCreate($user->id, $walletId, $coinId);
 
+            $basePath = $wallet->basePath();
 
-        if ($userCoin == 'Expanse') {
-            $response = Http::post($basePath, ['addr' => $walletId, 'options' => ['balance']]);
-        } elseif ($userCoin == 'MOAC') {
-            $response = Http::post($basePath, ['addr' => $walletId, 'options' => ['balance']]);
-        }
+            $response = Http::get($basePath)->throw();
 
-        if ($this->isJson($response)) {
-            $coins = $this->totalCoins($response, $userCoin);
-            if (is_numeric($coins)) {
-                if ($userCoin == 'Expanse') {
-                    return $this->WalletCreate($user->id, $walletId, $userCoinId, $coins, $response['balanceUSD']);
-                }
-                return $this->WalletCreate($user->id, $walletId, $userCoinId, $coins, $balanceInUsd * $coins);
+            if ($acceptedCoin == 'EXP' || $acceptedCoin == 'MOAC' ) {
+                $response = Http::post($basePath, ['addr' => $walletId, 'options' => ['balance']]);
             }
+
+            $coins = $wallet->totalCoins($response);
+            if (is_numeric($coins)) {
+                if ($acceptedCoin == 'EXP') {
+                    return $wallet->update([
+                        'balance' => $response['balanceUSD'],
+                        'coins' => $coins
+                    ]);
+                }
+                $balanceInUsd = $wallet->cryptoToUsd();
+                $wallet->update(['balance' => $balanceInUsd * $coins, 'coins' => $coins]);
+            }
+
+            DB::commit();
+        }catch(Exception $e) {
+            DB::rollBack();
+            throw new WalletCreationException('Unable to add wallet, please check wallet Id and wallet address');
         }
         return true;
     }
 
     public function coin()
     {
-        return $this->belongsTo('App\Models\V1\Coin', 'coin_id', 'id');
+        return $this->belongsTo(Coin::class, 'coin_id', 'id');
     }
 }

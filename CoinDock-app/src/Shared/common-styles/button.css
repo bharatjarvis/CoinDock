@@ -1,0 +1,67 @@
+.cd-button {
+  padding: 8px 24px;
+  background: #e0e0e0;
+  border-radius: 20px;
+  border-left-width: 0px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+}
+
+.cd-button-2 {
+  margin-top: -10px;
+  width: 80px;
+  margin-left: 36px;
+  height: 39px;
+  padding: 3px;
+  border-left-width: 0px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  border-radius: 18px;
+  background: #4461fc;
+  color: #ffffff;
+}
+.cd-button-3 {
+  width: 85px;
+  padding-top: 5px;
+  height: 33px;
+  border-radius: 20px;
+  border-left-width: 0px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  background: #4461fc;
+  color: #ffffff;
+}
+.cd-card-button {
+  width: 51px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  border-left-width: 0px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  background: #4461fc;
+  color: #ffffff;
+}
+.cd-card-button1 {
+  /* width: 51px; */
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  border-left-width: 0px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
+  background: #4461fc;
+  color: #ffffff;
+}
+.cd-button-2:disabled {
+  background: #e0e0e0;
+  color: black;
+}
+.cd-button-1:disabled {
+  background: #e0e0e0;
+}

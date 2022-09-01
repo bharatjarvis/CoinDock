@@ -7,7 +7,6 @@ use App\Models\V1\Traits\Encryptable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Requests\V1\RecoveryKeyRequest;
-use App\Models\V1\Signup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
@@ -26,7 +25,7 @@ class RecoveryKey extends Model
     ];
 
 
-    public function GenerateRecoveryKeys(User $user)
+    public static function GenerateRecoveryKeys(User $user)
     {
         //randomizing the dictionary words
         $recoveryArray = Arr::random(
@@ -47,16 +46,18 @@ class RecoveryKey extends Model
         return $recoveryGeneration;
     }
     //generating random Recovery words
-    public function store(User $user, Request $request)
+    public static function store(User $user, Request $request)
     {
 
         if ($request->is_regenerate) {
-            $recoveryCode = $this->whereUserId($user->id)
+            self::whereUserId($user->id)
                 ->whereNot('status', RecoveryKeyStatus::Used)
                 ->update(['status' => RecoveryKeyStatus::Used]);
+
+            $user->update(['recovery_attempts' => 0]);
         }
-        
-        $recoveryCode = $this->whereUserId($user->id)
+
+        $recoveryCode = self::whereUserId($user->id)
             ->whereStatus(RecoveryKeyStatus::Inactive)
             ->latest()
             ->first();
@@ -65,22 +66,20 @@ class RecoveryKey extends Model
             return $recoveryCode;
         }
 
-        return $this->GenerateRecoveryKeys($user);
+        return self::GenerateRecoveryKeys($user);
     }
 
 
     //Downloading RecoveryWords
-    public function download(User $user)
+    public function download()
     {
-        $userRecoveryCodes = self::whereUserId($user->id)->latest()->first();
-
-        $userRecoveryCodes = $userRecoveryCodes->recovery_code;
+        $userRecoveryCodes = $this->recovery_code;
         $data = [
             'words_array' => explode(' ', $userRecoveryCodes),
         ];
 
         // USER SUCCESSFULLY DOWNLOADED THE RECOVERY CODES  STEP:2
-        $signup = Signup::whereUserId($user->id)->get()->first();
+        $signup = $this->user->signup;
         if ($signup) {
             $signup->step_count += 1;
             $signup->save();
@@ -89,16 +88,16 @@ class RecoveryKey extends Model
         return $data;
     }
 
-    public function recoveryKeys(User $user, RecoveryKeyRequest $request)
+    public function recoveryKeys(RecoveryKeyRequest $request):bool
     {
-        $passArray = explode(" ", $this->recovery_code);
+        $recoveryCode = explode(" ", $this->recovery_code);
 
         $count = 0;
 
         $keyResponses = $request->key_response;
 
         foreach ($keyResponses as $key => $value) {
-            if ($passArray[$key - 1] == $value) {
+            if ($recoveryCode[$key - 1] == $value) {
                 $count++;
             }
         }
@@ -109,7 +108,7 @@ class RecoveryKey extends Model
             ]);
 
             // USER SIGNUP STATUS RECOVERY CODES MATCHED SUCCESSFULLY - STEP:3
-            $signup = Signup::whereUserId($user->id)->get()->first();
+            $signup = $this->user->signup;
             if ($signup) {
                 $signup->step_count += 1;
                 if ($signup->step_count == 3) {
@@ -120,37 +119,19 @@ class RecoveryKey extends Model
                 }
             }
 
-            return response(
-                [
-                    'message' => 'Recovery codes matched successfully',
-                    'result' => [
-                        'completed' => 4,
-                    ],
-                ],
-                200,
-            );
+            return true;
         }
 
-
-
-        $attemptCount = $user->recovery_attempts;
+        $attemptCount = $this->user->recovery_attempts;
 
         $maxAttemptCount = config('random_keys.recovery.attemps');
 
         if ($attemptCount < $maxAttemptCount) {
-            $user->update([
-                'recovery_attempts' => $attemptCount + 1,
-            ]);
+            $this->user->recovery_attempts = $attemptCount + 1;
+            $this->user->save();
         }
 
-        return response(
-            [
-                'error' => [
-                    'message' => __("recovery-code.attempt-{$user->recovery_attempts}"),
-                ],
-            ],
-            400,
-        );
+        return false;
     }
 
     public function user()

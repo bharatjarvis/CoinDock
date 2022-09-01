@@ -17,7 +17,6 @@ return new class extends Migration
             $table->decimal('balance',10,2)->change();
             $table->string('name')->nullable()->change();
             $table->double('coins',10)->after('wallet_id');
-
         });
     }
 

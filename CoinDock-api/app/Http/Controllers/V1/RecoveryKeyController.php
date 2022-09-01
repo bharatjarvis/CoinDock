@@ -9,17 +9,16 @@ use App\Http\Resources\V1\RecoveryCodeResource;
 use App\Models\V1\{User, RecoveryKey};
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Response;
 
 class RecoveryKeyController extends Controller
 {
-    public function random()
+    public function random(User $user)
     {
         return response(
             [
-                'result' => Arr::random(
+                'results' => Arr::random(
                     range(1, config('random_keys.recovery.block_length')),
                     config('random_keys.recovery.test_block_length'),
                 ),
@@ -35,9 +34,8 @@ class RecoveryKeyController extends Controller
     public function create(User $user, CreateRecoveryKeyRequest $request)
     {
 
-        $recovery = new RecoveryKey();
-        $recoveryKey = $recovery->store($user,$request);
-        
+        $recoveryKey = RecoveryKey::store($user,$request);
+
         return response(
             [
                 'message' => 'Recovery codes created successfully',
@@ -50,12 +48,12 @@ class RecoveryKeyController extends Controller
         );
     }
 
-    
+
     public function download(User $user)
     {
-        $recovery = new RecoveryKey();
+        $recoveryKey = $user->recoveryKey()->latest()->first();
 
-        $data = $recovery->download($user);
+        $data = $recoveryKey->download();
         $pdf = Pdf::loadview('myPDF', $data);
         $now = Carbon::now()->format('Y-m-d');
 
@@ -80,8 +78,27 @@ class RecoveryKeyController extends Controller
             );
         }
 
-        return $recoveryKey->recoveryKeys($user, $request);
+        if($recoveryKey->recoveryKeys($request)) {
+            return response(
+                [
+                    'message' => 'Recovery codes matched successfully',
+                    'result' => [
+                        'completed' => 4,
+                    ],
+                ],
+                Response::HTTP_OK
+            );
+        }
+        $user->refresh();
+
+        return response(
+            [
+                'error' => [
+                    'message' => __("recovery-code.attempt-{$user->recovery_attempts}"),
+                ],
+            ],
+            Response::HTTP_BAD_REQUEST
+        );
     }
 
-    
 }

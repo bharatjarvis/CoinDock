@@ -1,0 +1,22 @@
+.cd-pie-chart {
+  padding: 12px;
+  /* border: 0.1rem solid #09bbff; */
+}
+@media screen {
+  .cd-pie-chart {
+    max-width: 95%;
+  }
+  .cd-pie-chart .filter {
+    float: right;
+  }
+  @media (min-width: 360px) and (max-width: 768px) {
+    .cd-pie-chart {
+      margin-top: 6px;
+    }
+  }
+}
+.cd-pie-chart-card {
+  border: 0.1rem solid;
+  border-radius: 1rem;
+  box-shadow: rgb(0 0 0 / 14%) 0rem 0.25rem 1.25rem 0rem;
+}

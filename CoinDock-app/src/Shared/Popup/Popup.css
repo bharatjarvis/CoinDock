@@ -1,0 +1,39 @@
+.cd-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.cd-popup-inner {
+  position: relative;
+  padding: 14px;
+  width: 100%;
+  max-width: 353px;
+  background-color: #ffff;
+  border-radius: 10px;
+}
+
+h5 {
+  position: absolute;
+  width: 252px;
+  height: 29px;
+  left: 22px;
+  top: 32px;
+
+  font-family: "Lora";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 160%;
+
+  color: #000000;
+}
+.cd-mt-39 {
+  margin-top: 39px;
+}

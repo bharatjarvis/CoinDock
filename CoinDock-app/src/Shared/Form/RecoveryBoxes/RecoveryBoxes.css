@@ -1,0 +1,38 @@
+.cd-code-box {
+  position: relative;
+  box-sizing: border-box;
+  width: 79px;
+  height: 65px;
+  background: #ffffff;
+  border: 1px solid #0080b1;
+  border-radius: 10px;
+  justify-content: center;
+  display: flex;
+  flex: auto;
+}
+
+.cd-box-index {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  margin: 0px;
+}
+
+.cd-box-data {
+  margin: 0px;
+  justify-content: center;
+  height: fit-content;
+  padding: 20px;
+  font-family: "Roboto, Helvetica, Arial, sans-serif";
+}
+
+.cd-box-input-data {
+  padding: 20px;
+  box-sizing: content-box;
+  display: block;
+  width: 100%;
+  border: indigo;
+  border-radius: 10px;
+  text-align: center;
+  font-family: "Roboto, Helvetica, Arial, sans-serif";
+}

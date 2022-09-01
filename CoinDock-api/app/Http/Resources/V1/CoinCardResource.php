@@ -26,7 +26,7 @@ class CoinCardResource extends JsonResource
             'number_of_coins' =>  $this->countCoins(),
             'primary_currency_code'=>$user->setting->whereUserId($user->id)->first()?->primary_currency,
             'primary_currency' => $this->getPrimaryCurrency(),
-            'seconday_currency_code'=>$user->setting->whereUserId($user->id)->first()?->secondary_currency,
+            'secondary_currency_code'=>$user->setting->whereUserId($user->id)->first()?->secondary_currency,
             'secondary_currency' => $this->getSecondaryCurrency(),
         ];
     }

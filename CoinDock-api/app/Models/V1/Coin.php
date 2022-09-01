@@ -2,10 +2,8 @@
 
 namespace App\Models\V1;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Database\Eloquent\{Factories\HasFactory, Model};
+use Illuminate\Support\Facades\{Auth, Http};
 use App\Exceptions\ApiKeyException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -46,8 +44,8 @@ class Coin extends Model
     public function countCoins()
     {
         $user = Auth::user();
-        return $this->wallets()->whereUserId($user->id)
-            ->whereCoinId($this->id)
+        return $this->wallets()
+            ->whereUserId($user->id)
             ->sum('coins');
     }
 
@@ -69,10 +67,9 @@ class Coin extends Model
     //get the primary currency value
     public function getPrimaryCurrency():float
     {
-        //$from= 'BTC';
         $user = Auth::user();
         $grouped = $this->defaultCoin();
-        $from = Coin::whereIsDefault(1)->first()?->coin_id;
+        $from = config('assets.default_coin');
         $to = $user->setting->whereUserId($user->id)->first()?->primary_currency;
         return $this->priceConversion($from, $to, $grouped);
     }
@@ -82,9 +79,8 @@ class Coin extends Model
     public function getSecondaryCurrency():float{
         $user = Auth::user();
         return $this->wallets()->whereUserId($user->id)
-            ->whereCoinId($this->id)
             ->sum('balance');
-        
+
 
     }
 
@@ -94,7 +90,7 @@ class Coin extends Model
         $user = Auth::user();
         $grouped = $this->getSecondaryCurrency();
         $from = $user->setting->whereUserId($user->id)->first()?->secondary_currency;
-        $to = Coin::whereIsDefault(1)->first()?->coin_id;
+        $to = config('assets.default_coin');
         return $this->priceConversion($from, $to, $grouped);
     }
 }

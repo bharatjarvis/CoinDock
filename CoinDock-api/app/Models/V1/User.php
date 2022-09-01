@@ -2,28 +2,17 @@
 
 namespace App\Models\V1;
 
-use App\Enums\V1\TimePeriod;
-use App\Enums\V1\UserStatus;
-use App\Enums\V1\UserType;
+use App\Enums\V1\{TimePeriod, UserStatus, UserType};
 use App\Exceptions\ApiKeyException;
 use App\Http\Requests\V1\ChartRequest;
-use App\Models\V1\{Signup, Setting};
-use App\Models\V1\{Coin};
-use App\Http\Requests\V1\CreateUserRequest;
-use App\Http\Requests\V1\updatePasswordRequest;
-use App\Http\Requests\V1\UpdateProfileRequest;
-use App\Http\Resources\V1\UserResource;
-use App\Http\Requests\V1\GraphRequest;
+use App\Models\V1\{Signup, Setting, Wallet};
+use App\Http\Requests\V1\{CreateUserRequest, UpdateProfileRequest, GraphRequest};
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\{Arr, Collection, Facades\Hash, Facades\Http, Str};
 use Laravel\Passport\HasApiTokens;
-use Carbon\Carbon;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
-use App\Models\V1\Wallet;
 use Symfony\Component\HttpFoundation\Response;
 
 class User extends Authenticatable
@@ -92,9 +81,9 @@ class User extends Authenticatable
             return $this->hasOne(RecoveryKey::class);
         }
 
-        public function store(CreateUserRequest $request): self
+        public static function store(CreateUserRequest $request): self
         {
-            $user = $this::create([
+            $user = self::create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
                 'type' => UserType::User,
@@ -115,7 +104,7 @@ class User extends Authenticatable
             ]);
 
             // REGISTRATION STATUS UPDATION -  STEP:1
-            $signup = $this->signUp;
+            $signup = $user->signup;
             if ($signup) {
                 $signup->step_count += 1;
                 $signup->save();
@@ -150,13 +139,13 @@ class User extends Authenticatable
                     $primaryCurrency = $this->setting->primary_currency;
 
                     $baseURL = config('coin.coin.api_url') . config('coin.coin.exchange_url');
-                    
+
                     $baseURLIdReplaced = str_replace(
                         ['{from}', '{to}'],
                         [$key, $primaryCurrency],
                         $baseURL
                     );
-                    
+
 
                     try {
                         $response = Http::withHeaders([
@@ -199,7 +188,7 @@ class User extends Authenticatable
 
         public function getCoinId($coinId): array|collection
         {
-            if ($coinId != 'Coins') {
+           if ($coinId !== 'coins') {
                 return $this->wallets->map(function ($wallet) use ($coinId) {
                     return $wallet->coin()->whereCoinId($coinId)->first();
                 })->unique('coin_id')->pluck('coin_id')->filter();
@@ -217,6 +206,7 @@ class User extends Authenticatable
         {
             $result = [];
             $coinIds = $this->getCoinId($coinId);
+
             foreach ($coinIds as $coinId) {
                 $response = $this->historicalData($coinId, $range, $startDate, $endDate);
                 $result[$coinId] = array_column($response, 'rate_close', 'time_period_end');
@@ -294,23 +284,18 @@ class User extends Authenticatable
             return $this->hasMany(RecoveryKey::class, 'user_id', 'id');
         }
 
-        public function signUp()
+        public function signup()
         {
             return $this->hasOne(Signup::class);
         }
 
-        public function updateProfile(User $user, UpdateProfileRequest $request)
+        public function updateProfile(UpdateProfileRequest $request)
         {
-            $data = $request->all();
-            $settings = $user->setting();
-
-            $user->update($data);
+            $this->update($request->all());
 
             if ($request->primary_currency || $request->secondary_currency) {
-                $settings->update($data);
+                $this->setting->update($request->all());
             }
-
-            return $user;
         }
 
 
@@ -318,7 +303,7 @@ class User extends Authenticatable
         {
             $walletBalanceInUSD = $this->wallets()->sum('balance');
             $baseUrl = config('coin.coin.api_url');
-            $exchangeURL = $baseUrl . config('coin.coin.usd_to_Btc');
+            $exchangeURL = $baseUrl . config('coin.coin.usd_to_btc');
             try {
                 $usdToBtC = Http::withHeaders(['X-CoinAPI-Key' => config('coin.coin.api_key')])->get($exchangeURL)['rate'];
             } catch (\Throwable $th) {
@@ -331,8 +316,7 @@ class User extends Authenticatable
 
         public function totalPrimaryCurrency(): array
         {
-            $userSetting = $this->setting;
-            $primaryCurrency = $userSetting->primary_currency;
+            $primaryCurrency = $this->setting->primary_currency;
             $baseUrl = config('coin.coin.api_url');
             $currencyURL = $baseUrl . config('coin.coin.primary_currency');
             $currency = str_replace('{id}', $primaryCurrency, $currencyURL);
@@ -343,6 +327,7 @@ class User extends Authenticatable
 
                 throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
             }
+
             $balanceInUsd = $this->wallets
                 ->mapToGroups(function ($wallet) {
                     return ['balance' => $wallet->balance];
@@ -358,10 +343,9 @@ class User extends Authenticatable
 
         public function topPerformer(): array
         {
-            $walletCoinIds = $this->wallets()->pluck('coin_id');
-            $coins = Coin::select(['coin_id', 'name'])->whereIn('id', $walletCoinIds)->get();
+            $coins = $this->userAcceptedCoins();
             $baseUrl = config('coin.coin.api_url');
-            $currencyURL = $baseUrl . config('coin.coin.top_performer');
+            $currencyURL = $baseUrl . config('coin.coin.crypto_to_usd');
             $topPerformerBal = PHP_INT_MIN;
             $coinName = null;
             $shortName = null;
@@ -372,10 +356,9 @@ class User extends Authenticatable
                     if ($response['rate'] > $topPerformerBal) {
                         $topPerformerBal = $response['rate'];
                         $shortName = $response['asset_id_base'];
-                        $coinName  = Coin::whereCoinId($shortName)->first()?->name;
+                        $coinName  = $coin->name;
                     }
-                } catch (\Throwable $th) {
-
+                }catch (\Throwable $th) {
                     throw new ApiKeyException('Server down, try again after some time', Response::HTTP_BAD_REQUEST);
                 }
             }
@@ -388,10 +371,10 @@ class User extends Authenticatable
 
         public function lowPerformer(): array
         {
-            $walletCoinIds = $this->wallets()->pluck('coin_id');
-            $coins = Coin::select(['coin_id', 'name'])->whereIn('id', $walletCoinIds)->get();
+            $coins = $this->userAcceptedCoins();
+
             $baseUrl = config('coin.coin.api_url');
-            $currencyURL = $baseUrl . config('coin.coin.top_performer');
+            $currencyURL = $baseUrl . config('coin.coin.crypto_to_usd');
             $lowPerformerBal = PHP_INT_MAX;
             $coinName = null;
             $shortName = null;
@@ -402,7 +385,7 @@ class User extends Authenticatable
                     if ($response['rate'] < $lowPerformerBal) {
                         $lowPerformerBal = $response['rate'];
                         $shortName = $response['asset_id_base'];
-                        $coinName  = Coin::whereCoinId($shortName)->first()?->name;
+                        $coinName  = $coin->name;
                     }
                 } catch (\Throwable $th) {
 
@@ -424,5 +407,12 @@ class User extends Authenticatable
         public function setting()
         {
             return $this->hasOne(Setting::class, 'user_id', 'id');
+        }
+
+        public function userAcceptedCoins()
+        {
+            return $this->wallets->map(function ($wallet) {
+                return $wallet->coin;
+            });
         }
 }

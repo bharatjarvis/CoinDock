@@ -1,0 +1,14 @@
+.cd-app-continer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+@media (max-width: 600px) {
+  .cd-app-continer {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+}
+.cd-app-content-container {
+  flex-grow: 1;
+}
