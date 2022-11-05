@@ -7,7 +7,7 @@ use App\Models\V1\Wallet;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
-class handleWalletBalance extends Command
+class HandleWalletBalance extends Command
 {
     /**
      * The name and signature of the console command.

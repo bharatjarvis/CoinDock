@@ -15,6 +15,13 @@ class Kernel extends ConsoleKernel
         $schedule->command('wallet:handle_balance')->everyFiveMinutes()->runInBackground()->withoutOverlapping();
 
         $schedule->command('coins:handle')->monthly()->runInBackground()->withoutOverlapping();
+
+        $schedule->command('historicalData:fetch ')->hourly()->runInBackground()->withoutOverlapping();
+
+        $schedule->command('historicalData:fetch --yearly-data')->yearly()->runInBackground()->withoutOverlapping();
+
+        $schedule->command('historicalData:purge ')->yearly()->runInBackground()->withoutOverlapping();
+
     }
 
     /**

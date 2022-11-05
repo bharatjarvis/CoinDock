@@ -27,6 +27,7 @@ Route::group(['prefix' => 'users'], function () {
     Route::post('/', [UserController::class, 'create'])->name('users.create');
 });
 
+
 Route::middleware('auth:api')
     ->prefix('users')
     ->group(function () {

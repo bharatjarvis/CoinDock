@@ -6,7 +6,7 @@ use App\Models\V1\Coin;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
-class handleCoins extends Command
+class HandleCoins extends Command
 {
     /**
      * The name and signature of the console command.

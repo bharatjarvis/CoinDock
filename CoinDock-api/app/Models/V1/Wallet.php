@@ -123,15 +123,15 @@ class Wallet extends Model
         $responseArrayKeys = array_keys($responseArray);
 
         switch ($coin) {
-            
-            case 'Expanse'||'MOAC':
-                return Arr::get($response,'balance');
+
+            case 'Expanse' || 'MOAC':
+                return Arr::get($response, 'balance');
             case 'Aion':
-                return Arr::get(Arr::get(Arr::get($response,'content'),0),'balance');
+                return Arr::get(Arr::get(Arr::get($response, 'content'), 0), 'balance');
             case 'PLSR':
-                return Arr::get(Arr::get(Arr::get($response,'data'),2),4);
+                return Arr::get(Arr::get(Arr::get($response, 'data'), 2), 4);
             case 'NEOX':
-                return Arr::get(Arr::get(Arr::get($response,'data'),1),4);
+                return Arr::get(Arr::get(Arr::get($response, 'data'), 1), 4);
             default:
                 break;
         }
